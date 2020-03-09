@@ -22,12 +22,12 @@ class TSPropertySpec extends ObjectBehavior
     
     protected $cfgFlagsHex = '180801437478436667466c61677331e380b0e381a6e380b2e380b9';
     
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Utilities\TSProperty');
     }
     
-    function it_should_reconstruct_the_binary_value_for_a_string_value()
+    public function it_should_reconstruct_the_binary_value_for_a_string_value()
     {
         $this->beConstructedWith(hex2bin($this->profilePathHex));
 
@@ -36,7 +36,7 @@ class TSPropertySpec extends ObjectBehavior
         $this->toBinary()->shouldHaveHex($this->profilePathHex);
     }
 
-    function it_should_reconstruct_the_binary_value_for_a_time_value()
+    public function it_should_reconstruct_the_binary_value_for_a_time_value()
     {
         $this->beConstructedWith(hex2bin($this->connectionTimeHex));
 
@@ -45,7 +45,7 @@ class TSPropertySpec extends ObjectBehavior
         $this->toBinary()->shouldHaveHex($this->connectionTimeHex);
     }
     
-    function it_should_reconstruct_the_binary_value_for_an_integer_value()
+    public function it_should_reconstruct_the_binary_value_for_an_integer_value()
     {
         $this->beConstructedWith(hex2bin($this->shadowHex));
 
@@ -54,7 +54,7 @@ class TSPropertySpec extends ObjectBehavior
         $this->toBinary()->shouldHaveHex($this->shadowHex);
     }
     
-    function it_should_reconstruct_the_binary_value_for_a_bitmask_int_value()
+    public function it_should_reconstruct_the_binary_value_for_a_bitmask_int_value()
     {
         $this->beConstructedWith(hex2bin($this->cfgFlagsHex));
 
@@ -63,14 +63,14 @@ class TSPropertySpec extends ObjectBehavior
         $this->toBinary()->shouldHaveHex($this->cfgFlagsHex);
     }
     
-    function it_should_encode_a_newly_built_TSProperty_properly()
+    public function it_should_encode_a_newly_built_TSProperty_properly()
     {
         $this->setName('CtxShadow');
         $this->setValue(1);
         $this->toBinary()->shouldHaveHex($this->shadowHex);
     }
     
-    function it_should_change_a_name_and_value_when_reencoding_it_after_being_constructed_from_binary()
+    public function it_should_change_a_name_and_value_when_reencoding_it_after_being_constructed_from_binary()
     {
         $this->beConstructedWith(hex2bin($this->shadowHex));
         
@@ -79,7 +79,7 @@ class TSPropertySpec extends ObjectBehavior
         $this->toBinary()->shouldHaveHex($this->cfgFlagsHex);
     }
 
-    function it_should_properly_encode_and_decode_values_with_UTF8_characters()
+    public function it_should_properly_encode_and_decode_values_with_UTF8_characters()
     {
         $hex = '200e01437478574650726f66696c6550617468e398b6e38da6e38da6e388b6e385a5e388b7e380b0';
         $this->beConstructedWith(hex2bin($hex));
@@ -89,10 +89,10 @@ class TSPropertySpec extends ObjectBehavior
         $this->toBinary()->shouldHaveHex($hex);
     }
     
-    public function getMatchers()
+    public function getMatchers(): array
     {
         return [
-            'haveHex' => function($subject, $value) {
+            'haveHex' => function ($subject, $value) {
                 return bin2hex($subject) == $value;
             },
         ];

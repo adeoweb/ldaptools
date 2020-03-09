@@ -15,23 +15,23 @@ use PhpSpec\ObjectBehavior;
 
 class ConvertLockoutTimeSpec extends ObjectBehavior
 {
-    function let()
+    public function let()
     {
         $this->setOptions(['bool' => true]);
         $this->setAttribute('locked');
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\AttributeConverter\ConvertLockoutTime');
     }
 
-    function it_should_implement_AttributeConverterInterface()
+    public function it_should_implement_AttributeConverterInterface()
     {
         $this->shouldImplement('\LdapTools\AttributeConverter\AttributeConverterInterface');
     }
 
-    function it_should_convert_a_lockoutTime_to_a_bool_for_whether_it_is_locked()
+    public function it_should_convert_a_lockoutTime_to_a_bool_for_whether_it_is_locked()
     {
         $this->setOperationType(AttributeConverterInterface::TYPE_SEARCH_FROM);
 
@@ -40,7 +40,7 @@ class ConvertLockoutTimeSpec extends ObjectBehavior
         $this->fromLdap('130660331300000000')->shouldBeEqualTo(true);
     }
 
-    function it_should_convert_a_lockoutTime_to_a_DateTime_object_if_the_attribute_is_no_expecting_bool()
+    public function it_should_convert_a_lockoutTime_to_a_DateTime_object_if_the_attribute_is_no_expecting_bool()
     {
         $this->setOptions(['bool' => false]);
         $this->setOperationType(AttributeConverterInterface::TYPE_SEARCH_FROM);
@@ -50,7 +50,7 @@ class ConvertLockoutTimeSpec extends ObjectBehavior
         $this->fromLdap('130660331300000000')->format('Y-m-d H:i:s')->shouldEqual('2015-01-18 05:38:50');
     }
 
-    function it_should_convert_a_datetime_object_to_windows_time_when_going_to_ldap()
+    public function it_should_convert_a_datetime_object_to_windows_time_when_going_to_ldap()
     {
         $this->setOptions(['bool' => false]);
         $this->setOperationType(AttributeConverterInterface::TYPE_SEARCH_TO);
@@ -59,12 +59,12 @@ class ConvertLockoutTimeSpec extends ObjectBehavior
         $this->toLdap(new \DateTime("20150118053850", new \DateTimeZone('UTC')))->shouldBeEqualTo('130660331300000000');
     }
 
-    function it_should_convert_a_bool_false_to_a_zero_when_going_to_ldap()
+    public function it_should_convert_a_bool_false_to_a_zero_when_going_to_ldap()
     {
         $this->toLdap(false)->shouldBeEqualTo('0');
     }
 
-    function it_should_throw_an_attribute_converter_exception_if_the_value_to_ldap_is_not_supported()
+    public function it_should_throw_an_attribute_converter_exception_if_the_value_to_ldap_is_not_supported()
     {
         $this->setOptions(['bool' => false]);
         $this->setOperationType(AttributeConverterInterface::TYPE_SEARCH_TO);
@@ -73,7 +73,7 @@ class ConvertLockoutTimeSpec extends ObjectBehavior
         $this->shouldThrow('\LdapTools\Exception\AttributeConverterException')->duringToLdap(new \SplObjectStorage());
     }
 
-    function it_should_convert_a_bool_to_the_correct_LDAP_filter_when_querying()
+    public function it_should_convert_a_bool_to_the_correct_LDAP_filter_when_querying()
     {
         $this->setOperationType(AttributeConverterInterface::TYPE_SEARCH_TO);
 

@@ -21,62 +21,62 @@ class StashCacheSpec extends ObjectBehavior
 {
     protected $testCacheDir = '/ldaptoolstesting';
 
-    function let()
+    public function let()
     {
         $this->testCacheDir = sys_get_temp_dir().'/ldaptoolstesting';
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Cache\StashCache');
     }
 
-    function it_should_implement_the_CacheInterface()
+    public function it_should_implement_the_CacheInterface()
     {
         $this->shouldImplement('\LdapTools\Cache\CacheInterface');
     }
 
-    function it_should_support_setting_the_cache_prefix()
+    public function it_should_support_setting_the_cache_prefix()
     {
         $this->setCachePrefix('/foo');
         $this->getCachePrefix()->shouldBeEqualTo('/foo');
     }
 
-    function it_should_have_the_system_temp_dir_with_a_ldaptools_subfolder_as_the_default_cache_location()
+    public function it_should_have_the_system_temp_dir_with_a_ldaptools_subfolder_as_the_default_cache_location()
     {
         $this->getCacheFolder()->shouldBeEqualTo(sys_get_temp_dir().'/ldaptools');
     }
 
-    function it_should_support_setting_the_cache_folder()
+    public function it_should_support_setting_the_cache_folder()
     {
         $this->setCacheFolder(sys_get_temp_dir());
         $this->getCacheFolder()->shouldBeEqualTo(sys_get_temp_dir());
     }
 
-    function it_should_return_a_default_cache_prefix_of_ldaptools_when_calling_getCachePrefix()
+    public function it_should_return_a_default_cache_prefix_of_ldaptools_when_calling_getCachePrefix()
     {
         $this->getCachePrefix()->shouldBeEqualTo('/ldaptools');
     }
 
-    function it_should_recognize_the_cache_prefix_option()
+    public function it_should_recognize_the_cache_prefix_option()
     {
         $this->setOptions(['cache_prefix' => '/foo']);
         $this->getCachePrefix()->shouldBeEqualTo('/foo');
     }
 
-    function it_should_recognize_the_cache_folder_option()
+    public function it_should_recognize_the_cache_folder_option()
     {
         $this->setOptions(['cache_folder' => sys_get_temp_dir()]);
         $this->getCacheFolder()->shouldBeEqualTo(sys_get_temp_dir());
     }
 
-    function it_should_return_null_on_an_item_not_in_the_cache_when_calling_get()
+    public function it_should_return_null_on_an_item_not_in_the_cache_when_calling_get()
     {
         $this->setCacheFolder($this->testCacheDir);
         $this->get('foo.bar')->shouldBeNull();
     }
 
-    function it_should_cache_an_item_when_calling_set()
+    public function it_should_cache_an_item_when_calling_set()
     {
         $this->setCacheFolder($this->testCacheDir);
         $item = new CacheItem(CacheItem::TYPE['SCHEMA_OBJECT'].'.foo.bar', new LdapObjectSchema('foo', 'bar'));
@@ -85,13 +85,13 @@ class StashCacheSpec extends ObjectBehavior
         $this->deleteAll();
     }
 
-    function it_should_return_false_when_calling_getCacheCreationTime_for_a_non_existent_item()
+    public function it_should_return_false_when_calling_getCacheCreationTime_for_a_non_existent_item()
     {
         $this->setCacheFolder($this->testCacheDir);
         $this->getCacheCreationTime(CacheItem::TYPE['SCHEMA_OBJECT'].'.foo.bar')->shouldBeEqualTo(false);
     }
 
-    function it_should_return_a_datetime_when_calling_getCacheCreationTime_when_the_item_is_in_the_cache()
+    public function it_should_return_a_datetime_when_calling_getCacheCreationTime_when_the_item_is_in_the_cache()
     {
         $this->setCacheFolder($this->testCacheDir);
         $item = new CacheItem(CacheItem::TYPE['SCHEMA_OBJECT'].'.foo.bar', new LdapObjectSchema('foo', 'bar'));
@@ -100,7 +100,7 @@ class StashCacheSpec extends ObjectBehavior
         $this->deleteAll();
     }
 
-    function it_should_return_true_when_calling_contains_and_the_item_is_in_the_cache()
+    public function it_should_return_true_when_calling_contains_and_the_item_is_in_the_cache()
     {
         $this->setCacheFolder($this->testCacheDir);
         $item = new CacheItem(CacheItem::TYPE['SCHEMA_OBJECT'].'.foo.bar', new LdapObjectSchema('foo', 'bar'));
@@ -109,14 +109,14 @@ class StashCacheSpec extends ObjectBehavior
         $this->deleteAll();
     }
 
-    function it_should_return_false_when_calling_contains_and_the_item_is_not_in_the_cache()
+    public function it_should_return_false_when_calling_contains_and_the_item_is_not_in_the_cache()
     {
         $this->setCacheFolder($this->testCacheDir);
         $this->contains(CacheItem::TYPE['SCHEMA_OBJECT'].'.foo.bar')->shouldBeEqualTo(false);
         $this->deleteAll();
     }
 
-    function it_should_delete_an_item_from_the_cache()
+    public function it_should_delete_an_item_from_the_cache()
     {
         $this->setCacheFolder($this->testCacheDir);
         $item = new CacheItem(CacheItem::TYPE['SCHEMA_OBJECT'].'.foo.bar', new LdapObjectSchema('foo', 'bar'));
@@ -126,7 +126,7 @@ class StashCacheSpec extends ObjectBehavior
         $this->contains($item->getKey())->shouldBeEqualTo(false);
     }
 
-    function it_should_delete_all_items_in_the_cache()
+    public function it_should_delete_all_items_in_the_cache()
     {
         $this->setCacheFolder($this->testCacheDir);
         $itemOne = new CacheItem(CacheItem::TYPE['SCHEMA_OBJECT'].'.foo.bar', new LdapObjectSchema('foo', 'bar'));
@@ -140,7 +140,7 @@ class StashCacheSpec extends ObjectBehavior
         $this->contains($itemTwo->getKey())->shouldBeEqualTo(false);
     }
 
-    function it_should_be_case_insensitive_when_looking_up_an_item_in_the_cache()
+    public function it_should_be_case_insensitive_when_looking_up_an_item_in_the_cache()
     {
         $this->setCacheFolder($this->testCacheDir);
         $item = new CacheItem(CacheItem::TYPE['SCHEMA_OBJECT'].'.foo.bar', new LdapObjectSchema('foo', 'bar'));
@@ -150,7 +150,7 @@ class StashCacheSpec extends ObjectBehavior
         $this->deleteAll();
     }
 
-    function it_should_set_a_expiration_for_the_cache_item_if_specified(PoolInterface $pool, Item $item)
+    public function it_should_set_a_expiration_for_the_cache_item_if_specified(PoolInterface $pool, Item $item)
     {
         $this->beConstructedWith($pool);
 

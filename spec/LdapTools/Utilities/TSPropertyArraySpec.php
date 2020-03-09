@@ -26,17 +26,17 @@ class TSPropertyArraySpec extends ObjectBehavior
         'e380b0180801437478436667466c61677331e380b0e381a6e380b2e380b9220201437478496e697469616c50726f6772616de380b02402'.
         '01437478496e697469616c50726f6772616d57e380b0';
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Utilities\TSPropertyArray');
     }
     
-    function it_should_get_the_default_binary_value_when_newly_constructed()
+    public function it_should_get_the_default_binary_value_when_newly_constructed()
     {
         $this->toBinary()->shouldHaveHex(substr($this->defaultHex, 96));
     }
     
-    function it_should_support_being_constructed_with_a_binary_value()
+    public function it_should_support_being_constructed_with_a_binary_value()
     {
         $tsPropArray = new TSPropertyArray();
         $tsPropArray->set('CtxWFProfilePath', 'foo');
@@ -46,7 +46,7 @@ class TSPropertyArraySpec extends ObjectBehavior
         $this->get('CtxWFProfilePath')->shouldEqual('foo');
     }
     
-    function it_should_support_being_constructed_from_an_array_with_property_values()
+    public function it_should_support_being_constructed_from_an_array_with_property_values()
     {
         $props = TSPropertyArray::DEFAULTS;
         $props['CtxWFProfilePath'] = 'foobar';
@@ -55,18 +55,18 @@ class TSPropertyArraySpec extends ObjectBehavior
         $this->get('CtxWFProfilePath')->shouldEqual('foobar');
     }
     
-    function it_should_get_a_specific_TSProperty_object()
+    public function it_should_get_a_specific_TSProperty_object()
     {
         $this->get('CtxWFProfilePath')->shouldBeString();
     }
     
-    function it_should_return_whether_a_specific_TSProperty_exists()
+    public function it_should_return_whether_a_specific_TSProperty_exists()
     {
         $this->has('foo')->shouldEqual(false);
         $this->has('CtxWFProfilePath')->shouldEqual(true);
     }
 
-    function it_should_add_a_specific_TSProperty()
+    public function it_should_add_a_specific_TSProperty()
     {
         $tsProp = new TSProperty();
         $tsProp->setName('foo');
@@ -77,7 +77,7 @@ class TSPropertyArraySpec extends ObjectBehavior
         $this->has('foo')->shouldEqual(true);
     }
     
-    function it_should_remove_a_specific_TSProperty()
+    public function it_should_remove_a_specific_TSProperty()
     {
         $tsProp = new TSProperty();
         $tsProp->setName('foo');
@@ -89,7 +89,7 @@ class TSPropertyArraySpec extends ObjectBehavior
         $this->has('foo')->shouldEqual(false);
     }
 
-    function it_should_set_a_specific_TSProperty_by_name()
+    public function it_should_set_a_specific_TSProperty_by_name()
     {
         $this->set('CtxWFProfilePath', 'foo');
         $this->get('CtxWFProfilePath')->shouldEqual('foo');
@@ -97,13 +97,13 @@ class TSPropertyArraySpec extends ObjectBehavior
         $this->get('CtxWFProfilePath')->shouldEqual('bar');
     }
     
-    function it_should_throw_an_invalid_argument_exception_when_the_property_doesnt_exist()
+    public function it_should_throw_an_invalid_argument_exception_when_the_property_doesnt_exist()
     {
         $this->shouldThrow('LdapTools\Exception\InvalidArgumentException')->duringGet('foo');
         $this->shouldThrow('LdapTools\Exception\InvalidArgumentException')->duringSet('foo', 'bar');
     }
     
-    function it_should_return_all_the_TSProperty_objects_as_a_key_value_array()
+    public function it_should_return_all_the_TSProperty_objects_as_a_key_value_array()
     {
         $this->toArray()->shouldEqual([
             'CtxCfgPresent' => 2953518677,
@@ -125,7 +125,7 @@ class TSPropertyArraySpec extends ObjectBehavior
         ]);
     }
 
-    function it_should_respect_the_binary_data_stored_after_the_TSPropertyArray_data_when_constructed()
+    public function it_should_respect_the_binary_data_stored_after_the_TSPropertyArray_data_when_constructed()
     {
         $postBinary = '666f6f626172';
         $hex = bin2hex((new TSPropertyArray())->set('CtxWFProfilePath', 'foo')->toBinary());
@@ -137,14 +137,14 @@ class TSPropertyArraySpec extends ObjectBehavior
         $this->getPostBinary()->shouldEqual(hex2bin($postBinary));
     }
 
-    function it_should_get_the_signature_for_the_data()
+    public function it_should_get_the_signature_for_the_data()
     {
         $this->beConstructedWith((new TSPropertyArray())->toBinary());
         $this->getSignature()->shouldEqual(TSPropertyArray::VALID_SIGNATURE);
         $this->isSignatureValid()->shouldEqual(true);
     }
     
-    function it_should_be_able_to_check_whether_the_signature_is_valid()
+    public function it_should_be_able_to_check_whether_the_signature_is_valid()
     {
         $hex = substr($this->defaultHex, 96);
         
@@ -152,10 +152,10 @@ class TSPropertyArraySpec extends ObjectBehavior
         $this->isSignatureValid()->shouldEqual(false);
     }
 
-    public function getMatchers()
+    public function getMatchers(): array
     {
         return [
-            'haveHex' => function($subject, $value) {
+            'haveHex' => function ($subject, $value) {
                 return bin2hex($subject) == $value;
             },
         ];

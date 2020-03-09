@@ -169,7 +169,7 @@ class OperationHydrator extends ArrayHydrator
             throw new LogicException('You must specify a container or OU to place this LDAP object in.');
         }
         // Handles a possible multi-valued RDN, where each RDN is pieced together with a '+'
-        $rdn = implode('+', array_map(function($rdn) use ($operation) {
+        $rdn = implode('+', array_map(function ($rdn) use ($operation) {
             return $rdn.'='.LdapUtilities::escapeValue($operation->getAttributes()[$rdn], null, LDAP_ESCAPE_DN);
         }, $this->getRdnFromAttributes(array_keys($operation->getAttributes()))));
         $operation->setDn($rdn.','.$this->resolveParameters(['container' => $location])['container']);
@@ -181,7 +181,8 @@ class OperationHydrator extends ArrayHydrator
      * @param array $attributes The attribute names.
      * @return array
      */
-    protected function getRdnFromAttributes(array $attributes) {
+    protected function getRdnFromAttributes(array $attributes)
+    {
         $rdn = [];
         $rdnAttributes = array_map('strtolower', $this->schema->getRdn());
 

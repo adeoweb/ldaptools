@@ -18,22 +18,22 @@ use PhpSpec\ObjectBehavior;
 
 class LdifSpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Ldif\Ldif');
     }
 
-    function it_should_set_the_ldif_version()
+    public function it_should_set_the_ldif_version()
     {
         $this->setVersion(1)->shouldReturnAnInstanceOf('LdapTools\Ldif\Ldif');
     }
 
-    function it_should_get_a_ldif_entry_builder()
+    public function it_should_get_a_ldif_entry_builder()
     {
         $this->entry()->shouldReturnAnInstanceOf('LdapTools\Ldif\LdifEntryBuilder');
     }
 
-    function it_should_add_a_comment()
+    public function it_should_add_a_comment()
     {
         $this->addComment('test')->shouldReturnAnInstanceOf('LdapTools\Ldif\Ldif');
         $this->getComments()->shouldHaveCount(1);
@@ -44,7 +44,7 @@ class LdifSpec extends ObjectBehavior
         $this->getComments()->shouldBeEqualTo(['test', 'foo', 'bar']);
     }
 
-    function it_should_add_an_entry()
+    public function it_should_add_an_entry()
     {
         $delete = new LdifEntryDelete('dc=foo,dc=bar');
         $add = new LdifEntryAdd('dc=foo,dc=bar', ['foo' => 'bar']);
@@ -57,7 +57,7 @@ class LdifSpec extends ObjectBehavior
         $this->getEntries()->shouldBeEqualTo([$delete, $add, $modify]);
     }
 
-    function it_should_get_the_ldif_string()
+    public function it_should_get_the_ldif_string()
     {
         $delete = new LdifEntryDelete('dc=foo,dc=bar');
         $add = new LdifEntryAdd('dc=foo,dc=bar', ['foo' => 'bar']);
@@ -78,7 +78,7 @@ class LdifSpec extends ObjectBehavior
         $this->toString()->shouldBeEqualTo($ldif);
     }
 
-    function it_should_get_the_operations_for_the_ldif_entries()
+    public function it_should_get_the_operations_for_the_ldif_entries()
     {
         $delete = new LdifEntryDelete('dc=foo,dc=bar');
         $add = new LdifEntryAdd('dc=foo,dc=bar', ['foo' => 'bar']);
@@ -87,7 +87,7 @@ class LdifSpec extends ObjectBehavior
         $this->toOperations()->shouldBeLike([$delete->toOperation(), $add->toOperation()]);
     }
 
-    function it_should_set_the_line_endings_for_the_ldif_string()
+    public function it_should_set_the_line_endings_for_the_ldif_string()
     {
         $delete = new LdifEntryDelete('dc=foo,dc=bar');
         $add = new LdifEntryAdd('dc=foo,dc=bar', ['foo' => 'bar']);
@@ -109,18 +109,18 @@ class LdifSpec extends ObjectBehavior
         $this->toString()->shouldBeEqualTo($ldif);
     }
 
-    function it_should_throw_an_exception_on_an_invalid_line_ending_type()
+    public function it_should_throw_an_exception_on_an_invalid_line_ending_type()
     {
         $this->shouldThrow('\LdapTools\Exception\InvalidArgumentException')->duringSetLineEnding('foo');
     }
 
-    function it_should_have_a_line_folding_set_to_false_by_default_with_a_length_of_76()
+    public function it_should_have_a_line_folding_set_to_false_by_default_with_a_length_of_76()
     {
         $this->getLineFolding()->shouldBeEqualTo(false);
         $this->getMaxLineLength(76);
     }
 
-    function it_should_fold_long_lines_when_specified()
+    public function it_should_fold_long_lines_when_specified()
     {
         $dn = 'cn=foo,dc=example,dc=local';
         $description = 'This is a long line that will go over the 76 char limit and then be continued on the next line. We dont need no stinking wordwrap.';

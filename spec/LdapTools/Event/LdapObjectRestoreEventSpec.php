@@ -15,46 +15,46 @@ use PhpSpec\ObjectBehavior;
 
 class LdapObjectRestoreEventSpec extends ObjectBehavior
 {
-    function let()
+    public function let()
     {
         $container = 'ou=people,dc=foo,dc=bar';
         $ldapObject = new LdapObject(['foo' => 'bar'], ['user'], 'user', 'user');
         $this->beConstructedWith('foo', $ldapObject, $container);
     }
     
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Event\LdapObjectRestoreEvent');
     }
     
-    function it_should_be_constructed_with_a_null_location()
+    public function it_should_be_constructed_with_a_null_location()
     {
         $this->beConstructedWith('foo', new LdapObject(['foo' => 'bar']), null);
         
         $this->getContainer()->shouldBeEqualTo(null);
     }
 
-    function it_should_get_the_container()
+    public function it_should_get_the_container()
     {
         $this->getContainer()->shouldBeEqualTo('ou=people,dc=foo,dc=bar');
     }
 
-    function it_should_extend_the_LdapObjectEvent()
+    public function it_should_extend_the_LdapObjectEvent()
     {
         $this->shouldHaveType('\LdapTools\Event\LdapObjectEvent');
     }
 
-    function it_should_get_the_event_name()
+    public function it_should_get_the_event_name()
     {
         $this->getName()->shouldBeEqualTo('foo');
     }
 
-    function it_should_get_the_ldap_object_for_the_event()
+    public function it_should_get_the_ldap_object_for_the_event()
     {
         $this->getLdapObject()->shouldReturnAnInstanceOf('LdapTools\Object\LdapObject');
     }
 
-    function it_should_set_the_container()
+    public function it_should_set_the_container()
     {
         $container = 'ou=stuff,dc=example,dc=local';
         $this->setContainer($container);

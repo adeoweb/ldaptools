@@ -71,7 +71,7 @@ class BatchValueResolverSpec extends ObjectBehavior
      */
     protected $ldapObjectOpts = [['dn' => 'cn=foo,dc=foo,dc=bar'], 'user'];
 
-    function let(LdapConnectionInterface $connection)
+    public function let(LdapConnectionInterface $connection)
     {
         $parser = new SchemaYamlParser(__DIR__.'/../../../resources/schema');
         $this->schema = $parser->parse('exchange', 'ExchangeMailboxUser');
@@ -79,25 +79,25 @@ class BatchValueResolverSpec extends ObjectBehavior
         $this->expectedSearch = new QueryOperation('(&(distinguishedName=cn=foo,dc=foo,dc=bar))', ['userAccountControl']);
         $connection->getConfig()->willReturn(new DomainConfiguration('foo.bar'));
         $connection->getRootDse()->willReturn(new LdapObject(['foo' => 'bar']));
-        $connection->execute(Argument::that(function($operation) {
+        $connection->execute(Argument::that(function ($operation) {
             return $operation->getFilter() == '(&(objectClass=*))'
                 && $operation->getBaseDn() == 'cn=foo,dc=foo,dc=bar'
                 && $operation->getAttributes() == ['userAccountControl'];
         }))->willReturn($this->expectedResult);
-        $connection->execute(Argument::that(function($operation) {
+        $connection->execute(Argument::that(function ($operation) {
             return $operation->getFilter() == '(&(objectClass=*))'
                 && $operation->getBaseDn() == 'cn=foo,dc=foo,dc=bar'
                 && $operation->getAttributes() == ['msExchELCMailboxFlags'];
         }))->willReturn($this->expectedElcResult);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->beConstructedThrough('getInstance', [$this->schema, (new LdapObject(...$this->ldapObjectOpts))->getBatchCollection(), AttributeConverterInterface::TYPE_MODIFY]);
         $this->shouldHaveType('LdapTools\Resolver\BatchValueResolver');
     }
 
-    function it_should_convert_values_to_ldap_with_a_batch_modification($connection)
+    public function it_should_convert_values_to_ldap_with_a_batch_modification($connection)
     {
         $ldapObject = new LdapObject(...$this->ldapObjectOpts);
         $ldapObject->set('disabled', true);
@@ -106,7 +106,7 @@ class BatchValueResolverSpec extends ObjectBehavior
         $ldapObject->set('retentionEnabled', true);
         $ldapObject->set('username', 'foo');
         $ldapObject->add('emailAddress', 'chad.sikorra@gmail.com');
-        $ldapObject->remove('phoneNumber','555-5555');
+        $ldapObject->remove('phoneNumber', '555-5555');
         $ldapObject->reset('pager');
 
         $uacBatch = [
@@ -172,7 +172,7 @@ class BatchValueResolverSpec extends ObjectBehavior
         $ldapObject->add('trustedForAllDelegation', true);
 
         $batch = $ldapObject->getBatchCollection();
-        $connection->execute(Argument::that(function($operation) {
+        $connection->execute(Argument::that(function ($operation) {
             return $operation->getFilter() == '(&(objectClass=*))'
                 && $operation->getBaseDn() == 'cn=foo,dc=foo,dc=bar'
                 && $operation->getAttributes() == ['userAccountControl'];
@@ -183,7 +183,7 @@ class BatchValueResolverSpec extends ObjectBehavior
         $this->shouldThrow(new \LogicException('Unable to modify "trustedForAllDelegation". The "ADD" action is not allowed.'))->duringToLdap();
     }
     
-    function it_should_remove_batches_when_specified_by_a_converter_implementing_OperationGeneratorInterface($connection)
+    public function it_should_remove_batches_when_specified_by_a_converter_implementing_OperationGeneratorInterface($connection)
     {
         $dn = 'cn=Chad,dc=foo,dc=bar';
         $batch = new BatchCollection($dn);

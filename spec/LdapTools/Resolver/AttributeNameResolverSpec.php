@@ -15,12 +15,12 @@ use PhpSpec\ObjectBehavior;
 
 class AttributeNameResolverSpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Resolver\AttributeNameResolver');
     }
 
-    function it_should_retain_the_selected_attribute_case_when_there_is_no_schema_being_used_from_ldap()
+    public function it_should_retain_the_selected_attribute_case_when_there_is_no_schema_being_used_from_ldap()
     {
         $entry = ['givenname' => 'Chad', 'sn' => 'Sikorra'];
         $selected = ['GivenNamE', 'SN'];
@@ -29,7 +29,7 @@ class AttributeNameResolverSpec extends ObjectBehavior
         $this->fromLdap($entry, $selected)->shouldHaveKey('SN');
     }
 
-    function it_should_retain_the_selected_attribute_case_when_there_is_a_schema_from_ldap()
+    public function it_should_retain_the_selected_attribute_case_when_there_is_a_schema_from_ldap()
     {
         $schema = new LdapObjectSchema('ad', 'user');
         $schema->setAttributeMap([ 'firstName' => 'givenName', 'lastName' => 'sn' ]);
@@ -42,7 +42,7 @@ class AttributeNameResolverSpec extends ObjectBehavior
         $this->fromLdap($entry, $selected)->shouldHaveKey('LastName');
     }
 
-    function it_should_rename_schema_names_to_ldap_attribute_names_going_to_ldap()
+    public function it_should_rename_schema_names_to_ldap_attribute_names_going_to_ldap()
     {
         $schema = new LdapObjectSchema('ad', 'user');
         $schema->setAttributeMap([
@@ -65,7 +65,7 @@ class AttributeNameResolverSpec extends ObjectBehavior
         $this->toLdap($objectToLdap)->shouldHaveKey('cn');
     }
 
-    function it_should_return_all_LDAP_attributes_merged_with_the_schema_if_a_wildcard_was_used()
+    public function it_should_return_all_LDAP_attributes_merged_with_the_schema_if_a_wildcard_was_used()
     {
         $map = [
             'firstName' => 'givenName',
@@ -88,16 +88,16 @@ class AttributeNameResolverSpec extends ObjectBehavior
         $this->fromLdap($fromLdap, ['*'])->shouldHaveKeys($keys);
     }
 
-    function it_should_find_a_value_in_an_array_and_return_it_in_its_original_case()
+    public function it_should_find_a_value_in_an_array_and_return_it_in_its_original_case()
     {
         $this::arraySearchGetValue('foo', ['FoO', 'bar'])->shouldBeEqualTo('FoO');
         $this::arraySearchGetValue('foo', ['foo', 'bar'])->shouldBeEqualTo('foo');
     }
 
-    public function getMatchers()
+    public function getMatchers(): array
     {
         return [
-            'haveKeys' => function($subject, $keys) {
+            'haveKeys' => function ($subject, $keys) {
                 return (count(array_intersect_key(array_flip($keys), $subject)) === count($keys));
             },
         ];

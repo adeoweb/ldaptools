@@ -67,7 +67,7 @@ class AttributeValueResolverSpec extends ObjectBehavior
      */
     protected $schema;
 
-    function let(LdapConnectionInterface $connection, AddOperation $operation)
+    public function let(LdapConnectionInterface $connection, AddOperation $operation)
     {
         $parser = new SchemaYamlParser(__DIR__.'/../../../resources/schema');
         $this->schema = $parser->parse('exchange', 'ExchangeMailboxUser');
@@ -76,31 +76,31 @@ class AttributeValueResolverSpec extends ObjectBehavior
         $this->beConstructedThrough('getInstance', [$this->schema, $this->entryTo, AttributeConverterInterface::TYPE_CREATE]);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Resolver\AttributeValueResolver');
     }
 
-    function it_should_allow_setting_the_dn()
+    public function it_should_allow_setting_the_dn()
     {
         $this->setDn('cn=foo,dc=foo,dc=bar')->shouldBeNull();
     }
 
-    function it_should_allow_setting_the_ldap_connection($connection)
+    public function it_should_allow_setting_the_ldap_connection($connection)
     {
         $this->setLdapConnection($connection);
     }
 
-    function it_should_convert_values_to_ldap($operation)
+    public function it_should_convert_values_to_ldap($operation)
     {
         $this->setOperation($operation);
-        $this->toLdap()->shouldHaveKeyWithValue('userAccountControl','512');
-        $this->toLdap()->shouldHaveKeyWithValue('username','chad');
-        $this->toLdap()->shouldHaveKeyWithValue('emailAddress','Chad.Sikorra@gmail.com');
-        $this->toLdap()->shouldHaveKeyWithValue('passwordMustChange','0');
+        $this->toLdap()->shouldHaveKeyWithValue('userAccountControl', '512');
+        $this->toLdap()->shouldHaveKeyWithValue('username', 'chad');
+        $this->toLdap()->shouldHaveKeyWithValue('emailAddress', 'Chad.Sikorra@gmail.com');
+        $this->toLdap()->shouldHaveKeyWithValue('passwordMustChange', '0');
     }
 
-    function it_should_aggregate_properly_on_creation($operation)
+    public function it_should_aggregate_properly_on_creation($operation)
     {
         $entry = $this->entryTo;
         $entry['disabled'] = true;
@@ -109,20 +109,20 @@ class AttributeValueResolverSpec extends ObjectBehavior
 
         $this->beConstructedWith($this->schema, $entry, AttributeConverterInterface::TYPE_CREATE);
         $this->setOperation($operation);
-        $this->toLdap()->shouldHaveKeyWithValue('userAccountControl','590338');
+        $this->toLdap()->shouldHaveKeyWithValue('userAccountControl', '590338');
     }
 
-    function it_should_convert_values_from_ldap()
+    public function it_should_convert_values_from_ldap()
     {
         $this->beConstructedWith($this->schema, $this->entryFrom, AttributeConverterInterface::TYPE_SEARCH_FROM);
 
         $this->fromLdap()->shouldHaveKeyWithValue('disabled', false);
-        $this->fromLdap()->shouldHaveKeyWithValue('username','chad');
-        $this->fromLdap()->shouldHaveKeyWithValue('emailAddress','Chad.Sikorra@gmail.com');
+        $this->fromLdap()->shouldHaveKeyWithValue('username', 'chad');
+        $this->fromLdap()->shouldHaveKeyWithValue('emailAddress', 'Chad.Sikorra@gmail.com');
         $this->fromLdap()->shouldHaveKeyWithValue('passwordMustChange', true);
     }
 
-    function it_should_remove_attributes_when_specified_by_a_converter_implementing_OperationGeneratorInterface($operation)
+    public function it_should_remove_attributes_when_specified_by_a_converter_implementing_OperationGeneratorInterface($operation)
     {
         $this->setOperation($operation);
         $this->toLdap()->shouldNotContain('groups');

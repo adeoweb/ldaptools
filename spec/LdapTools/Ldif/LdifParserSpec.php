@@ -23,12 +23,12 @@ use PhpSpec\ObjectBehavior;
 
 class LdifParserSpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Ldif\LdifParser');
     }
 
-    function it_should_parse_ldif_data()
+    public function it_should_parse_ldif_data()
     {
         $ldif = file_get_contents(__DIR__.'/../../resources/ldif/sample1.txt');
 
@@ -91,14 +91,14 @@ class LdifParserSpec extends ObjectBehavior
         $this->parse($ldif)->getEntries()->shouldHaveIndexWithValue(7, $delete2);
     }
 
-    function it_should_have_a_file_http_and_https_url_loader_by_default()
+    public function it_should_have_a_file_http_and_https_url_loader_by_default()
     {
         $this->hasUrlLoader('file')->shouldBeEqualTo(true);
         $this->hasUrlLoader('http')->shouldBeEqualTo(true);
         $this->hasUrlLoader('https')->shouldBeEqualTo(true);
     }
 
-    function it_should_set_a_url_loader()
+    public function it_should_set_a_url_loader()
     {
         $type = 'foo';
 
@@ -107,14 +107,14 @@ class LdifParserSpec extends ObjectBehavior
         $this->hasUrlLoader($type)->shouldBeEqualTo(true);
     }
 
-    function it_should_remove_a_url_loader()
+    public function it_should_remove_a_url_loader()
     {
         $this->hasUrlLoader('http')->shouldBeEqualTo(true);
         $this->removeUrlLoader('http');
         $this->hasUrlLoader('http')->shouldBeEqualTo(false);
     }
 
-    function it_should_throw_an_exception_when_parsing_an_entry_where_the_changetype_is_redefined()
+    public function it_should_throw_an_exception_when_parsing_an_entry_where_the_changetype_is_redefined()
     {
         $ldif = file_get_contents(__DIR__.'/../../resources/ldif/fail_redefined_changetype.txt');
         $e = new LdifParserException('The changetype directive has already been defined on line number 3 near "changetype: add"');
@@ -122,7 +122,7 @@ class LdifParserSpec extends ObjectBehavior
         $this->shouldThrow($e)->duringParse($ldif);
     }
 
-    function it_should_throw_an_exception_when_a_changetype_is_invalid()
+    public function it_should_throw_an_exception_when_a_changetype_is_invalid()
     {
         $ldif = file_get_contents(__DIR__.'/../../resources/ldif/fail_invalid_changetype.txt');
         $e = new LdifParserException('The changetype "foo" is invalid on line number 3 near "cn: foobar"');
@@ -130,7 +130,7 @@ class LdifParserSpec extends ObjectBehavior
         $this->shouldThrow($e)->duringParse($ldif);
     }
 
-    function it_should_throw_an_exception_when_the_key_value_format_is_invalid()
+    public function it_should_throw_an_exception_when_the_key_value_format_is_invalid()
     {
         $ldif = file_get_contents(__DIR__.'/../../resources/ldif/fail_invalid_key_value_format.txt');
         $e = new LdifParserException('Expecting a LDIF directive on line number 3 near "cn;; foobar"');
@@ -138,7 +138,7 @@ class LdifParserSpec extends ObjectBehavior
         $this->shouldThrow($e)->duringParse($ldif);
     }
 
-    function it_should_throw_an_exception_when_the_url_loader_type_specified_is_not_recognized()
+    public function it_should_throw_an_exception_when_the_url_loader_type_specified_is_not_recognized()
     {
         $ldif = file_get_contents(__DIR__.'/../../resources/ldif/fail_invalid_url_loader.txt');
         $e = new LdifParserException('Cannot find a URL loader for type "foo" on line number 3 near "cn:< foo://bar"');
@@ -146,7 +146,7 @@ class LdifParserSpec extends ObjectBehavior
         $this->shouldThrow($e)->duringParse($ldif);
     }
 
-    function it_should_throw_an_exception_when_the_OID_in_the_ldap_control_is_not_in_the_correct_format()
+    public function it_should_throw_an_exception_when_the_OID_in_the_ldap_control_is_not_in_the_correct_format()
     {
         $ldif = file_get_contents(__DIR__.'/../../resources/ldif/fail_invalid_control.txt');
         $e = new LdifParserException('The control directive has an invalid OID format "foo" on line number 3 near "control: foo"');
@@ -154,7 +154,7 @@ class LdifParserSpec extends ObjectBehavior
         $this->shouldThrow($e)->duringParse($ldif);
     }
 
-    function it_should_throw_an_exception_when_the_ldif_version_is_not_recognized()
+    public function it_should_throw_an_exception_when_the_ldif_version_is_not_recognized()
     {
         $ldif = file_get_contents(__DIR__.'/../../resources/ldif/fail_invalid_version.txt');
         $e = new LdifParserException('LDIF version "2" is not currently supported. on line number 1 near "version: 2"');
@@ -162,7 +162,7 @@ class LdifParserSpec extends ObjectBehavior
         $this->shouldThrow($e)->duringParse($ldif);
     }
 
-    function it_should_throw_an_exception_when_the_directive_for_the_changetype_is_not_valid()
+    public function it_should_throw_an_exception_when_the_directive_for_the_changetype_is_not_valid()
     {
         $ldif = file_get_contents(__DIR__.'/../../resources/ldif/fail_invalid_changetype_directive.txt');
         $e = new LdifParserException('Directive "foo" is not valid for a "moddn" changetype on line number 3 near "foo: bar"');
@@ -170,7 +170,7 @@ class LdifParserSpec extends ObjectBehavior
         $this->shouldThrow($e)->duringParse($ldif);
     }
 
-    function it_should_throw_an_exception_when_parsing_a_modify_type_and_the_keys_following_the_directive_do_not_match_the_attribute()
+    public function it_should_throw_an_exception_when_parsing_a_modify_type_and_the_keys_following_the_directive_do_not_match_the_attribute()
     {
         $ldif = file_get_contents(__DIR__.'/../../resources/ldif/fail_modify_invalid_attribute.txt');
         $e = new LdifParserException('Attribute "bar" does not match "postaladdress" for adding values. on line number 4 near "foo: bar"');
@@ -178,7 +178,7 @@ class LdifParserSpec extends ObjectBehavior
         $this->shouldThrow($e)->duringParse($ldif);
     }
 
-    function it_should_throw_an_exception_when_parsing_the_criticality_for_a_ldap_control_and_it_is_not_valid()
+    public function it_should_throw_an_exception_when_parsing_the_criticality_for_a_ldap_control_and_it_is_not_valid()
     {
         $ldif = file_get_contents(__DIR__.'/../../resources/ldif/fail_invalid_control_criticality.txt');
         $e = new LdifParserException('Expected "true" or "false" but got foo on line number 3 near "control: 1.2.840.113556.1.4.805 foo"');
@@ -186,7 +186,7 @@ class LdifParserSpec extends ObjectBehavior
         $this->shouldThrow($e)->duringParse($ldif);
     }
 
-    function it_should_throw_an_exception_when_parsing_whether_the_old_rdn_should_be_deleted_and_it_is_not_valid()
+    public function it_should_throw_an_exception_when_parsing_whether_the_old_rdn_should_be_deleted_and_it_is_not_valid()
     {
         $ldif = file_get_contents(__DIR__.'/../../resources/ldif/fail_invalid_deleteoldrdn.txt');
         $e = new LdifParserException('Expected "0" or "1" but got: false on line number 4 near "deleteoldrdn: false"');
@@ -194,18 +194,18 @@ class LdifParserSpec extends ObjectBehavior
         $this->shouldThrow($e)->duringParse($ldif);
     }
 
-    function it_should_parse_an_ldif_with_an_empty_value()
+    public function it_should_parse_an_ldif_with_an_empty_value()
     {
         $ldif = file_get_contents(__DIR__.'/../../resources/ldif/sample2.txt');
-        $add = new AddOperation('',['objectClass' => ['top', 'OpenLDAProotDSE'], 'structuralObjectClass' => ['OpenLDAProotDSE']]);
+        $add = new AddOperation('', ['objectClass' => ['top', 'OpenLDAProotDSE'], 'structuralObjectClass' => ['OpenLDAProotDSE']]);
 
         $this->parse($ldif)->toOperations()->shouldBeLike([$add]);
     }
 
-    public function getMatchers()
+    public function getMatchers(): array
     {
         return [
-            'haveIndexWithValue' => function($subject, $index, $value) {
+            'haveIndexWithValue' => function ($subject, $index, $value) {
                 if (!isset($subject[$index])) {
                     return false;
                 }

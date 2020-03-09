@@ -17,67 +17,67 @@ use PhpSpec\ObjectBehavior;
 
 class MatchingRuleSpec extends ObjectBehavior
 {
-    function let()
+    public function let()
     {
         $this->beConstructedWith('foo', MatchingRuleOid::BitAnd, '2');
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Query\Operator\MatchingRule');
     }
 
-    function it_should_have_a_symbol_constant()
+    public function it_should_have_a_symbol_constant()
     {
         $this->shouldHaveConstant('SYMBOL');
     }
 
-    function it_should_return_foo_when_calling_getAttribute()
+    public function it_should_return_foo_when_calling_getAttribute()
     {
         $this->getAttribute()->shouldBeEqualTo('foo');
     }
 
-    function it_should_return_2_when_calling_getValue()
+    public function it_should_return_2_when_calling_getValue()
     {
         $this->getValue()->shouldBeEqualTo('2');
     }
 
-    function it_should_return_the_correct_ldap_bitwise_and_filter()
+    public function it_should_return_the_correct_ldap_bitwise_and_filter()
     {
         $this->toLdapFilter()->shouldBeEqualTo('(foo:1.2.840.113556.1.4.803:=2)');
     }
 
-    function it_should_return_the_correct_ldap_bitwise_or_filter()
+    public function it_should_return_the_correct_ldap_bitwise_or_filter()
     {
         $this->beConstructedWith('foo', MatchingRuleOid::BitOr, 2);
         $this->toLdapFilter()->shouldBeEqualTo('(foo:1.2.840.113556.1.4.804:=2)');
     }
 
-    function it_should_throw_LdapQueryException_when_trying_to_set_the_operator_to_an_invalid_type()
+    public function it_should_throw_LdapQueryException_when_trying_to_set_the_operator_to_an_invalid_type()
     {
         $ex = new LdapQueryException('Invalid operator symbol ">=". Valid operator symbols are: :=');
         $this->shouldThrow($ex)->duringSetOperatorSymbol('>=');
     }
 
-    function it_should_throw_a_LdapQueryException_on_an_invalid_oid()
+    public function it_should_throw_a_LdapQueryException_on_an_invalid_oid()
     {
         $this->beConstructedWith('foo', 'foo=bar)(', 2);
         $this->shouldThrow('\LdapTools\Exception\LdapQueryException')->duringToLdapFilter();
     }
 
-    function it_should_accept_text_as_an_oid()
+    public function it_should_accept_text_as_an_oid()
     {
         $this->beConstructedWith('foo', 'FooBarMatch', 2);
         $this->shouldNotThrow('\LdapTools\Exception\LdapQueryException')->duringToLdapFilter();
     }
 
-    function it_should_escape_special_characters_when_going_to_ldap()
+    public function it_should_escape_special_characters_when_going_to_ldap()
     {
         $this->beConstructedWith('foo', MatchingRuleOid::BitOr, '\*)3');
         $this->toLdapFilter()->shouldBeEqualTo('(foo:1.2.840.113556.1.4.804:=\5c\2a\293)');
     }
 
-    function it_should_set_the_alias_based_off_the_attribute()
+    public function it_should_set_the_alias_based_off_the_attribute()
     {
         $this->beConstructedWith('foo.bar', '=', 'foo');
 
@@ -89,7 +89,7 @@ class MatchingRuleSpec extends ObjectBehavior
         $this->getAttribute()->shouldBeEqualTo('foo');
     }
 
-    function it_should_set_the_converted_value_for_a_specific_alias()
+    public function it_should_set_the_converted_value_for_a_specific_alias()
     {
         $this->setValue('foo');
         $this->setConvertedValue('bar', 'foo');
@@ -100,7 +100,7 @@ class MatchingRuleSpec extends ObjectBehavior
         $this->getConvertedValue()->shouldBeEqualTo(null);
     }
 
-    function it_should_set_the_translated_attribute_name_for_a_specific_alias()
+    public function it_should_set_the_translated_attribute_name_for_a_specific_alias()
     {
         $this->setAttribute('name');
         $this->setTranslatedAttribute('ou', 'ou');
@@ -113,7 +113,7 @@ class MatchingRuleSpec extends ObjectBehavior
         $this->getTranslatedAttribute()->shouldBeEqualTo('');
     }
 
-    function it_should_set_if_a_converter_was_used_for_a_specific_alias()
+    public function it_should_set_if_a_converter_was_used_for_a_specific_alias()
     {
         $this->setAttribute('foo');
         $this->getWasConverterUsed()->shouldBeEqualTo(false);
@@ -129,7 +129,7 @@ class MatchingRuleSpec extends ObjectBehavior
         $this->getWasConverterUsed()->shouldBeEqualTo(false);
     }
 
-    function it_should_return_the_LDAP_filter_correctly_based_on_the_alias_in_use()
+    public function it_should_return_the_LDAP_filter_correctly_based_on_the_alias_in_use()
     {
         $this->setAttribute('bar.foo');
 
@@ -147,7 +147,7 @@ class MatchingRuleSpec extends ObjectBehavior
         $this->toLdapFilter('foo')->shouldBeEqualTo('(foo:1.2.840.113556.1.4.803:=2)');
     }
 
-    function it_should_get_the_LDAP_filter_with_any_converted_values_or_translated_attributes_for_an_alias()
+    public function it_should_get_the_LDAP_filter_with_any_converted_values_or_translated_attributes_for_an_alias()
     {
         $this->setAttribute('u.foo');
         $this->toLdapFilter('u')->shouldBeEqualTo('(foo:1.2.840.113556.1.4.803:=2)');
@@ -157,61 +157,61 @@ class MatchingRuleSpec extends ObjectBehavior
         $this->toLdapFilter('u')->shouldBeEqualTo('(foobar:1.2.840.113556.1.4.803:=foo)');
     }
     
-    function it_should_return_the_filter_for_the_value_if_the_value_is_a_BaseOperator_instance()
+    public function it_should_return_the_filter_for_the_value_if_the_value_is_a_BaseOperator_instance()
     {
         $this->setAttribute('foo');
         $this->setValue(new Comparison('foobar', '=', 'stuff'));
         $this->toLdapFilter()->shouldEqual('(foobar=stuff)');
     }
 
-    function it_should_set_the_matching_rule()
+    public function it_should_set_the_matching_rule()
     {
         $this->setRule('caseExactMatch')->getRule()->shouldBeEqualTo('caseExactMatch');
     }
 
-    function it_should_set_the_dn_flag_when_specified()
+    public function it_should_set_the_dn_flag_when_specified()
     {
         $this->getUseDnFlag()->shouldBeEqualTo(false);
         $this->setUseDnFlag(true)->getUseDnFlag()->shouldBeEqualTo(true);
     }
 
-    function it_should_allow_for_only_a_rule_with_no_explicit_attribute()
+    public function it_should_allow_for_only_a_rule_with_no_explicit_attribute()
     {
         $this->beConstructedWith(null, 'caseExactMatch', 'foo');
         $this->toLdapFilter()->shouldBeEqualTo('(:caseExactMatch:=foo)');
     }
 
-    function it_should_allow_for_only_an_attribute_and_value_specified()
+    public function it_should_allow_for_only_an_attribute_and_value_specified()
     {
         $this->beConstructedWith('foo', null, 'bar');
         $this->toLdapFilter()->shouldBeEqualTo('(foo:=bar)');
     }
 
-    function it_should_throw_an_exception_if_neither_an_attribute_or_rule_was_specified()
+    public function it_should_throw_an_exception_if_neither_an_attribute_or_rule_was_specified()
     {
         $this->beConstructedWith(null, null, 'foo');
 
         $this->shouldThrow('LdapTools\Exception\LdapQueryException')->duringToLdapFilter();
     }
 
-    function it_should_allow_for_a_dn_flag_attribute_and_value()
+    public function it_should_allow_for_a_dn_flag_attribute_and_value()
     {
         $this->beConstructedWith('ou', null, 'Sales', true);
 
         $this->toLdapFilter()->shouldBeEqualTo('(ou:dn:=Sales)');
     }
 
-    function it_should_allow_for_a_dn_flag_matching_rule_and_value()
+    public function it_should_allow_for_a_dn_flag_matching_rule_and_value()
     {
         $this->beConstructedWith(null, '2.4.8.10', 'America', true);
 
         $this->toLdapFilter()->shouldBeEqualTo('(:dn:2.4.8.10:=America)');
     }
 
-    public function getMatchers()
+    public function getMatchers(): array
     {
         return [
-            'haveConstant' => function($subject, $constant) {
+            'haveConstant' => function ($subject, $constant) {
                 return defined('\LdapTools\Query\Operator\MatchingRule::'.$constant);
             }
         ];

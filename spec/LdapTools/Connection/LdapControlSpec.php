@@ -16,22 +16,22 @@ use PhpSpec\ObjectBehavior;
 
 class LdapControlSpec extends ObjectBehavior
 {
-    function let()
+    public function let()
     {
         $this->beConstructedWith(LdapControlOid::SubTreeDelete);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Connection\LdapControl');
     }
 
-    function it_should_set_the_oid_in_the_constructor()
+    public function it_should_set_the_oid_in_the_constructor()
     {
         $this->getOid()->shouldBeEqualTo(LdapControlOid::SubTreeDelete);
     }
 
-    function it_should_be_able_to_set_the_criticality_and_value_in_the_constructor()
+    public function it_should_be_able_to_set_the_criticality_and_value_in_the_constructor()
     {
         $this->beConstructedWith(LdapControlOid::SubTreeDelete, true, 'foo');
         $this->getOid()->shouldBeEqualTo(LdapControlOid::SubTreeDelete);
@@ -39,42 +39,42 @@ class LdapControlSpec extends ObjectBehavior
         $this->getValue()->shouldBeEqualTo('foo');
     }
 
-    function it_should_have_a_default_criticality_of_false()
+    public function it_should_have_a_default_criticality_of_false()
     {
         $this->getCriticality()->shouldBeEqualTo(false);
     }
 
-    function it_should_have_a_default_value_of_null()
+    public function it_should_have_a_default_value_of_null()
     {
         $this->getValue()->shouldBeNull();
     }
 
-    function it_should_set_the_oid()
+    public function it_should_set_the_oid()
     {
         $this->setOid(LdapControlOid::ShowDeleted)->getOid()->shouldBeEqualTo(LdapControlOid::ShowDeleted);
     }
 
-    function it_should_set_the_criticality()
+    public function it_should_set_the_criticality()
     {
         $this->setCriticality(true)->getCriticality()->shouldBeEqualTo(true);
     }
 
-    function it_should_set_the_value()
+    public function it_should_set_the_value()
     {
         $this->setValue(false)->getValue()->shouldBeEqualTo(false);
     }
 
-    function it_should_allow_setting_a_reset_value()
+    public function it_should_allow_setting_a_reset_value()
     {
         $this->setResetValue(0)->getResetValue()->shouldBeEqualTo(0);
     }
 
-    function it_should_have_a_default_reset_vaulue_of_bool_false()
+    public function it_should_have_a_default_reset_vaulue_of_bool_false()
     {
         $this->getResetValue()->shouldBeEqualTo(false);
     }
 
-    function it_should_get_the_array_structure_of_the_control()
+    public function it_should_get_the_array_structure_of_the_control()
     {
         $this->toArray()->shouldBeEqualTo([
            'oid' => LdapControlOid::SubTreeDelete,
@@ -91,12 +91,12 @@ class LdapControlSpec extends ObjectBehavior
         ]);
     }
 
-    function it_should_encode_a_simple_int_control_value_with_the_helper_berEncodeInt()
+    public function it_should_encode_a_simple_int_control_value_with_the_helper_berEncodeInt()
     {
         $this::berEncodeInt(7)->shouldBeEqualTo(hex2bin('3003020107'));
     }
 
-    function it_should_accept_an_ldap_control_oid_enum_as_an_oid_value()
+    public function it_should_accept_an_ldap_control_oid_enum_as_an_oid_value()
     {
         $oid = new LdapControlOid('ShowDeleted');
         $this->beConstructedWith($oid);
@@ -107,7 +107,7 @@ class LdapControlSpec extends ObjectBehavior
         ]);
     }
 
-    function it_should_accept_an_ldap_control_oid_enum_name_as_an_oid_value()
+    public function it_should_accept_an_ldap_control_oid_enum_name_as_an_oid_value()
     {
         $this->beConstructedWith('ShowDeleted');
 
@@ -117,7 +117,7 @@ class LdapControlSpec extends ObjectBehavior
         ]);
     }
 
-    function it_should_throw_an_error_when_an_invalid_oid_or_enum_name_is_used_on_toArray()
+    public function it_should_throw_an_error_when_an_invalid_oid_or_enum_name_is_used_on_toArray()
     {
         $this->beConstructedWith('Foo');
 

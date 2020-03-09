@@ -136,7 +136,8 @@ class QueryOperation implements LdapOperationInterface, CacheableOperationInterf
     {
         if (!in_array($scope, self::SCOPE)) {
             throw new LdapQueryException(sprintf(
-                'Scope type "%s" is invalid. See the QueryOperation::SCOPE[] constant for valid types.', $scope
+                'Scope type "%s" is invalid. See the QueryOperation::SCOPE[] constant for valid types.',
+                $scope
             ));
         }
         $this->properties['scope'] = $scope;

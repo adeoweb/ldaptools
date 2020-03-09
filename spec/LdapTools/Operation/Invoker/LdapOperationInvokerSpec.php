@@ -32,7 +32,7 @@ use Prophecy\Argument;
 
 class LdapOperationInvokerSpec extends ObjectBehavior
 {
-    function let(LdapConnectionInterface $connection, EventDispatcherInterface $dispatcher, LdapLoggerInterface $logger)
+    public function let(LdapConnectionInterface $connection, EventDispatcherInterface $dispatcher, LdapLoggerInterface $logger)
     {
         $connection->getConfig()->willReturn(new DomainConfiguration('example.local'));
         $connection->getResource()->willReturn(null);
@@ -45,22 +45,22 @@ class LdapOperationInvokerSpec extends ObjectBehavior
         $this->setLogger($logger);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Operation\Invoker\LdapOperationInvoker');
     }
 
-    function it_should_implement_the_operation_invoker_interface()
+    public function it_should_implement_the_operation_invoker_interface()
     {
         $this->shouldImplement('\LdapTools\Operation\Invoker\LdapOperationInvokerInterface');
     }
 
-    function it_should_add_a_handler()
+    public function it_should_add_a_handler()
     {
         $this->addHandler(new QueryOperationHandler());
     }
 
-    function it_should_execute_an_operation_with_the_correct_handler($dispatcher, $connection, OperationHandler $handler, QueryOperationHandler $queryHandler, DeleteOperation $operation)
+    public function it_should_execute_an_operation_with_the_correct_handler($dispatcher, $connection, OperationHandler $handler, QueryOperationHandler $queryHandler, DeleteOperation $operation)
     {
         $queryHandler->supports($operation)->willReturn(false);
         $queryHandler->execute($operation)->shouldNotBeCalled();
@@ -83,7 +83,7 @@ class LdapOperationInvokerSpec extends ObjectBehavior
         $this->execute($operation);
     }
 
-    function it_should_switch_the_server_if_the_operation_requested_it(OperationHandler $handler, $connection, $dispatcher)
+    public function it_should_switch_the_server_if_the_operation_requested_it(OperationHandler $handler, $connection, $dispatcher)
     {
         $operation = (new DeleteOperation('foo'))->setServer('bar');
         $handler->supports($operation)->willReturn(true);
@@ -97,19 +97,19 @@ class LdapOperationInvokerSpec extends ObjectBehavior
 
         // Apparently this is the magic/undocumented way to say that calling this function will return X value on
         // the Nth attempt, where Nth is the argument number passed to willReturn(). *sigh* ... ridiculousness.
-        $connection->getServer()->willReturn('foo','foo', 'foo', 'bar');
+        $connection->getServer()->willReturn('foo', 'foo', 'foo', 'bar');
 
         $this->addHandler($handler);
         $this->execute($operation);
     }
 
-    function it_should_NOT_switch_the_server_if_the_operation_doesnt_request_it(OperationHandler $handler, $connection, $dispatcher)
+    public function it_should_NOT_switch_the_server_if_the_operation_doesnt_request_it(OperationHandler $handler, $connection, $dispatcher)
     {
         $operation = new DeleteOperation('foo');
         $handler->supports($operation)->willReturn(true);
         $handler->setConnection($connection)->shouldBeCalled();
         $handler->setEventDispatcher($dispatcher)->shouldBeCalled();
-        $handler->setOperationDefaults($operation)->will(function() use ($operation) {
+        $handler->setOperationDefaults($operation)->will(function () use ($operation) {
             $operation->setServer('foo');
         });
         $handler->setOperationDefaults($operation)->shouldBeCalled();
@@ -119,13 +119,13 @@ class LdapOperationInvokerSpec extends ObjectBehavior
         $connection->connect(null, null, false, 'foo')->shouldNotBeCalled();
         $connection->connect(null, null, false, 'bar')->shouldNotBeCalled();
 
-        $connection->getServer()->willReturn('foo','foo');
+        $connection->getServer()->willReturn('foo', 'foo');
 
         $this->addHandler($handler);
         $this->execute($operation);
     }
 
-    function it_should_NOT_switch_the_server_if_the_server_is_already_active(OperationHandler $handler, $connection, $dispatcher)
+    public function it_should_NOT_switch_the_server_if_the_server_is_already_active(OperationHandler $handler, $connection, $dispatcher)
     {
         $operation = (new DeleteOperation('foo'))->setServer('foo');
         $handler->supports($operation)->willReturn(true);
@@ -142,14 +142,14 @@ class LdapOperationInvokerSpec extends ObjectBehavior
         $this->execute($operation);
     }
 
-    function it_should_not_connect_before_or_after_an_authentication_operation_with_a_specific_server_set($connection)
+    public function it_should_not_connect_before_or_after_an_authentication_operation_with_a_specific_server_set($connection)
     {
         $operation = (new AuthenticationOperation())->setUsername('foo')->setPassword('foo')->setServer('foo');
 
         $connection->close()->willReturn($connection);
         // One to close the original connection. Another to close the temp auth connection.
         $connection->close()->shouldBeCalledTimes(2);
-        $connection->connect('foo','foo', false, 'foo')->shouldBeCalledTimes(1);
+        $connection->connect('foo', 'foo', false, 'foo')->shouldBeCalledTimes(1);
         $connection->connect()->shouldBeCalledTimes(1);
         // This would be called in switch server, which should not be called...
         $connection->connect(null, null, false, Argument::any())->shouldNotBeCalled();
@@ -159,7 +159,7 @@ class LdapOperationInvokerSpec extends ObjectBehavior
         $this->execute($operation);
     }
 
-    function it_should_set_controls_specified_by_the_operation(OperationHandler $handler, $connection, $dispatcher)
+    public function it_should_set_controls_specified_by_the_operation(OperationHandler $handler, $connection, $dispatcher)
     {
         $control = new LdapControl(LdapControlOid::SubTreeDelete);
         $control2 = (new LdapControl(LdapControlOid::SDFlagsControl, false, LdapControl::berEncodeInt(7)))->setResetValue(LdapControl::berEncodeInt(0));
@@ -180,7 +180,7 @@ class LdapOperationInvokerSpec extends ObjectBehavior
         $this->execute($operation);
     }
 
-    function it_should_trigger_an_event_before_and_after_operation_execution($dispatcher)
+    public function it_should_trigger_an_event_before_and_after_operation_execution($dispatcher)
     {
         $operation = new DeleteOperation('dc=foo,dc=bar');
 
@@ -190,7 +190,7 @@ class LdapOperationInvokerSpec extends ObjectBehavior
         $this->execute($operation);
     }
 
-    function it_should_execute_all_child_operations($connection, $dispatcher, OperationHandler $handler, DeleteOperation $operation, AddOperation $preOperation, AddOperation $postOperation)
+    public function it_should_execute_all_child_operations($connection, $dispatcher, OperationHandler $handler, DeleteOperation $operation, AddOperation $preOperation, AddOperation $postOperation)
     {
         $handler->supports($operation)->willReturn(true);
         $handler->supports($preOperation)->willReturn(true);
@@ -223,7 +223,7 @@ class LdapOperationInvokerSpec extends ObjectBehavior
         $this->execute($operation);
     }
 
-    function it_should_skip_batch_operations_that_are_empty(OperationHandler $handler)
+    public function it_should_skip_batch_operations_that_are_empty(OperationHandler $handler)
     {
         $operation = new BatchModifyOperation('dc=foo,dc=bar', new BatchCollection());
         $handler->execute($operation)->shouldNotBeCalled(true);
@@ -232,7 +232,7 @@ class LdapOperationInvokerSpec extends ObjectBehavior
         $this->execute($operation);
     }
 
-    function it_should_reconnect_a_connection_that_has_been_idle_too_long(OperationHandler $handler, $connection, $dispatcher)
+    public function it_should_reconnect_a_connection_that_has_been_idle_too_long(OperationHandler $handler, $connection, $dispatcher)
     {
         $operation = (new DeleteOperation('foo'))->setServer('foo');
         $handler->supports($operation)->willReturn(true);
@@ -248,7 +248,7 @@ class LdapOperationInvokerSpec extends ObjectBehavior
         $this->execute($operation);
     }
 
-    function it_should_not_reconnect_a_connection_that_hasnt_been_idle_too_long(OperationHandler $handler, $connection, $dispatcher)
+    public function it_should_not_reconnect_a_connection_that_hasnt_been_idle_too_long(OperationHandler $handler, $connection, $dispatcher)
     {
         $operation = (new DeleteOperation('foo'))->setServer('foo');
         $handler->supports($operation)->willReturn(true);
@@ -264,7 +264,7 @@ class LdapOperationInvokerSpec extends ObjectBehavior
         $this->execute($operation);
     }
 
-    function it_should_not_idle_reconnect_on_an_authentication_operation(OperationHandler $handler, $connection, $dispatcher)
+    public function it_should_not_idle_reconnect_on_an_authentication_operation(OperationHandler $handler, $connection, $dispatcher)
     {
         $operation = (new AuthenticationOperation('foo', 'bar'))->setServer('foo');
         $handler->supports($operation)->willReturn(true);
@@ -280,7 +280,7 @@ class LdapOperationInvokerSpec extends ObjectBehavior
         $this->execute($operation);
     }
 
-    function it_should_connect_if_not_yet_bound_on_execution(OperationHandler $handler, $dispatcher, $connection)
+    public function it_should_connect_if_not_yet_bound_on_execution(OperationHandler $handler, $dispatcher, $connection)
     {
         $operation = new DeleteOperation('foo');
         $handler->supports($operation)->willReturn(true);
@@ -299,7 +299,7 @@ class LdapOperationInvokerSpec extends ObjectBehavior
         $this->execute($operation);
     }
 
-    function it_should_not_connect_if_not_yet_bound_on_an_AuthenticationOperation(OperationHandler $handler, $connection, $dispatcher)
+    public function it_should_not_connect_if_not_yet_bound_on_an_AuthenticationOperation(OperationHandler $handler, $connection, $dispatcher)
     {
         $operation = new AuthenticationOperation('foo', 'bar');
         $handler->supports($operation)->willReturn(true);
@@ -318,7 +318,7 @@ class LdapOperationInvokerSpec extends ObjectBehavior
         $this->execute($operation);
     }
 
-    function it_should_use_the_cache_if_specified_and_the_item_is_in_the_cache(CacheInterface $cache, OperationHandler $handler, $connection, $dispatcher, $logger)
+    public function it_should_use_the_cache_if_specified_and_the_item_is_in_the_cache(CacheInterface $cache, OperationHandler $handler, $connection, $dispatcher, $logger)
     {
         $query = (new QueryOperation('(foo=bar)', ['cn']))->setServer('foo')->setUseCache(true);
         $handler->supports($query)->willReturn(true);
@@ -336,7 +336,7 @@ class LdapOperationInvokerSpec extends ObjectBehavior
         $this->execute($query);
     }
 
-    function it_should_set_the_cache_if_specified_when_the_item_is_not_in_the_cache(CacheInterface $cache, OperationHandler $handler, $connection, $dispatcher)
+    public function it_should_set_the_cache_if_specified_when_the_item_is_not_in_the_cache(CacheInterface $cache, OperationHandler $handler, $connection, $dispatcher)
     {
         $expire = new \DateTime();
         $query = (new QueryOperation('(foo=bar)', ['cn']))->setServer('foo')->setUseCache(true)->setExpireCacheAt($expire);
@@ -357,7 +357,7 @@ class LdapOperationInvokerSpec extends ObjectBehavior
         $this->execute($query);
     }
 
-    function it_should_invalidate_an_existing_cache_result_if_specified(CacheInterface $cache, OperationHandler $handler, $connection, $dispatcher)
+    public function it_should_invalidate_an_existing_cache_result_if_specified(CacheInterface $cache, OperationHandler $handler, $connection, $dispatcher)
     {
         $query = (new QueryOperation('(foo=bar)', ['cn']))->setServer('foo')->setInvalidateCache(true)->setUseCache(true);
 
@@ -379,7 +379,7 @@ class LdapOperationInvokerSpec extends ObjectBehavior
         $this->execute($query);
     }
 
-    function it_should_invalidate_an_existing_cache_result_even_if_use_cache_is_false(CacheInterface $cache, OperationHandler $handler, $connection, $dispatcher)
+    public function it_should_invalidate_an_existing_cache_result_even_if_use_cache_is_false(CacheInterface $cache, OperationHandler $handler, $connection, $dispatcher)
     {
         $query = (new QueryOperation('(foo=bar)', ['cn']))->setServer('foo')->setInvalidateCache(true)->setUseCache(false);
 
@@ -400,7 +400,7 @@ class LdapOperationInvokerSpec extends ObjectBehavior
         $this->execute($query);
     }
 
-    function it_should_throw_a_CacheMissException_if_using_cache_and_the_operation_should_not_execute_if_not_in_the_cache(CacheInterface $cache, OperationHandler $handler, $connection, $dispatcher)
+    public function it_should_throw_a_CacheMissException_if_using_cache_and_the_operation_should_not_execute_if_not_in_the_cache(CacheInterface $cache, OperationHandler $handler, $connection, $dispatcher)
     {
         $query = (new QueryOperation('(foo=bar)', ['cn']))->setServer('foo')->setUseCache(true)->setExecuteOnCacheMiss(false);
         $handler->supports($query)->willReturn(true);

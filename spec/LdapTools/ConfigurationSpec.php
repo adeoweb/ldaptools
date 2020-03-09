@@ -19,39 +19,39 @@ use LdapTools\DomainConfiguration;
 
 class ConfigurationSpec extends ObjectBehavior
 {
-    function let()
+    public function let()
     {
         $this->beConstructedWith(new DomainConfiguration('foo.bar'), new DomainConfiguration('example.local'));
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Configuration');
     }
 
-    function it_is_initializable_with_no_domain_configurations()
+    public function it_is_initializable_with_no_domain_configurations()
     {
         $this->beConstructedWith();
         $this->shouldHaveType('LdapTools\Configuration');
     }
 
-    function it_should_return_self_when_adding_domain_configuration()
+    public function it_should_return_self_when_adding_domain_configuration()
     {
         $domain = new DomainConfiguration('example.com');
         $this->addDomain($domain)->shouldReturnAnInstanceOf('\LdapTools\Configuration');
     }
 
-    function it_should_load_configuration_files()
+    public function it_should_load_configuration_files()
     {
         $this->load(__DIR__.'/../../resources/config/example.yml')->shouldReturnAnInstanceOf('\LdapTools\Configuration');
     }
 
-    function it_should_error_when_the_configuration_file_is_not_found()
+    public function it_should_error_when_the_configuration_file_is_not_found()
     {
         $this->shouldthrow('\LdapTools\Exception\ConfigurationException')->duringLoad(__DIR__.'/thisisasuperlongfilenamethatshouldneverexist.yml');
     }
 
-    function it_should_load_from_an_array_of_config_values()
+    public function it_should_load_from_an_array_of_config_values()
     {
         $config = [
             'general' => [
@@ -71,7 +71,7 @@ class ConfigurationSpec extends ObjectBehavior
         $this->loadFromArray($config)->getDomainConfiguration('foo.bar')->shouldReturnAnInstanceOf('\LdapTools\DomainConfiguration');
     }
 
-    function it_should_allow_loading_from_an_array_with_no_domains_set()
+    public function it_should_allow_loading_from_an_array_with_no_domains_set()
     {
         $config = [
             'general' => [
@@ -83,90 +83,90 @@ class ConfigurationSpec extends ObjectBehavior
         $this->loadFromArray($config)->getDomainConfiguration()->shouldBeEqualTo([]);
     }
 
-    function it_should_return_self_when_calling_setDefaultDomain()
+    public function it_should_return_self_when_calling_setDefaultDomain()
     {
         $this->setDefaultDomain('foo.bar')->shouldReturnAnInstanceOf('\LdapTools\Configuration');
     }
 
-    function it_should_return_correct_domain_when_calling_getDefaultDomain()
+    public function it_should_return_correct_domain_when_calling_getDefaultDomain()
     {
         $this->setDefaultDomain('foo.bar');
         $this->getDefaultDomain()->shouldBeEqualTo('foo.bar');
     }
 
-    function it_should_return_an_array_when_calling_getDomainConfiguration()
+    public function it_should_return_an_array_when_calling_getDomainConfiguration()
     {
         $this->getDomainConfiguration()->shouldBeArray();
     }
 
-    function it_should_return_a_DomainConfiguration_when_calling_getDomainConfiguration_with_a_domain_name()
+    public function it_should_return_a_DomainConfiguration_when_calling_getDomainConfiguration_with_a_domain_name()
     {
         $this->getDomainConfiguration('foo.bar')->shouldReturnAnInstanceOf('\LdapTools\DomainConfiguration');
     }
 
-    function it_should_throw_InvalidArgumentException_when_calling_getDomainConfiguration_with_an_invalid_name()
+    public function it_should_throw_InvalidArgumentException_when_calling_getDomainConfiguration_with_an_invalid_name()
     {
         $this->shouldThrow('\LdapTools\Exception\InvalidArgumentException')->duringGetDomainConfiguration('happyfuntime');
     }
 
-    function it_should_return_the_correct_number_of_domains_when_calling_getDomainConfiguration()
+    public function it_should_return_the_correct_number_of_domains_when_calling_getDomainConfiguration()
     {
         $this->getDomainConfiguration()->shouldHaveCount(2);
     }
 
-    function it_should_return_a_string_when_calling_getSchemaFolder()
+    public function it_should_return_a_string_when_calling_getSchemaFolder()
     {
         $this->getSchemaFolder()->shouldBeString();
     }
 
-    function it_should_return_the_correct_schema_folder_after_calling_setSchemaFolder()
+    public function it_should_return_the_correct_schema_folder_after_calling_setSchemaFolder()
     {
         $this->setSchemaFolder('/dev/null');
         $this->getSchemaFolder()->shouldBeEqualTo('/dev/null');
     }
 
-    function it_should_return_a_string_when_calling_getCacheType()
+    public function it_should_return_a_string_when_calling_getCacheType()
     {
         $this->getCacheType()->shouldBeString();
     }
 
-    function it_should_throw_ConfigurationException_when_loading_a_domain_config_with_an_unknown_option()
+    public function it_should_throw_ConfigurationException_when_loading_a_domain_config_with_an_unknown_option()
     {
         $e = new ConfigurationException('Error in domain config section: Option "user" not recognized.');
         $this->shouldThrow($e)->duringLoad(__DIR__.'/../resources/config/unknown_directive.yml');
     }
 
-    function it_should_have_an_array_as_the_attribute_converters()
+    public function it_should_have_an_array_as_the_attribute_converters()
     {
         $this->getAttributeConverters()->shouldBeArray();
     }
 
-    function it_should_be_able_to_properly_set_the_attribute_converters()
+    public function it_should_be_able_to_properly_set_the_attribute_converters()
     {
         $converters = ['foo' => '\Bar'];
         $this->setAttributeConverters($converters);
         $this->getAttributeConverters()->shouldBeEqualTo($converters);
     }
 
-    function it_should_return_self_after_calling_set_attribute_converters()
+    public function it_should_return_self_after_calling_set_attribute_converters()
     {
         $this->setAttributeConverters(['foo' => 'bar'])->shouldReturnAnInstanceOf('\LdapTools\Configuration');
     }
 
-    function it_should_set_an_event_dispatcher()
+    public function it_should_set_an_event_dispatcher()
     {
         $this->getEventDispatcher()->shouldReturnAnInstanceOf('\LdapTools\Event\SymfonyEventDispatcher');
         $this->setEventDispatcher(new SymfonyEventDispatcher())->shouldReturnAnInstanceOf('\LdapTools\Configuration');
     }
 
-    function it_should_set_a_logger()
+    public function it_should_set_a_logger()
     {
         $this->getLogger()->shouldBeEqualTo(null);
         $this->setLogger(new EchoLdapLogger())->shouldReturnAnInstanceOf('\LdapTools\Configuration');
         $this->getLogger()->shouldReturnAnInstanceOf('\LdapTools\Log\EchoLdapLogger');
     }
 
-    function it_should_set_and_get_the_cache(CacheInterface $cache)
+    public function it_should_set_and_get_the_cache(CacheInterface $cache)
     {
         $this->setCache($cache)->getCache()->shouldBeEqualTo($cache);
     }

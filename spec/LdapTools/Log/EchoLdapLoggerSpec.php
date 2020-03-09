@@ -14,12 +14,12 @@ use PhpSpec\ObjectBehavior;
 
 class EchoLdapLoggerSpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Log\EchoLdapLogger');
     }
 
-    function it_should_implement_LdapLoggerInterface()
+    public function it_should_implement_LdapLoggerInterface()
     {
         $this->shouldImplement('\LdapTools\Log\LdapLoggerInterface');
     }

@@ -18,17 +18,17 @@ use PhpSpec\ObjectBehavior;
 
 class LoggerChainSpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Log\LoggerChain');
     }
 
-    function it_should_add_a_logger()
+    public function it_should_add_a_logger()
     {
         $this->addLogger(new EchoLdapLogger());
     }
 
-    function it_should_call_the_loggers_on_start_and_end()
+    public function it_should_call_the_loggers_on_start_and_end()
     {
         $operation = new DeleteOperation('foo');
         $log = new LogOperation($operation);

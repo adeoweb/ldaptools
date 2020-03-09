@@ -49,7 +49,7 @@ class LdapObjectManagerSpec extends ObjectBehavior
 
     protected $dispatcherTest;
 
-    function let(LdapConnectionInterface $connection)
+    public function let(LdapConnectionInterface $connection)
     {
         $connection->getConfig()->willReturn(new DomainConfiguration('example.com'));
         $config = new Configuration();
@@ -61,12 +61,12 @@ class LdapObjectManagerSpec extends ObjectBehavior
         $this->beConstructedWith($connection, $this->objectSchemaFactory, $this->dispatcher);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Object\LdapObjectManager');
     }
 
-    function it_should_error_on_update_delete_move_or_restore_if_the_dn_is_not_set()
+    public function it_should_error_on_update_delete_move_or_restore_if_the_dn_is_not_set()
     {
         $ldapObject = new LdapObject(['foo' => 'bar'], 'user');
         $ldapObject->set('foo', 'foobar');
@@ -77,7 +77,7 @@ class LdapObjectManagerSpec extends ObjectBehavior
         $this->shouldThrow('\InvalidArgumentException')->duringMove($ldapObject, 'dc=foo,dc=bar');
     }
 
-    function it_should_delete_a_ldap_object_from_its_dn($connection)
+    public function it_should_delete_a_ldap_object_from_its_dn($connection)
     {
         $connection->execute(new DeleteOperation('cn=foo,dc=foo,dc=bar'))->willReturn(true);
 
@@ -85,7 +85,7 @@ class LdapObjectManagerSpec extends ObjectBehavior
         $this->delete($ldapObject);
     }
 
-    function it_should_delete_a_ldap_object_recursively_if_specified($connection)
+    public function it_should_delete_a_ldap_object_recursively_if_specified($connection)
     {
         $control = (new LdapControl(LdapControlOid::SubTreeDelete))->setCriticality(true);
         $connection->execute((new DeleteOperation('cn=foo,dc=foo,dc=bar'))->addControl($control))
@@ -96,7 +96,7 @@ class LdapObjectManagerSpec extends ObjectBehavior
         $this->delete($ldapObject, true);
     }
 
-    function it_should_update_a_ldap_object_using_batch_modify($connection)
+    public function it_should_update_a_ldap_object_using_batch_modify($connection)
     {
         $dn = 'cn=foo,dc=foo,dc=bar';
         $batch = new BatchCollection($dn);
@@ -115,7 +115,7 @@ class LdapObjectManagerSpec extends ObjectBehavior
         $this->persist($ldapObject);
     }
 
-    function it_should_move_a_ldap_object_using_move($connection)
+    public function it_should_move_a_ldap_object_using_move($connection)
     {
         $operation = new RenameOperation(
             'cn=foo,dc=foo,dc=bar',
@@ -128,7 +128,7 @@ class LdapObjectManagerSpec extends ObjectBehavior
         $this->move($ldapObject, 'ou=employees,dc=foo,dc=bar');
     }
 
-    function it_should_escape_the_RDN_when_moving_a_ldap_object($connection)
+    public function it_should_escape_the_RDN_when_moving_a_ldap_object($connection)
     {
         $operation = new RenameOperation(
             'cn=foo\, bar,dc=foo,dc=bar',
@@ -141,7 +141,7 @@ class LdapObjectManagerSpec extends ObjectBehavior
         $this->move($ldapObject, 'ou=employees,dc=foo,dc=bar');
     }
 
-    function it_should_move_an_object_without_a_schema_type($connection)
+    public function it_should_move_an_object_without_a_schema_type($connection)
     {
         $operation = new RenameOperation(
             'cn=foo,dc=foo,dc=bar',
@@ -154,14 +154,14 @@ class LdapObjectManagerSpec extends ObjectBehavior
         $this->move($ldapObject, 'ou=employees,dc=foo,dc=bar');
     }
 
-    function it_should_restore_a_ldap_object_using_restore($connection)
+    public function it_should_restore_a_ldap_object_using_restore($connection)
     {
         $dn = 'cn=foo\0ADEL:0101011,cn=Deleted Objects,dc=example,dc=local';
 
         $ldapObject1 = new LdapObject(['dn' => $dn, 'lastKnownLocation' => 'cn=Users,dc=example,dc=local'], 'deleted');
         $ldapObject2 = new LdapObject(['dn' => $dn, 'lastKnownLocation' => 'cn=Users,dc=example,dc=local'], 'deleted');
 
-        $connection->execute(Argument::that(function($operation) use ($dn) {
+        $connection->execute(Argument::that(function ($operation) use ($dn) {
             /** @var BatchModifyOperation $operation */
             $batches = $operation->getBatchCollection()->toArray();
 
@@ -172,7 +172,7 @@ class LdapObjectManagerSpec extends ObjectBehavior
         }))->shouldBeCalled();
         $this->restore($ldapObject1);
 
-        $connection->execute(Argument::that(function($operation) use ($dn) {
+        $connection->execute(Argument::that(function ($operation) use ($dn) {
             /** @var BatchModifyOperation $operation */
             $batches = $operation->getBatchCollection()->toArray();
 
@@ -184,7 +184,7 @@ class LdapObjectManagerSpec extends ObjectBehavior
         $this->restore($ldapObject2, 'ou=Employees,dc=example,dc=local');
     }
 
-    function it_should_error_on_restore_if_the_last_known_location_cannot_be_found_and_none_was_specified($connection)
+    public function it_should_error_on_restore_if_the_last_known_location_cannot_be_found_and_none_was_specified($connection)
     {
         $dn = 'cn=foo\0ADEL:0101011,cn=Deleted Objects,dc=example,dc=local';
         $ldapObject = new LdapObject(['dn' => $dn], 'deleted');
@@ -195,7 +195,7 @@ class LdapObjectManagerSpec extends ObjectBehavior
         $this->shouldThrow(new InvalidArgumentException('No restore location specified and cannot find the last known location for "'.$dn.'".'))->duringRestore($ldapObject);
     }
     
-    function it_should_not_query_ldap_for_the_RDN_when_moving_an_object_and_the_name_attribute_was_not_selected($connection)
+    public function it_should_not_query_ldap_for_the_RDN_when_moving_an_object_and_the_name_attribute_was_not_selected($connection)
     {
         $connection->execute(Argument::type('\LdapTools\Operation\QueryOperation'))->shouldNotBeCalled();
         $connection->execute(Argument::type('\LdapTools\Operation\RenameOperation'))->shouldBeCalled();
@@ -204,7 +204,7 @@ class LdapObjectManagerSpec extends ObjectBehavior
         $this->move($ldapObject, 'ou=employees,dc=foo,dc=bar');
     }
 
-    function it_should_call_the_event_dispatcher_delete_events_when_deleting_an_object(EventDispatcherInterface $dispatcher, $connection)
+    public function it_should_call_the_event_dispatcher_delete_events_when_deleting_an_object(EventDispatcherInterface $dispatcher, $connection)
     {
         $ldapObject = new LdapObject(['dn' => 'cn=foo,dc=foo,dc=bar'], 'user');
         $beforeEvent = new LdapObjectEvent(Event::LDAP_OBJECT_BEFORE_DELETE, $ldapObject);
@@ -218,7 +218,7 @@ class LdapObjectManagerSpec extends ObjectBehavior
         $this->delete($ldapObject);
     }
 
-    function it_should_call_the_event_dispatcher_move_events_when_moving_an_object(EventDispatcherInterface $dispatcher, $connection)
+    public function it_should_call_the_event_dispatcher_move_events_when_moving_an_object(EventDispatcherInterface $dispatcher, $connection)
     {
         $operation = new RenameOperation(
             'cn=foo,dc=foo,dc=bar',
@@ -238,7 +238,7 @@ class LdapObjectManagerSpec extends ObjectBehavior
         $this->move($ldapObject, 'ou=employees,dc=foo,dc=bar');
     }
 
-    function it_should_call_the_event_dispatcher_modify_events_when_persisting_an_object(EventDispatcherInterface $dispatcher, $connection)
+    public function it_should_call_the_event_dispatcher_modify_events_when_persisting_an_object(EventDispatcherInterface $dispatcher, $connection)
     {
         $dn = 'cn=foo,dc=foo,dc=bar';
         $batch = new BatchCollection($dn);
@@ -264,7 +264,7 @@ class LdapObjectManagerSpec extends ObjectBehavior
         $this->persist($ldapObject);
     }
 
-    function it_should_call_the_event_dispatcher_restore_events_when_restoring_an_object(EventDispatcherInterface $dispatcher, $connection)
+    public function it_should_call_the_event_dispatcher_restore_events_when_restoring_an_object(EventDispatcherInterface $dispatcher, $connection)
     {
         $dn = 'cn=foo\0ADEL:0101011,cn=Deleted Objects,dc=example,dc=local';
         $ldapObject = new LdapObject(['dn' => $dn, 'lastKnownLocation' => 'cn=Users,dc=example,dc=local'], 'deleted');
@@ -280,7 +280,7 @@ class LdapObjectManagerSpec extends ObjectBehavior
         $this->restore($ldapObject, 'ou=employees,dc=foo,dc=bar');
     }
 
-    function it_should_not_try_to_modify_an_ldap_object_that_has_not_changed($connection)
+    public function it_should_not_try_to_modify_an_ldap_object_that_has_not_changed($connection)
     {
         $ldapObject = new LdapObject(['dn' => 'cn=user,dc=foo,dc=bar'], 'user');
         $connection->execute(Argument::any())->shouldNotBeCalled();
@@ -288,7 +288,7 @@ class LdapObjectManagerSpec extends ObjectBehavior
         $this->persist($ldapObject);
     }
 
-    function it_should_not_call_the_event_dispatcher_modify_events_when_an_object_has_not_changed(EventDispatcherInterface $dispatcher, $connection)
+    public function it_should_not_call_the_event_dispatcher_modify_events_when_an_object_has_not_changed(EventDispatcherInterface $dispatcher, $connection)
     {
         $this->beConstructedWith($connection, $this->objectSchemaFactory, $dispatcher);
 
@@ -301,19 +301,19 @@ class LdapObjectManagerSpec extends ObjectBehavior
         $this->persist($ldapObject);
     }
 
-    function it_should_persist_an_ldap_object_that_has_no_schema_type($connection)
+    public function it_should_persist_an_ldap_object_that_has_no_schema_type($connection)
     {
         $dn = 'cn=user,dc=foo,dc=bar';
         $ldapObject = new LdapObject(['dn' => $dn]);
         $ldapObject->set('foo', 'bar');
         $batch = new BatchCollection($dn);
-        $batch->add(new Batch(Batch::TYPE['REPLACE'],'foo','bar'));
+        $batch->add(new Batch(Batch::TYPE['REPLACE'], 'foo', 'bar'));
 
         $connection->execute(new BatchModifyOperation($dn, $batch))->shouldBeCalled();
         $this->persist($ldapObject);
     }
 
-    function it_should_perform_rename_operations_when_an_RDN_change_is_persisted($connection)
+    public function it_should_perform_rename_operations_when_an_RDN_change_is_persisted($connection)
     {
         $dn = 'cn=user,dc=foo,dc=bar';
         $ldapObject = new LdapObject(['dn' => 'cn=user,dc=foo,dc=bar'], 'user');
@@ -327,7 +327,7 @@ class LdapObjectManagerSpec extends ObjectBehavior
         $this->persist($ldapObject);
     }
 
-    function it_should_allow_using_a_ldap_object_for_the_move_location($connection)
+    public function it_should_allow_using_a_ldap_object_for_the_move_location($connection)
     {
         $location = new LdapObject(['dn' => 'ou=employees,dc=foo,dc=bar']);
         $operation = new RenameOperation(
@@ -341,13 +341,13 @@ class LdapObjectManagerSpec extends ObjectBehavior
         $this->move($ldapObject, $location);
     }
 
-    function it_should_allow_using_a_ldap_object_for_the_restore_location($connection)
+    public function it_should_allow_using_a_ldap_object_for_the_restore_location($connection)
     {
         $dn = 'cn=foo\0ADEL:0101011,cn=Deleted Objects,dc=example,dc=local';
         $ldapObject = new LdapObject(['dn' => $dn, 'lastKnownLocation' => 'cn=Users,dc=example,dc=local'], 'deleted');
         $location = new LdapObject(['dn' => 'ou=Employees,dc=example,dc=local']);
 
-        $connection->execute(Argument::that(function($operation) use ($dn) {
+        $connection->execute(Argument::that(function ($operation) use ($dn) {
             /** @var BatchModifyOperation $operation */
             $batches = $operation->getBatchCollection()->toArray();
 

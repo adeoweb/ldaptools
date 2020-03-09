@@ -14,12 +14,12 @@ use PhpSpec\ObjectBehavior;
 
 class DnsSpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Utilities\Dns');
     }
 
-    function it_should_get_a_dns_record()
+    public function it_should_get_a_dns_record()
     {
         $this->getRecord('127.0.0.1')->shouldBeArray();
     }

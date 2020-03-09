@@ -20,68 +20,68 @@ class DoctrineCacheSpec extends ObjectBehavior
 {
     protected $testCacheDir = '/ldaptoolstesting';
 
-    function let()
+    public function let()
     {
         $this->testCacheDir = sys_get_temp_dir().'/ldaptoolstesting';
     }
 
-    function letGo()
+    public function letGo()
     {
         $this->deleteAll();
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Cache\DoctrineCache');
     }
 
-    function it_should_implement_the_CacheInterface()
+    public function it_should_implement_the_CacheInterface()
     {
         $this->shouldImplement('\LdapTools\Cache\CacheInterface');
     }
 
-    function it_should_support_setting_the_cache_prefix()
+    public function it_should_support_setting_the_cache_prefix()
     {
         $this->setCachePrefix('/foo');
         $this->getCachePrefix()->shouldBeEqualTo('/foo');
     }
 
-    function it_should_have_the_system_temp_dir_with_a_ldaptools_subfolder_as_the_default_cache_location()
+    public function it_should_have_the_system_temp_dir_with_a_ldaptools_subfolder_as_the_default_cache_location()
     {
         $this->getCacheFolder()->shouldBeEqualTo(sys_get_temp_dir().'/ldaptools');
     }
 
-    function it_should_support_setting_the_cache_folder()
+    public function it_should_support_setting_the_cache_folder()
     {
         $this->setCacheFolder('/tmp/foo/bar');
         $this->getCacheFolder()->shouldBeEqualTo('/tmp/foo/bar');
     }
 
-    function it_should_return_a_default_cache_prefix_of_ldaptools_when_calling_getCachePrefix()
+    public function it_should_return_a_default_cache_prefix_of_ldaptools_when_calling_getCachePrefix()
     {
         $this->getCachePrefix()->shouldBeEqualTo('/ldaptools');
     }
 
-    function it_should_recognize_the_cache_prefix_option()
+    public function it_should_recognize_the_cache_prefix_option()
     {
         $this->setOptions(['cache_prefix' => '/foo']);
         $this->getCachePrefix()->shouldBeEqualTo('/foo');
     }
 
-    function it_should_recognize_the_cache_folder_option()
+    public function it_should_recognize_the_cache_folder_option()
     {
         $this->setOptions(['cache_folder' => '/tmp/foo/bar']);
         $this->getCacheFolder()->shouldBeEqualTo('/tmp/foo/bar');
     }
 
-    function it_should_return_null_on_an_item_not_in_the_cache_when_calling_get()
+    public function it_should_return_null_on_an_item_not_in_the_cache_when_calling_get()
     {
         $item = new CacheItem(CacheItem::TYPE['SCHEMA_OBJECT'].'.foo.bar', new LdapObjectSchema('foo', 'bar'));
         $this->setCacheFolder($this->testCacheDir);
         $this->get($item->getKey())->shouldBeEqualTo(null);
     }
 
-    function it_should_cache_an_item_when_calling_set()
+    public function it_should_cache_an_item_when_calling_set()
     {
         $this->setCacheFolder($this->testCacheDir);
         $item = new CacheItem(CacheItem::TYPE['SCHEMA_OBJECT'].'.foo.bar', new LdapObjectSchema('foo', 'bar'));
@@ -93,12 +93,12 @@ class DoctrineCacheSpec extends ObjectBehavior
     /**
      *  Expected to be false as it is not supported with the Doctrine Cache methods.
      */
-    function it_should_return_a_false_when_calling_getCacheCreationTime()
+    public function it_should_return_a_false_when_calling_getCacheCreationTime()
     {
         $this->getCacheCreationTime('foo.bar')->shouldBeEqualTo(false);
     }
 
-    function it_should_return_true_when_calling_contains_and_the_item_is_in_the_cache()
+    public function it_should_return_true_when_calling_contains_and_the_item_is_in_the_cache()
     {
         $this->setCacheFolder($this->testCacheDir);
         $item = new CacheItem(CacheItem::TYPE['SCHEMA_OBJECT'].'.foo.bar', new LdapObjectSchema('foo', 'bar'));
@@ -107,14 +107,14 @@ class DoctrineCacheSpec extends ObjectBehavior
         $this->deleteAll();
     }
 
-    function it_should_return_false_when_calling_contains_and_the_item_is_not_in_the_cache()
+    public function it_should_return_false_when_calling_contains_and_the_item_is_not_in_the_cache()
     {
         $this->setCacheFolder($this->testCacheDir);
         $this->contains('foo.bar')->shouldBeEqualTo(false);
         $this->deleteAll();
     }
 
-    function it_should_delete_an_item_from_the_cache()
+    public function it_should_delete_an_item_from_the_cache()
     {
         $this->setCacheFolder($this->testCacheDir);
         $item = new CacheItem(CacheItem::TYPE['SCHEMA_OBJECT'].'.foo.bar', new LdapObjectSchema('foo', 'bar'));
@@ -124,7 +124,7 @@ class DoctrineCacheSpec extends ObjectBehavior
         $this->contains($item->getKey())->shouldBeEqualTo(false);
     }
 
-    function it_should_delete_all_items_in_the_cache()
+    public function it_should_delete_all_items_in_the_cache()
     {
         $this->setCacheFolder($this->testCacheDir);
         $itemOne = new CacheItem(CacheItem::TYPE['SCHEMA_OBJECT'].'.foo.bar', new LdapObjectSchema('foo', 'bar'));
@@ -138,7 +138,7 @@ class DoctrineCacheSpec extends ObjectBehavior
         $this->contains($itemTwo->getKey())->shouldBeEqualTo(false);
     }
 
-    function it_should_be_case_insensitive_when_looking_up_an_item_in_the_cache()
+    public function it_should_be_case_insensitive_when_looking_up_an_item_in_the_cache()
     {
         $this->setCacheFolder($this->testCacheDir);
         $item = new CacheItem(CacheItem::TYPE['SCHEMA_OBJECT'].'.foo.bar', new LdapObjectSchema('foo', 'bar'));
@@ -148,7 +148,7 @@ class DoctrineCacheSpec extends ObjectBehavior
         $this->deleteAll();
     }
 
-    function it_should_set_a_ttl_for_the_cache_item_when_specified(FilesystemCache $cache)
+    public function it_should_set_a_ttl_for_the_cache_item_when_specified(FilesystemCache $cache)
     {
         $this->beConstructedWith($cache);
 

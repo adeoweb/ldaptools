@@ -98,7 +98,7 @@ class OperatorValueResolver extends BaseValueResolver
     /**
      * {@inheritdoc}
      */
-    protected function iterateAggregates(array $toAggregate, $values,  $converterName)
+    protected function iterateAggregates(array $toAggregate, $values, $converterName)
     {
     }
 }

@@ -19,28 +19,28 @@ class ConvertWindowsGuidSpec extends ObjectBehavior
 
     protected $guidHex = '\d0\b4\0d\27\9d\24\a7\46\9c\c5\eb\69\5d\9a\f9\ac';
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\AttributeConverter\ConvertWindowsGuid');
     }
 
-    function it_should_implement_AttributeConverterInterface()
+    public function it_should_implement_AttributeConverterInterface()
     {
         $this->shouldImplement('\LdapTools\AttributeConverter\AttributeConverterInterface');
     }
 
-    function it_should_return_a_searchable_hex_guid_when_calling_toLdap_on_a_search()
+    public function it_should_return_a_searchable_hex_guid_when_calling_toLdap_on_a_search()
     {
         $this->setOperationType(AttributeConverterInterface::TYPE_SEARCH_TO);
         $this->toLdap($this->guidString)->shouldBeEqualTo($this->guidHex);
     }
 
-    function it_should_return_a_string_guid_from_binary_when_calling_fromLdap()
+    public function it_should_return_a_string_guid_from_binary_when_calling_fromLdap()
     {
         $this->fromLdap(pack('H*', str_replace('\\', '', $this->guidHex)))->shouldBeEqualTo($this->guidString);
     }
 
-    function it_should_return_binary_data_when_calling_toLdap_on_create_or_modify()
+    public function it_should_return_binary_data_when_calling_toLdap_on_create_or_modify()
     {
         $expected = hex2bin(str_replace('\\', '', $this->guidHex));
 
@@ -51,7 +51,7 @@ class ConvertWindowsGuidSpec extends ObjectBehavior
         $this->toLdap($this->guidString)->shouldBeEqualTo($expected);
     }
 
-    function it_should_accept_the_term_auto_to_generate_a_guid_going_to_ldap()
+    public function it_should_accept_the_term_auto_to_generate_a_guid_going_to_ldap()
     {
         $escapedHex = '/^(\\\[0-9a-fA-F]{2})+$/';
 
@@ -66,12 +66,12 @@ class ConvertWindowsGuidSpec extends ObjectBehavior
         $this->toLdap('auto')->shouldHaveBinaryGuid();
     }
 
-    function it_should_throw_an_exception_when_an_invalid_guid_is_being_sent_to_LDAP()
+    public function it_should_throw_an_exception_when_an_invalid_guid_is_being_sent_to_LDAP()
     {
         $this->shouldThrow('LdapTools\Exception\AttributeConverterException')->duringToLdap('foo');
     }
 
-    public function getMatchers()
+    public function getMatchers(): array
     {
         return [
             'haveBinaryGuid' => function ($subject) {

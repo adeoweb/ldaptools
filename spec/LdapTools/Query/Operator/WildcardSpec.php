@@ -22,42 +22,42 @@ class WildcardSpec extends ObjectBehavior
         return ldap_escape($value);
     }
 
-    function let()
+    public function let()
     {
         $this->beConstructedWith('foo', Wildcard::CONTAINS, 'bar');
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Query\Operator\Wildcard');
     }
 
-    function it_should_extend_the_Comparison_operator()
+    public function it_should_extend_the_Comparison_operator()
     {
         $this->shouldHaveType('\LdapTools\Query\Operator\Comparison');
     }
 
-    function it_should_have_a_STARTS_WITH_constant()
+    public function it_should_have_a_STARTS_WITH_constant()
     {
         $this->shouldHaveConstant('STARTS_WITH');
     }
 
-    function it_should_have_an_ENDS_WITH_constant()
+    public function it_should_have_an_ENDS_WITH_constant()
     {
         $this->shouldHaveConstant('ENDS_WITH');
     }
 
-    function it_should_have_a_CONTAINS_constant()
+    public function it_should_have_a_CONTAINS_constant()
     {
         $this->shouldHaveConstant('CONTAINS');
     }
 
-    function it_should_have_a_PRESENT_constant()
+    public function it_should_have_a_PRESENT_constant()
     {
         $this->shouldHaveConstant('PRESENT');
     }
 
-    function it_should_have_an_EQ_constant()
+    public function it_should_have_an_EQ_constant()
     {
         $this->shouldHaveConstant('EQ');
     }
@@ -92,44 +92,44 @@ class WildcardSpec extends ObjectBehavior
         $this->getUseConverter()->shouldBeEqualTo(false);
     }
 
-    function it_should_throw_LdapQueryException_when_trying_to_set_the_operator_to_an_invalid_type()
+    public function it_should_throw_LdapQueryException_when_trying_to_set_the_operator_to_an_invalid_type()
     {
         $ex = new LdapQueryException('Invalid operator symbol ">=". Valid operator symbols are: =');
         $this->shouldThrow($ex)->duringSetOperatorSymbol('>=');
     }
 
-    function it_should_throw_a_LdapQueryException_when_using_an_invalid_attribute_name()
+    public function it_should_throw_a_LdapQueryException_when_using_an_invalid_attribute_name()
     {
         $this->beConstructedWith('foob<ar*', Wildcard::LIKE, '*bar*');
         $this->shouldThrow('\LdapTools\Exception\LdapQueryException')->duringToLdapFilter();
     }
 
-    function it_should_escape_special_characters_when_going_to_ldap_with_starts_with()
+    public function it_should_escape_special_characters_when_going_to_ldap_with_starts_with()
     {
         $this->beConstructedWith('foo', Wildcard::STARTS_WITH, '*test');
         $this->toLdapFilter()->shouldBeEqualTo('(foo=\2atest*)');
     }
 
-    function it_should_escape_special_characters_when_going_to_ldap_with_ends_with()
+    public function it_should_escape_special_characters_when_going_to_ldap_with_ends_with()
     {
         $this->beConstructedWith('foo', Wildcard::ENDS_WITH, '*test=)');
         $this->toLdapFilter()->shouldBeEqualTo('(foo=*\2atest=\29)');
     }
 
-    function it_should_escape_special_characters_when_going_to_ldap_with_contains()
+    public function it_should_escape_special_characters_when_going_to_ldap_with_contains()
     {
         $this->beConstructedWith('foo', Wildcard::ENDS_WITH, '*te*st<*');
         $this->toLdapFilter()->shouldBeEqualTo('(foo=*\2ate\2ast<\2a)');
     }
 
-    function it_should_escape_special_characters_when_going_to_ldap_with_like()
+    public function it_should_escape_special_characters_when_going_to_ldap_with_like()
     {
         $this->beConstructedWith('foo', Wildcard::LIKE, '*te*s)t*');
         $this->toLdapFilter()->shouldBeEqualTo('(foo=*te*s\29t*)');
     }
 
 
-    function it_should_set_the_alias_based_off_the_attribute()
+    public function it_should_set_the_alias_based_off_the_attribute()
     {
         $this->beConstructedWith('foo.bar', Wildcard::CONTAINS, 'foo');
 
@@ -141,7 +141,7 @@ class WildcardSpec extends ObjectBehavior
         $this->getAttribute()->shouldBeEqualTo('foo');
     }
 
-    function it_should_set_the_converted_value_for_a_specific_alias()
+    public function it_should_set_the_converted_value_for_a_specific_alias()
     {
         $this->setValue('foo');
         $this->setConvertedValue('bar', 'foo');
@@ -152,7 +152,7 @@ class WildcardSpec extends ObjectBehavior
         $this->getConvertedValue()->shouldBeEqualTo(null);
     }
 
-    function it_should_set_the_translated_attribute_name_for_a_specific_alias()
+    public function it_should_set_the_translated_attribute_name_for_a_specific_alias()
     {
         $this->setAttribute('name');
         $this->setTranslatedAttribute('ou', 'ou');
@@ -165,7 +165,7 @@ class WildcardSpec extends ObjectBehavior
         $this->getTranslatedAttribute()->shouldBeEqualTo('');
     }
 
-    function it_should_set_if_a_converter_was_used_for_a_specific_alias()
+    public function it_should_set_if_a_converter_was_used_for_a_specific_alias()
     {
         $this->setAttribute('foo');
         $this->getWasConverterUsed()->shouldBeEqualTo(false);
@@ -181,7 +181,7 @@ class WildcardSpec extends ObjectBehavior
         $this->getWasConverterUsed()->shouldBeEqualTo(false);
     }
 
-    function it_should_return_the_LDAP_filter_correctly_based_on_the_alias_in_use()
+    public function it_should_return_the_LDAP_filter_correctly_based_on_the_alias_in_use()
     {
         $this->setAttribute('bar.foo');
 
@@ -199,7 +199,7 @@ class WildcardSpec extends ObjectBehavior
         $this->toLdapFilter('foo')->shouldBeEqualTo('(foo=*bar*)');
     }
 
-    function it_should_get_the_LDAP_filter_with_any_converted_values_or_translated_attributes_for_an_alias()
+    public function it_should_get_the_LDAP_filter_with_any_converted_values_or_translated_attributes_for_an_alias()
     {
         $this->setAttribute('u.foo');
         $this->toLdapFilter('u')->shouldBeEqualTo('(foo=*bar*)');
@@ -209,22 +209,22 @@ class WildcardSpec extends ObjectBehavior
         $this->toLdapFilter('u')->shouldBeEqualTo('(foobar=*foo*)');
     }
 
-    function it_should_return_the_filter_for_the_value_if_the_value_is_a_BaseOperator_instance()
+    public function it_should_return_the_filter_for_the_value_if_the_value_is_a_BaseOperator_instance()
     {
         $this->setAttribute('foo');
         $this->setValue(new Comparison('foobar', '=', 'stuff'));
         $this->toLdapFilter()->shouldEqual('(foobar=stuff)');
     }
 
-    function it_should_get_the_wildcard_type()
+    public function it_should_get_the_wildcard_type()
     {
         $this->getWildcardType()->shouldBeEqualTo(Wildcard::CONTAINS);
     }
 
-    public function getMatchers()
+    public function getMatchers(): array
     {
         return [
-            'haveConstant' => function($subject, $constant) {
+            'haveConstant' => function ($subject, $constant) {
                 return defined('\LdapTools\Query\Operator\Wildcard::'.$constant);
             }
         ];

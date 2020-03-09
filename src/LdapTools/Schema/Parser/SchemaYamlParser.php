@@ -225,7 +225,7 @@ class SchemaYamlParser implements SchemaParserInterface
                 'Unrecognized directive(s) for schema "%s": %s. Valid directives are: %s',
                 $schemaName,
                 implode(', ', $unrecognized),
-                implode(', ',self::SCHEMA_DIRECTIVES)
+                implode(', ', self::SCHEMA_DIRECTIVES)
             ));
         }
     }
@@ -243,10 +243,10 @@ class SchemaYamlParser implements SchemaParserInterface
         if (!empty($unrecognized)) {
             throw new SchemaParserException(sprintf(
                 'Unrecognized directive(s) for schema "%s" type "%s": %s. Valid directives are: %s',
-               $schemaName,
-               $objectType,
-               implode(', ', $unrecognized),
-               implode(', ',self::SCHEMA_OBJECT_DIRECTIVES)
+                $schemaName,
+                $objectType,
+                implode(', ', $unrecognized),
+                implode(', ', self::SCHEMA_OBJECT_DIRECTIVES)
             ));
         }
     }

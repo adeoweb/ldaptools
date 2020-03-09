@@ -91,12 +91,12 @@ class LdapObjectRepositorySpec extends ObjectBehavior
         $this->beConstructedWith($schemaFactory->get('ad', 'user'), $connection);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Object\LdapObjectRepository');
     }
 
-    function it_should_call_findOneByGuid_and_return_a_LdapObject($connection)
+    public function it_should_call_findOneByGuid_and_return_a_LdapObject($connection)
     {
         $results = $this->ldapEntries;
         $results['count'] = 1;
@@ -106,40 +106,40 @@ class LdapObjectRepositorySpec extends ObjectBehavior
         $this->findOneByGuid('8E1F85EB-4882-4920-88A5-CF52F31D8D31')->shouldReturnAnInstanceOf('\LdapTools\Object\LdapObject');
     }
 
-    function it_should_call_findByFirstName()
+    public function it_should_call_findByFirstName()
     {
         $this->findByFirstName('foo')->shouldReturnAnInstanceOf('\LdapTools\Object\LdapObjectCollection');
     }
 
-    function it_should_call_findAll()
+    public function it_should_call_findAll()
     {
         $this->findAll()->shouldReturnAnInstanceOf('\LdapTools\Object\LdapObjectCollection');
     }
 
-    function it_should_not_error_when_the_attribute_is_not_in_the_schema()
+    public function it_should_not_error_when_the_attribute_is_not_in_the_schema()
     {
         $this->findByFooBar('test')->shouldHaveCount(2);
     }
 
-    function it_should_set_default_attributes_when_calling_setAttributes()
+    public function it_should_set_default_attributes_when_calling_setAttributes()
     {
         $this->setAttributes(['foo']);
         $this->getAttributes()->shouldBeEqualTo(['foo']);
     }
 
-    function it_should_get_set_the_hydration_mode_if_calling_set_hydration_mode()
+    public function it_should_get_set_the_hydration_mode_if_calling_set_hydration_mode()
     {
         $this->setHydrationMode('array');
         $this->getHydrationMode()->shouldBeEqualTo('array');
     }
 
-    function it_should_respect_the_explicitly_set_hydration_mode()
+    public function it_should_respect_the_explicitly_set_hydration_mode()
     {
         $this->setHydrationMode('array');
         $this->findByFirstName('foo')->shouldBeArray();
     }
 
-    function it_should_return_a_LdapQueryBuilder_instance_when_calling_build_ldap_query()
+    public function it_should_return_a_LdapQueryBuilder_instance_when_calling_build_ldap_query()
     {
         $this->buildLdapQuery()->shouldReturnAnInstanceOf('\LdapTools\Query\LdapQueryBuilder');
 

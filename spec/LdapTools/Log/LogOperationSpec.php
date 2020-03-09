@@ -31,43 +31,43 @@ class LogOperationSpec extends ObjectBehavior
         $this->beConstructedWith($this->operation);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Log\LogOperation');
     }
 
-    function it_should_set_the_domain()
+    public function it_should_set_the_domain()
     {
         $this->setDomain('example.local');
         $this->getDomain()->shouldBeEqualTo('example.local');
     }
 
-    function it_should_set_an_error_message()
+    public function it_should_set_an_error_message()
     {
         $this->setError('foo');
         $this->getError()->shouldBeEqualTo('foo');
     }
 
-    function it_should_set_a_start_time()
+    public function it_should_set_a_start_time()
     {
         $this->getStartTime()->shouldBeEqualTo(null);
         $this->start();
         $this->getStartTime()->shouldNotBeEqualTo(null);
     }
 
-    function it_should_set_a_stop_time()
+    public function it_should_set_a_stop_time()
     {
         $this->getStopTime()->shouldBeEqualTo(null);
         $this->stop();
         $this->getStopTime()->shouldNotBeEqualTo(null);
     }
 
-    function it_should_get_the_ldap_operation()
+    public function it_should_get_the_ldap_operation()
     {
         $this->getOperation()->shouldBeEqualTo($this->operation);
     }
 
-    function it_should_set_the_ldap_operation()
+    public function it_should_set_the_ldap_operation()
     {
         $op = new DeleteOperation('foo');
 
@@ -75,7 +75,7 @@ class LogOperationSpec extends ObjectBehavior
         $this->getOperation()->shouldBeEqualTo($op);
     }
 
-    function it_should_get_whether_the_cache_was_used_for_the_result()
+    public function it_should_get_whether_the_cache_was_used_for_the_result()
     {
         $this->getUsedCachedResult()->shouldBeEqualTo(false);
         $this->setUsedCachedResult(true)->getUsedCachedResult()->shouldBeEqualTo(true);

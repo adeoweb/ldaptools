@@ -15,27 +15,27 @@ use PhpSpec\ObjectBehavior;
 
 class ControlFlagsSpec extends ObjectBehavior
 {
-    function let()
+    public function let()
     {
         $this->beConstructedWith(32769);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType(ControlFlags::class);
     }
 
-    function it_should_extend_Flags()
+    public function it_should_extend_Flags()
     {
         $this->beAnInstanceOf('LdapTools\Security\Flags');
     }
 
-    function it_should_get_the_short_names_of_the_flags()
+    public function it_should_get_the_short_names_of_the_flags()
     {
         $this->getShortNames()->shouldBeEqualTo(['SR', 'OD']);
     }
 
-    function it_should_have_a_string_representation_for_SDDL()
+    public function it_should_have_a_string_representation_for_SDDL()
     {
         $this->__toString()->shouldBeEqualTo('SROD');
     }

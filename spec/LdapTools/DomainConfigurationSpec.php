@@ -16,78 +16,78 @@ use PhpSpec\ObjectBehavior;
 
 class DomainConfigurationSpec extends ObjectBehavior
 {
-    function let()
+    public function let()
     {
         $this->beConstructedWith('example.com');
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\DomainConfiguration');
     }
 
-    function it_should_have_a_default_schema_name_of_the_ldap_type()
+    public function it_should_have_a_default_schema_name_of_the_ldap_type()
     {
         $this->getSchemaName()->shouldBeEqualTo('ad');
     }
 
-    function it_should_set_the_username_when_calling_setUsername()
+    public function it_should_set_the_username_when_calling_setUsername()
     {
         $this->setUsername('bar');
         $this->getUsername()->shouldBeEqualTo('bar');
     }
 
-    function it_should_set_the_password_when_calling_setPassword()
+    public function it_should_set_the_password_when_calling_setPassword()
     {
         $this->setPassword('foo');
         $this->getPassword()->shouldBeEqualTo('foo');
     }
 
-    function it_should_have_the_correct_string_as_domain_name()
+    public function it_should_have_the_correct_string_as_domain_name()
     {
         $this->getDomainName()->shouldBeEqualTo('example.com');
         $this->setDomainName('foo.bar');
         $this->getDomainName()->shouldBeEqualTo('foo.bar');
     }
 
-    function it_should_properly_set_the_base_dn_when_calling_setBaseDn()
+    public function it_should_properly_set_the_base_dn_when_calling_setBaseDn()
     {
         $this->setBaseDn('dc=foo,dc=bar');
         $this->getBaseDn()->shouldBeEqualTo('dc=foo,dc=bar');
     }
 
-    function it_should_set_use_ssl_when_calling_setUseSsl()
+    public function it_should_set_use_ssl_when_calling_setUseSsl()
     {
         $this->getUseSsl()->shouldBeEqualTo(false);
         $this->setUseSsl(true);
         $this->getUseSsl()->shouldBeEqualTo(true);
     }
 
-    function it_should_set_use_tls_when_calling_setUseTls()
+    public function it_should_set_use_tls_when_calling_setUseTls()
     {
         $this->getUseTls()->shouldBeEqualTo(false);
         $this->setUseTls(true);
         $this->getUseTls()->shouldBeEqualTo(true);
     }
 
-    function it_should_have_the_correct_port_after_calling_setPort()
+    public function it_should_have_the_correct_port_after_calling_setPort()
     {
         $this->getPort()->shouldBeEqualTo(389);
         $this->setPort(9001);
         $this->getPort()->shouldBeEqualTo(9001);
     }
 
-    function it_should_allow_a_numeric_string_when_setting_port()
+    public function it_should_allow_a_numeric_string_when_setting_port()
     {
         $this->shouldNotThrow('\LdapTools\Exception\InvalidArgumentException')->duringSetPort('123');
     }
 
-    function it_should_throw_InvalidTypeException_when_setting_port_as_non_int()
+    public function it_should_throw_InvalidTypeException_when_setting_port_as_non_int()
     {
         $this->shouldThrow('\LdapTools\Exception\InvalidArgumentException')->duringSetPort('test');
     }
 
-    function it_should_return_the_correct_page_size_after_calling_setPageSize()
+    public function it_should_return_the_correct_page_size_after_calling_setPageSize()
     {
         $this->getPageSize()->shouldBeEqualTo(1000);
         $this->setPageSize(9001);
@@ -96,28 +96,28 @@ class DomainConfigurationSpec extends ObjectBehavior
         $this->getPageSize()->shouldBeEqualTo(0);
     }
 
-    function it_should_allow_a_numeric_string_when_setting_page_size()
+    public function it_should_allow_a_numeric_string_when_setting_page_size()
     {
         $this->setPort('1000')->shouldReturnAnInstanceOf('LdapTools\DomainConfiguration');
     }
 
-    function it_should_throw_InvalidTypeException_when_setting_page_size_as_non_int()
+    public function it_should_throw_InvalidTypeException_when_setting_page_size_as_non_int()
     {
         $this->shouldThrow('\LdapTools\Exception\InvalidArgumentException')->duringSetPageSize('test');
     }
 
-    function it_should_return_a_string_when_calling_getSchemaName()
+    public function it_should_return_a_string_when_calling_getSchemaName()
     {
         $this->getSchemaName()->shouldBeString();
     }
 
-    function it_should_return_the_correct_schema_name_when_it_is_set()
+    public function it_should_return_the_correct_schema_name_when_it_is_set()
     {
         $this->setSchemaName('test');
         $this->getSchemaName()->shouldBeEqualTo('test');
     }
 
-    function it_should_return_the_correct_servers_after_calling_setServers()
+    public function it_should_return_the_correct_servers_after_calling_setServers()
     {
         $servers = ['foo', 'bar'];
         $this->getServers()->shouldBeArray();
@@ -125,69 +125,69 @@ class DomainConfigurationSpec extends ObjectBehavior
         $this->getServers()->shouldBeEqualTo($servers);
     }
 
-    function it_should_have_the_correct_value_for_lazy_bind_after_calling_setLazyBind()
+    public function it_should_have_the_correct_value_for_lazy_bind_after_calling_setLazyBind()
     {
         $this->getLazyBind()->shouldBeEqualTo(false);
         $this->setLazyBind(true);
         $this->getLazyBind()->shouldBeEqualTo(true);
     }
 
-    function it_should_have_the_correct_ldap_type_after_calling_setLdapType()
+    public function it_should_have_the_correct_ldap_type_after_calling_setLdapType()
     {
         $this->getLdapType()->shouldBeEqualTo(LdapConnection::TYPE_AD);
         $this->setLdapType(LdapConnection::TYPE_OPENLDAP);
         $this->getLdapType()->shouldBeEqualTo(LdapConnection::TYPE_OPENLDAP);
     }
 
-    function it_should_have_active_directory_set_as_the_default_ldap_type()
+    public function it_should_have_active_directory_set_as_the_default_ldap_type()
     {
         $this->getLdapType()->shouldBeEqualTo(LdapConnection::TYPE_AD);
     }
 
-    function it_should_error_when_setting_an_unknown_ldap_type()
+    public function it_should_error_when_setting_an_unknown_ldap_type()
     {
         $this->shouldThrow('\LdapTools\Exception\InvalidArgumentException')->duringSetLdapType('SuperHappyFunTime');
     }
 
-    function it_should_return_the_correct_server_selection_type_after_calling_setServerSelection()
+    public function it_should_return_the_correct_server_selection_type_after_calling_setServerSelection()
     {
         $this->setServerSelection(LdapServerPool::SELECT_RANDOM);
         $this->getServerSelection()->shouldBeEqualTo(LdapServerPool::SELECT_RANDOM);
     }
 
-    function it_should_have_the_server_selection_type_as_order_by_default()
+    public function it_should_have_the_server_selection_type_as_order_by_default()
     {
         $this->getServerSelection()->shouldBeEqualTo(LdapServerPool::SELECT_ORDER);
     }
 
-    function it_should_have_the_correct_encoding_after_calling_setEncoding()
+    public function it_should_have_the_correct_encoding_after_calling_setEncoding()
     {
         $this->getEncoding()->shouldBeEqualTo('UTF-8');
         $this->setEncoding('Foo');
         $this->getEncoding()->shouldBeEqualTo('Foo');
     }
 
-    function it_should_set_whether_paging_control_should_be_used()
+    public function it_should_set_whether_paging_control_should_be_used()
     {
         $this->getUsePaging()->shouldBeEqualTo(true);
         $this->setUsePaging(false);
         $this->getUsePaging()->shouldBeEqualTo(false);
     }
 
-    function it_should_set_the_ldap_option_when_calling_setLdapOption()
+    public function it_should_set_the_ldap_option_when_calling_setLdapOption()
     {
         $this->setLdapOption(LDAP_OPT_DEBUG_LEVEL, 8);
         $this->getLdapOptions()->shouldHaveKeyWithValue(LDAP_OPT_DEBUG_LEVEL, 8);
     }
 
-    function it_should_overwrite_an_ldap_option_when_calling_setLdapOption()
+    public function it_should_overwrite_an_ldap_option_when_calling_setLdapOption()
     {
         $this->setLdapOption(LDAP_OPT_DEBUG_LEVEL, 8);
         $this->setLdapOption(LDAP_OPT_DEBUG_LEVEL, 3);
         $this->getLdapOptions()->shouldHaveKeyWithValue(LDAP_OPT_DEBUG_LEVEL, 3);
     }
 
-    function it_should_allow_a_string_representation_of_a_connection_option()
+    public function it_should_allow_a_string_representation_of_a_connection_option()
     {
         $this->setLdapOption('ldap_opt_debug_level', 3);
         $this->getLdapOptions()->shouldHaveKeyWithValue(LDAP_OPT_DEBUG_LEVEL, 3);
@@ -195,27 +195,27 @@ class DomainConfigurationSpec extends ObjectBehavior
         $this->getLdapOptions()->shouldHaveKeyWithValue(LDAP_OPT_DEBUG_LEVEL, 8);
     }
 
-    function it_should_use_ldap_v3_by_default_and_not_follow_referrals()
+    public function it_should_use_ldap_v3_by_default_and_not_follow_referrals()
     {
         $this->getLdapOptions()->shouldHaveKeyWithValue(LDAP_OPT_PROTOCOL_VERSION, 3);
         $this->getLdapOptions()->shouldHaveKeyWithValue(LDAP_OPT_REFERRALS, 0);
     }
     
-    function it_should_set_the_idle_reconnection_time()
+    public function it_should_set_the_idle_reconnection_time()
     {
         $this->getIdleReconnect()->shouldBeEqualTo(600);
         $this->setIdleReconnect(0);
         $this->getIdleReconnect()->shouldBeEqualTo(0);
     }
 
-    function it_should_set_the_connect_timeout_time()
+    public function it_should_set_the_connect_timeout_time()
     {
         $this->getConnectTimeout()->shouldBeEqualTo(1);
         $this->setConnectTimeout(5);
         $this->getConnectTimeout()->shouldBeEqualTo(5);
     }
 
-    function it_should_return_self_when_calling_the_setters()
+    public function it_should_return_self_when_calling_the_setters()
     {
         $this->setUsePaging(true)->shouldReturnAnInstanceOf('\LdapTools\DomainConfiguration');
         $this->setPassword('test')->shouldReturnAnInstanceOf('LdapTools\DomainConfiguration');
@@ -238,14 +238,14 @@ class DomainConfigurationSpec extends ObjectBehavior
         $this->setIdleReconnect(0)->shouldReturnAnInstanceOf('\LdapTools\DomainConfiguration');
     }
 
-    function it_should_have_the_correct_encoding_after_calling_setBindFormat()
+    public function it_should_have_the_correct_encoding_after_calling_setBindFormat()
     {
         $this->getBindFormat()->shouldBeEqualTo('');
         $this->setBindFormat('%username%');
         $this->getBindFormat()->shouldBeEqualTo('%username%');
     }
 
-    function it_should_load_an_array_for_the_configuration()
+    public function it_should_load_an_array_for_the_configuration()
     {
         $config = [
             'domain_name' => 'example.local',
@@ -265,7 +265,7 @@ class DomainConfigurationSpec extends ObjectBehavior
         $this->getUsePaging()->shouldBeEqualTo(false);
     }
 
-    function it_should_error_when_missing_required_config_values()
+    public function it_should_error_when_missing_required_config_values()
     {
         $config = [
             'username' => 'admin',
@@ -273,7 +273,7 @@ class DomainConfigurationSpec extends ObjectBehavior
         $this->shouldThrow('\LdapTools\Exception\ConfigurationException')->duringLoad($config);
     }
 
-    function it_should_error_on_unknown_configuration_options()
+    public function it_should_error_on_unknown_configuration_options()
     {
         $config = [
             'domain_name' => 'example.local',
@@ -284,10 +284,10 @@ class DomainConfigurationSpec extends ObjectBehavior
         $this->shouldThrow('\LdapTools\Exception\ConfigurationException')->duringLoad($config);
     }
 
-    public function getMatchers()
+    public function getMatchers(): array
     {
         return [
-            'haveKeyWithValue' => function($subject, $key, $value) {
+            'haveKeyWithValue' => function ($subject, $key, $value) {
                 return isset($subject[$key]) && ($subject[$key] === $value);
             },
         ];

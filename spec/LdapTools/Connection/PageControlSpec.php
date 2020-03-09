@@ -20,29 +20,29 @@ class PageControlSpec extends ObjectBehavior
         $this->beConstructedWith($connection);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Connection\PageControl');
     }
 
-    function it_should_not_be_active_when_constructed()
+    public function it_should_not_be_active_when_constructed()
     {
         $this->isActive()->shouldBeEqualTo(false);
     }
 
-    function it_should_call_start_with_a_page_size()
+    public function it_should_call_start_with_a_page_size()
     {
         $this->start(10);
     }
 
-    function it_should_set_whether_or_not_paging_is_enabled()
+    public function it_should_set_whether_or_not_paging_is_enabled()
     {
         $this->isEnabled()->shouldBeEqualTo(true);
         $this->setIsEnabled(false);
         $this->isEnabled()->shouldBeEqualTo(false);
     }
 
-    function it_should_not_call_paging_operations_when_it_is_disabled($connection)
+    public function it_should_not_call_paging_operations_when_it_is_disabled($connection)
     {
         $this->setIsEnabled(false);
         $connection->getResource()->shouldNotBeCalled();
@@ -52,7 +52,7 @@ class PageControlSpec extends ObjectBehavior
         $this->end();
     }
     
-    function it_should_be_able_to_start_the_control_with_a_size_limit()
+    public function it_should_be_able_to_start_the_control_with_a_size_limit()
     {
         $this->start(10, 20);
     }

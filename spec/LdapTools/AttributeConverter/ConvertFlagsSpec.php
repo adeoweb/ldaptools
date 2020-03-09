@@ -55,12 +55,12 @@ class ConvertFlagsSpec extends ObjectBehavior
         ],
     ];
     
-    /** 
+    /**
      * @var callable
      */
     protected $expectedOp;
 
-    function let(LdapConnectionInterface $connection)
+    public function let(LdapConnectionInterface $connection)
     {
         $config = new DomainConfiguration('foo.bar');
         $config->setBaseDn('dc=foo,dc=bar');
@@ -77,24 +77,24 @@ class ConvertFlagsSpec extends ObjectBehavior
         $this->setLdapConnection($connection);
         $this->setDn('cn=foo,dc=foo,dc=bar');
         
-        $this->expectedOp = function($operation) {
+        $this->expectedOp = function ($operation) {
             return $operation->getFilter() == '(&(objectClass=*))'
                 && $operation->getAttributes() == ['userAccountControl']
                 && $operation->getBaseDn() == 'cn=foo,dc=foo,dc=bar';
         };
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\AttributeConverter\ConvertFlags');
     }
 
-    function it_should_implement_AttributeConverterInterface()
+    public function it_should_implement_AttributeConverterInterface()
     {
         $this->shouldImplement('\LdapTools\AttributeConverter\AttributeConverterInterface');
     }
 
-    function it_should_convert_a_value_from_ldap_to_a_php_bool()
+    public function it_should_convert_a_value_from_ldap_to_a_php_bool()
     {
         $this->setOptions(['flag_enum' => 'LdapTools\Enums\AD\UserAccountControl::Disabled']);
         $this->fromLdap('514')->shouldBeEqualTo(true);
@@ -125,7 +125,7 @@ class ConvertFlagsSpec extends ObjectBehavior
         $this->fromLdap('328194')->shouldBeEqualTo(false);
     }
 
-    function it_should_not_aggregate_values_on_a_search()
+    public function it_should_not_aggregate_values_on_a_search()
     {
         $this->setOperationType(AttributeConverterInterface::TYPE_SEARCH_FROM);
         $this->getShouldAggregateValues()->shouldBeEqualTo(false);
@@ -133,7 +133,7 @@ class ConvertFlagsSpec extends ObjectBehavior
         $this->getShouldAggregateValues()->shouldBeEqualTo(false);
     }
 
-    function it_should_aggregate_values_when_converting_a_bool_to_ldap_on_modification($connection)
+    public function it_should_aggregate_values_when_converting_a_bool_to_ldap_on_modification($connection)
     {
         $connection->execute(Argument::that($this->expectedOp))->willReturn($this->expectedResult);
         $this->setOperationType(AttributeConverterInterface::TYPE_MODIFY);
@@ -151,7 +151,7 @@ class ConvertFlagsSpec extends ObjectBehavior
         $this->toLdap(true)->shouldBeEqualTo('66050');
     }
 
-    function it_should_aggregate_values_when_converting_a_bool_to_ldap_on_creation()
+    public function it_should_aggregate_values_when_converting_a_bool_to_ldap_on_creation()
     {
         $this->setOperationType(AttributeConverterInterface::TYPE_CREATE);
         $this->getShouldAggregateValues()->shouldBeEqualTo(true);
@@ -165,7 +165,7 @@ class ConvertFlagsSpec extends ObjectBehavior
         $this->toLdap(true)->shouldBeEqualTo('66050');
     }
 
-    function it_should_not_modify_the_value_if_the_bit_is_already_set($connection)
+    public function it_should_not_modify_the_value_if_the_bit_is_already_set($connection)
     {
         $this->setOperationType(AttributeConverterInterface::TYPE_MODIFY);
         $result = $this->expectedResult;
@@ -175,7 +175,7 @@ class ConvertFlagsSpec extends ObjectBehavior
         $this->toLdap(true)->shouldBeEqualTo('514');
     }
 
-    function it_should_remove_the_bit_if_requested_and_the_bit_is_already_set($connection)
+    public function it_should_remove_the_bit_if_requested_and_the_bit_is_already_set($connection)
     {
         $this->setOperationType(AttributeConverterInterface::TYPE_MODIFY);
         $result = $this->expectedResult;
@@ -185,21 +185,21 @@ class ConvertFlagsSpec extends ObjectBehavior
         $this->toLdap(false)->shouldBeEqualTo('512');
     }
 
-    function it_should_error_on_modifcation_when_the_existing_LDAP_object_cannot_be_queried($connection)
+    public function it_should_error_on_modifcation_when_the_existing_LDAP_object_cannot_be_queried($connection)
     {
         $connection->execute(Argument::that($this->expectedOp))->willReturn(['count' => 0]);
         $this->setOperationType(AttributeConverterInterface::TYPE_MODIFY);
         $this->shouldThrow(new AttributeConverterException("Unable to find LDAP object: cn=foo,dc=foo,dc=bar"))->duringToLdap(true);
     }
 
-    function it_should_error_when_a_dn_is_not_set_and_a_modification_type_is_requested()
+    public function it_should_error_when_a_dn_is_not_set_and_a_modification_type_is_requested()
     {
         $this->setDn(null);
         $this->setOperationType(AttributeConverterInterface::TYPE_MODIFY);
         $this->shouldThrow(new AttributeConverterException('Unable to query for the current "userAccountControl" attribute.'))->duringToLdap(true);
     }
     
-    function it_should_convert_a_bool_value_into_the_bitwise_operator_for_the_returned_value()
+    public function it_should_convert_a_bool_value_into_the_bitwise_operator_for_the_returned_value()
     {
         $this->setOperationType(AttributeConverterInterface::TYPE_SEARCH_TO);
 

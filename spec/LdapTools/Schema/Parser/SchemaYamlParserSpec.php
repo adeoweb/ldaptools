@@ -20,23 +20,23 @@ use PhpSpec\ObjectBehavior;
 
 class SchemaYamlParserSpec extends ObjectBehavior
 {
-    function let()
+    public function let()
     {
         $config = new Configuration();
         $this->beConstructedWith($config->getSchemaFolder());
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Schema\Parser\SchemaYamlParser');
     }
 
-    function it_should_implement_SchemaParserInferface()
+    public function it_should_implement_SchemaParserInferface()
     {
         $this->shouldImplement('\LdapTools\Schema\Parser\SchemaParserInterface');
     }
 
-    function it_should_return_LdapObjectSchema_when_parsing()
+    public function it_should_return_LdapObjectSchema_when_parsing()
     {
         $domain = new DomainConfiguration('example.com');
         $domain->setLdapType('ad');
@@ -44,7 +44,7 @@ class SchemaYamlParserSpec extends ObjectBehavior
         $this->parse($domain->getLdapType(), 'user')->shouldReturnAnInstanceOf('\LdapTools\Schema\LdapObjectSchema');
     }
 
-    function it_should_throw_a_SchemaParserException_when_the_schema_file_is_not_readable()
+    public function it_should_throw_a_SchemaParserException_when_the_schema_file_is_not_readable()
     {
         $fakePath = '/this/path/should/never/really/exist/I/would/hope';
         $this->beConstructedWith($fakePath);
@@ -58,7 +58,8 @@ class SchemaYamlParserSpec extends ObjectBehavior
         );
     }
 
-    function it_should_throw_a_SchemaParserException_when_the_schema_is_missing_an_objects_definition(){
+    public function it_should_throw_a_SchemaParserException_when_the_schema_is_missing_an_objects_definition()
+    {
         $folder = __DIR__.'/../../../resources/schema';
         $schema = 'no_objects';
         $this->beConstructedWith($folder);
@@ -69,7 +70,8 @@ class SchemaYamlParserSpec extends ObjectBehavior
         );
     }
 
-    function it_should_throw_a_SchemaParserException_when_the_schema_does_not_have_the_object_type(){
+    public function it_should_throw_a_SchemaParserException_when_the_schema_does_not_have_the_object_type()
+    {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
         $this->shouldThrow(new SchemaParserException('Cannot find object type "pandas" in schema.'))->duringParse(
@@ -78,7 +80,8 @@ class SchemaYamlParserSpec extends ObjectBehavior
         );
     }
 
-    function it_should_throw_a_SchemaParserException_when_the_schema_object_type_has_no_class_or_category(){
+    public function it_should_throw_a_SchemaParserException_when_the_schema_object_type_has_no_class_or_category()
+    {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
         $this->shouldThrow(new SchemaParserException('Object type "group" must have one of the following defined: class, category, filter'))->duringParse(
@@ -87,7 +90,8 @@ class SchemaYamlParserSpec extends ObjectBehavior
         );
     }
 
-    function it_should_throw_a_SchemaParserException_when_the_schema_object_has_no_attributes(){
+    public function it_should_throw_a_SchemaParserException_when_the_schema_object_has_no_attributes()
+    {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
         $this->shouldThrow(new SchemaParserException('Object type "distributionlist" has no attributes defined.'))->duringParse(
@@ -96,7 +100,7 @@ class SchemaYamlParserSpec extends ObjectBehavior
         );
     }
 
-    function it_should_set_default_attributes_to_select_in_LdapObjectSchema_when_parsing()
+    public function it_should_set_default_attributes_to_select_in_LdapObjectSchema_when_parsing()
     {
         $attributes = ['name', 'firstName', 'lastName','username', 'emailAddress', 'dn', 'guid'];
         $this->parse('ad', 'user')
@@ -104,7 +108,7 @@ class SchemaYamlParserSpec extends ObjectBehavior
             ->shouldBeEqualTo($attributes);
     }
 
-    function it_should_parse_a_custom_repository_for_an_object()
+    public function it_should_parse_a_custom_repository_for_an_object()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
@@ -113,21 +117,21 @@ class SchemaYamlParserSpec extends ObjectBehavior
             ->shouldBeEqualTo('\Foo\Bar');
     }
 
-    function it_should_return_a_datetime_when_calling_getSchemaModificationTime()
+    public function it_should_return_a_datetime_when_calling_getSchemaModificationTime()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
         $this->getSchemaModificationTime('example')->shouldReturnAnInstanceOf('\DateTime');
     }
 
-    function it_should_error_when_calling_getSchemaModificationTime_for_a_non_existing_schema()
+    public function it_should_error_when_calling_getSchemaModificationTime_for_a_non_existing_schema()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
         $this->shouldThrow('\Exception')->duringGetSchemaModificationTime('foo');
     }
 
-    function it_should_parse_default_attributes_for_an_object()
+    public function it_should_parse_default_attributes_for_an_object()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
@@ -136,7 +140,7 @@ class SchemaYamlParserSpec extends ObjectBehavior
             ->shouldBeEqualTo(['name' => 'bar']);
     }
 
-    function it_should_parse_required_attributes_for_an_object()
+    public function it_should_parse_required_attributes_for_an_object()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
@@ -145,7 +149,7 @@ class SchemaYamlParserSpec extends ObjectBehavior
             ->shouldBeEqualTo(['name']);
     }
 
-    function it_should_parse_the_default_container_for_an_object()
+    public function it_should_parse_the_default_container_for_an_object()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
@@ -154,7 +158,7 @@ class SchemaYamlParserSpec extends ObjectBehavior
             ->shouldBeEqualTo('ou=foo,ou=bar,dc=example,dc=local');
     }
 
-    function it_should_parse_the_base_dn_for_an_object()
+    public function it_should_parse_the_base_dn_for_an_object()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
@@ -163,7 +167,7 @@ class SchemaYamlParserSpec extends ObjectBehavior
             ->shouldBeEqualTo('ou=bar,dc=example,dc=local');
     }
 
-    function it_should_parse_a_schema_that_extends_a_default_schema()
+    public function it_should_parse_a_schema_that_extends_a_default_schema()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
@@ -194,7 +198,7 @@ class SchemaYamlParserSpec extends ObjectBehavior
             ->shouldHaveKeyWithValue('username', 'foo');
     }
 
-    function it_should_parse_a_schema_with_an_object_that_extends_a_default_schema_object()
+    public function it_should_parse_a_schema_with_an_object_that_extends_a_default_schema_object()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
@@ -206,7 +210,7 @@ class SchemaYamlParserSpec extends ObjectBehavior
             ->shouldContain('username');
     }
 
-    function it_should_parse_a_schema_with_an_object_that_extends_another_object()
+    public function it_should_parse_a_schema_with_an_object_that_extends_another_object()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
@@ -218,7 +222,7 @@ class SchemaYamlParserSpec extends ObjectBehavior
             ->shouldContain('name');
     }
 
-    function it_should_parse_a_schema_with_an_object_that_extends_a_schema_from_the_same_directory()
+    public function it_should_parse_a_schema_with_an_object_that_extends_a_schema_from_the_same_directory()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
@@ -227,7 +231,7 @@ class SchemaYamlParserSpec extends ObjectBehavior
             ->shouldBeEqualTo('\no\type');
     }
 
-    function it_should_parse_a_schema_objects_converter_options()
+    public function it_should_parse_a_schema_objects_converter_options()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
@@ -236,7 +240,7 @@ class SchemaYamlParserSpec extends ObjectBehavior
             ->shouldBeEqualTo(['type' => 'windows']);
     }
 
-    function it_should_parse_a_schema_objects_multivalued_attriutes()
+    public function it_should_parse_a_schema_objects_multivalued_attriutes()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
@@ -245,7 +249,7 @@ class SchemaYamlParserSpec extends ObjectBehavior
             ->shouldBeEqualTo(['otherHomePhone']);
     }
 
-    function it_should_be_able_to_parse_all_types_in_a_schema_and_return_an_array_of_LdapObjectSchema()
+    public function it_should_be_able_to_parse_all_types_in_a_schema_and_return_an_array_of_LdapObjectSchema()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
@@ -254,7 +258,7 @@ class SchemaYamlParserSpec extends ObjectBehavior
         $this->parseAll('example')->shouldReturnAnArrayOfLdapObjectSchemas();
     }
 
-    function it_should_parse_a_schema_that_includes_additional_schema_files()
+    public function it_should_parse_a_schema_that_includes_additional_schema_files()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
@@ -262,7 +266,7 @@ class SchemaYamlParserSpec extends ObjectBehavior
         $this->parse('includes', 'foo')->shouldReturnAnInstanceOf('\LdapTools\Schema\LdapObjectSchema');
     }
 
-    function it_should_parse_a_schema_that_includes_additional_default_schema_files()
+    public function it_should_parse_a_schema_that_includes_additional_default_schema_files()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
@@ -270,94 +274,94 @@ class SchemaYamlParserSpec extends ObjectBehavior
         $this->parse('includes_default', 'foo')->shouldReturnAnInstanceOf('\LdapTools\Schema\LdapObjectSchema');
     }
 
-    function it_should_be_able_to_load_a_file_with_a_YAML_extension()
+    public function it_should_be_able_to_load_a_file_with_a_YAML_extension()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
         $this->parse('extension', 'foo')->shouldReturnAnInstanceOf('\LdapTools\Schema\LdapObjectSchema');
     }
 
-    function it_should_allow_a_schema_object_type_that_has_multiple_classes_defined_in_objectClass()
+    public function it_should_allow_a_schema_object_type_that_has_multiple_classes_defined_in_objectClass()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
         $this->parse('filter', 'MultipleClasses')->getFilter()->toLdapFilter()->shouldBeEqualTo('(&(objectClass=user)(objectClass=person))');
     }
 
-    function it_should_allow_a_schema_object_type_that_has_only_a_category_defined()
+    public function it_should_allow_a_schema_object_type_that_has_only_a_category_defined()
     {
         $this->beConstructedWith(__DIR__ . '/../../../resources/schema');
 
         $this->parse('filter', 'CategoryOnly')->getFilter()->toLdapFilter()->shouldBeEqualTo('(objectCategory=user)');
     }
 
-    function it_should_allow_a_schema_object_type_that_has_only_a_single_class_defined()
+    public function it_should_allow_a_schema_object_type_that_has_only_a_single_class_defined()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
         $this->parse('filter', 'ClassOnly')->getFilter()->toLdapFilter()->shouldBeEqualTo('(objectClass=user)');
     }
 
-    function it_should_allow_a_schema_object_type_that_has_a_single_category_and_class_defined()
+    public function it_should_allow_a_schema_object_type_that_has_a_single_category_and_class_defined()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
         $this->parse('filter', 'ClassAndCategory')->getFilter()->toLdapFilter()->shouldBeEqualTo('(&(objectCategory=person)(objectClass=user))');
     }
 
-    function it_should_allow_a_schema_object_type_that_has_a_single_category_and_multiple_classes_defined()
+    public function it_should_allow_a_schema_object_type_that_has_a_single_category_and_multiple_classes_defined()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
         $this->parse('filter', 'MultipleClassesAndCategory')->getFilter()->toLdapFilter()->shouldBeEqualTo('(&(objectCategory=foo)(&(objectClass=user)(objectClass=person)))');
     }
-    
-    function it_should_allow_a_schema_object_type_that_has_only_a_filter_defined()
+
+    public function it_should_allow_a_schema_object_type_that_has_only_a_filter_defined()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
         $this->parse('filter', 'FilterOnly')->getFilter()->toLdapFilter()->shouldBeEqualTo('(&(objectClass=user)(objectCategory=person))');
     }
 
-    function it_should_allow_a_schema_object_type_that_has_a_filter_defined_with_a_class_and_category()
+    public function it_should_allow_a_schema_object_type_that_has_a_filter_defined_with_a_class_and_category()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
         $this->parse('filter', 'All')->getFilter()->toLdapFilter()->shouldBeEqualTo('(&(&(objectCategory=person)(objectClass=user))(&(foo=*)))');
     }
 
-    function it_should_parse_a_schema_object_with_controls_listed()
+    public function it_should_parse_a_schema_object_with_controls_listed()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
         $control1 = new LdapControl('foo', true, 'bar');
         $control2 = new LdapControl('bar');
-        
+
         $this->parse('example', 'controls')->getControls()->shouldBeLike([$control1, $control2]);
     }
-    
-    function it_should_parse_a_schema_object_with_paging_set()
+
+    public function it_should_parse_a_schema_object_with_paging_set()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
-        $this->parse('example', 'paging')->getUsePaging()->shouldBeEqualTo(false);   
+        $this->parse('example', 'paging')->getUsePaging()->shouldBeEqualTo(false);
     }
 
-    function it_should_parse_a_schema_object_with_the_scope_set()
+    public function it_should_parse_a_schema_object_with_the_scope_set()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
         $this->parse('example', 'scope')->getScope()->shouldBeEqualTo(QueryOperation::SCOPE['ONELEVEL']);
     }
 
-    function it_should_throw_an_error_when_parsing_an_incorrect_scope()
+    public function it_should_throw_an_error_when_parsing_an_incorrect_scope()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
         $this->shouldThrow(new SchemaParserException('The scope "foo" is not valid. Valid types are: subtree, onelevel, base'))->duringParse('incorrect_scope', 'scope');
     }
 
-    function it_should_parse_a_schema_that_extends_a_default_schema_with_a_type_that_extends_a_different_default_schema()
+    public function it_should_parse_a_schema_that_extends_a_default_schema_with_a_type_that_extends_a_different_default_schema()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
@@ -368,14 +372,14 @@ class SchemaYamlParserSpec extends ObjectBehavior
         $this->parse('extend_default_twice', 'CustomRootDSE')->getAttributeMap()->shouldHaveKey('foo');
     }
 
-    function it_should_be_case_insensitive_when_getting_a_ldap_object_schema_type()
+    public function it_should_be_case_insensitive_when_getting_a_ldap_object_schema_type()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
         $this->parse('example', 'GeneriC')->getObjectType()->shouldBeEqualTo('generic');
     }
 
-    function it_should_allow_a_ldap_control_oid_by_enum_name()
+    public function it_should_allow_a_ldap_control_oid_by_enum_name()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
@@ -384,36 +388,36 @@ class SchemaYamlParserSpec extends ObjectBehavior
         ]);
     }
 
-    function it_should_set_a_default_RDN_in_the_LdapObjectSchema_when_parsing()
+    public function it_should_set_a_default_RDN_in_the_LdapObjectSchema_when_parsing()
     {
         $this->parse('ad', 'user')->getRdn()->shouldBeEqualTo(['name']);
     }
 
-    function it_should_set_a_RDN_when_specified()
+    public function it_should_set_a_RDN_when_specified()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
         $this->parse('example', 'CustomRDN')->getRdn()->shouldBeEqualTo(['foo']);
     }
 
-    function it_should_error_on_invalid_schema_object_directives()
+    public function it_should_error_on_invalid_schema_object_directives()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
         $this->shouldThrow('LdapTools\Exception\SchemaParserException')->duringParse('invalid_object_directive', 'InvalidDirective');
     }
 
-    function it_should_error_on_invalid_schema_directives()
+    public function it_should_error_on_invalid_schema_directives()
     {
         $this->beConstructedWith(__DIR__.'/../../../resources/schema');
 
         $this->shouldThrow('LdapTools\Exception\SchemaParserException')->duringParseAll('invalid_schema_directive');
     }
 
-    function getMatchers()
+    public function getMatchers(): array
     {
         return [
-            'returnAnArrayOfLdapObjectSchemas' => function($ldapObjectSchemas) {
+            'returnAnArrayOfLdapObjectSchemas' => function ($ldapObjectSchemas) {
                 foreach ($ldapObjectSchemas as $schema) {
                     if (!($schema instanceof LdapObjectSchema)) {
                         return false;

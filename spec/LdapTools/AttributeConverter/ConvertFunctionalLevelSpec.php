@@ -15,12 +15,12 @@ use PhpSpec\ObjectBehavior;
 
 class ConvertFunctionalLevelSpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\AttributeConverter\ConvertFunctionalLevel');
     }
 
-    function it_should_convert_a_integer_to_a_functional_level_from_ldap()
+    public function it_should_convert_a_integer_to_a_functional_level_from_ldap()
     {
         $this->fromLdap('0')->shouldBeEqualTo(ADFunctionalLevelType::TYPES[0]);
         $this->fromLdap('1')->shouldBeEqualTo(ADFunctionalLevelType::TYPES[1]);
@@ -32,7 +32,7 @@ class ConvertFunctionalLevelSpec extends ObjectBehavior
         $this->fromLdap('7')->shouldBeEqualTo(ADFunctionalLevelType::TYPES[7]);
     }
 
-    function it_should_return_unknown_if_the_level_is_not_a_valid_type()
+    public function it_should_return_unknown_if_the_level_is_not_a_valid_type()
     {
         $this->fromLdap('9001')->shouldBeEqualTo('Unknown');
     }

@@ -14,7 +14,7 @@ use PhpSpec\ObjectBehavior;
 
 class TcpSocketSpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Utilities\TcpSocket');
     }

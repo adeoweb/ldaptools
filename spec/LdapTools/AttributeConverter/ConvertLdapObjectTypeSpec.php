@@ -22,34 +22,34 @@ class ConvertLdapObjectTypeSpec extends ObjectBehavior
         'ou' => [ 'top', 'organizationalUnit' ],
     ];
     
-    function let()
+    public function let()
     {
-        $this->setOptions($this->options);   
+        $this->setOptions($this->options);
     }
     
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\AttributeConverter\ConvertLdapObjectType');
     }
     
-    function it_should_implement_AttributeConverterInterface()
+    public function it_should_implement_AttributeConverterInterface()
     {
         $this->shouldImplement('\LdapTools\AttributeConverter\AttributeConverterInterface');
     }
 
-    function it_should_convert_classes_to_the_LdapTools_object_type_for_AD()
+    public function it_should_convert_classes_to_the_LdapTools_object_type_for_AD()
     {
         foreach ($this->options as $type => $classes) {
             $this->fromLdap($classes)->shouldBeEqualTo([$type]);
         }
     }
     
-    function it_should_return_unknown_if_the_type_cannot_be_determined()
+    public function it_should_return_unknown_if_the_type_cannot_be_determined()
     {
         $this->fromLdap(['foo'])->shouldBeEqualTo(['Unknown']);
     }
     
-    function it_should_not_support_converting_to_ldap()
+    public function it_should_not_support_converting_to_ldap()
     {
         $this->shouldThrow('LdapTools\Exception\AttributeConverterException')->duringToLdap('foo');
     }

@@ -90,7 +90,7 @@ class ConvertValueToDn implements AttributeConverterInterface
         if ($this->options['legacy_dn']) {
             $value = LdapUtilities::explodeExchangeLegacyDn($value);
             $value = end($value);
-        }  else {
+        } else {
             $value = LdapUtilities::explodeDn($value);
             $value = reset($value);
         }

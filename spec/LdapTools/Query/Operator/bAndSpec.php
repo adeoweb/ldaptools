@@ -19,55 +19,55 @@ use PhpSpec\ObjectBehavior;
 
 class bAndSpec extends ObjectBehavior
 {
-    function let()
+    public function let()
     {
         $this->beConstructedWith(new Comparison('foo', Comparison::EQ, 'bar'));
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Query\Operator\bAnd');
     }
 
-    function it_should_implement_ContainsOperatorsInferface()
+    public function it_should_implement_ContainsOperatorsInferface()
     {
         $this->shouldImplement('\LdapTools\Query\Operator\ContainsOperatorsInterface');
     }
 
-    function it_should_have_an_ampersand_symbol()
+    public function it_should_have_an_ampersand_symbol()
     {
         $this->getOperatorSymbol()->shouldBeEqualTo('&');
     }
 
-    function it_should_return_one_child_when_calling_getChildren()
+    public function it_should_return_one_child_when_calling_getChildren()
     {
         $this->getChildren()->shouldHaveCount(1);
     }
 
-    function it_should_return_correct_child_count_after_adding_operators_to_it()
+    public function it_should_return_correct_child_count_after_adding_operators_to_it()
     {
         $this->add(new bOr());
         $this->getChildren()->shouldHaveCount(2);
     }
 
-    function it_should_return_the_correct_ldap_filter_with_one_operator()
+    public function it_should_return_the_correct_ldap_filter_with_one_operator()
     {
         $this->toLdapFilter()->shouldBeEqualTo('(&(foo=bar))');
     }
 
-    function it_should_return_the_correct_ldap_filter_with_two_operators()
+    public function it_should_return_the_correct_ldap_filter_with_two_operators()
     {
-        $this->add(new Wildcard('foobar', Wildcard::ENDS_WITH,'bar'));
+        $this->add(new Wildcard('foobar', Wildcard::ENDS_WITH, 'bar'));
         $this->toLdapFilter()->shouldBeEqualTo('(&(foo=bar)(foobar=*bar))');
     }
 
-    function it_should_return_the_correct_ldap_filter_when_nesting_operators()
+    public function it_should_return_the_correct_ldap_filter_when_nesting_operators()
     {
-        $this->add(new bNot(new Wildcard('description', Wildcard::CONTAINS,'bar')));
+        $this->add(new bNot(new Wildcard('description', Wildcard::CONTAINS, 'bar')));
         $this->toLdapFilter()->shouldBeEqualTo('(&(foo=bar)(!(description=*bar*)))');
     }
 
-    function it_should_throw_LdapQueryException_when_trying_to_set_the_operator_to_an_invalid_type()
+    public function it_should_throw_LdapQueryException_when_trying_to_set_the_operator_to_an_invalid_type()
     {
         $ex = new LdapQueryException('Invalid operator symbol "=". Valid operator symbols are: &');
         $this->shouldThrow($ex)->duringSetOperatorSymbol('=');

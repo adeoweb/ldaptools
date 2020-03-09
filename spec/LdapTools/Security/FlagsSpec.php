@@ -16,23 +16,23 @@ use PhpSpec\ObjectBehavior;
 
 class FlagsSpec extends ObjectBehavior
 {
-    function let()
+    public function let()
     {
         $flags = AceFlags::FLAG['CONTAINER_INHERIT'] + AceFlags::FLAG['SUCCESSFUL_ACCESS'];
         $this->beConstructedWith($flags);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType(Flags::class);
     }
 
-    function it_should_get_the_flags_value()
+    public function it_should_get_the_flags_value()
     {
         $this->getValue()->shouldBeEqualTo(66);
     }
 
-    function it_should_check_if_a_flag_is_set_when_calling_has()
+    public function it_should_check_if_a_flag_is_set_when_calling_has()
     {
         $this->has(AceFlags::FLAG['FAILED_ACCESS'])->shouldBeEqualTo(false);
         $this->has(AceFlags::FLAG['NO_PROPAGATE_INHERIT'])->shouldBeEqualTo(false);
@@ -40,7 +40,7 @@ class FlagsSpec extends ObjectBehavior
         $this->has(AceFlags::FLAG['SUCCESSFUL_ACCESS'])->shouldBeEqualTo(true);
     }
 
-    function it_should_add_a_flag()
+    public function it_should_add_a_flag()
     {
         $this->has(AceFlags::FLAG['INHERIT_ONLY'])->shouldBeEqualTo(false);
         $this->add(AceFlags::FLAG['INHERIT_ONLY'])->shouldReturnAnInstanceOf('LdapTools\Security\Flags');
@@ -52,7 +52,7 @@ class FlagsSpec extends ObjectBehavior
         $this->has(AceFlags::FLAG['OBJECT_INHERIT'])->shouldBeEqualTo(true);
     }
 
-    function it_should_remove_a_flag()
+    public function it_should_remove_a_flag()
     {
         $this->add(AceFlags::FLAG['NO_PROPAGATE_INHERIT']);
         $this->has(AceFlags::FLAG['SUCCESSFUL_ACCESS'])->shouldBeEqualTo(true);

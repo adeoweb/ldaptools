@@ -16,12 +16,12 @@ use PhpSpec\ObjectBehavior;
 
 class NoCacheSpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Cache\NoCache');
     }
 
-    function it_should_implement_the_CacheInterface()
+    public function it_should_implement_the_CacheInterface()
     {
         $this->shouldImplement('\LdapTools\Cache\CacheInterface');
     }

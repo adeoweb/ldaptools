@@ -87,7 +87,7 @@ class FilterBuilder
      */
     public function in($attribute, array $values)
     {
-        return new bOr(...array_map(function($v) use ($attribute) {
+        return new bOr(...array_map(function ($v) use ($attribute) {
             return $this->eq($attribute, $v);
         }, $values));
     }

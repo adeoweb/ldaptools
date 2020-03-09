@@ -19,30 +19,30 @@ use Prophecy\Argument;
 
 class ConvertExchangeLegacyDnSpec extends ObjectBehavior
 {
-    function let(LdapConnectionInterface $connection)
+    public function let(LdapConnectionInterface $connection)
     {
         $connection->getConfig()->willReturn(new DomainConfiguration('foo.bar'));
         $connection->getRootDse()->willReturn(new LdapObject(['configurationNamingContext' => 'cn=foo,dc=foo,dc=bar']));
         $this->setLdapConnection($connection);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType(ConvertExchangeLegacyDn::class);
     }
 
-    function it_should_do_nothing_with_the_value_coming_from_ldap()
+    public function it_should_do_nothing_with_the_value_coming_from_ldap()
     {
         $this->fromLdap('foo')->shouldBeEqualTo('foo');
     }
 
-    function it_should_not_convert_the_value_going_to_ldap_if_it_is_not_set_to_auto($connection)
+    public function it_should_not_convert_the_value_going_to_ldap_if_it_is_not_set_to_auto($connection)
     {
         $connection->execute(Argument::any())->shouldNotBeCalled();
         $this->toLdap('foo')->shouldBeEqualTo('foo');
     }
 
-    function it_should_convert_to_a_legacy_dn_with_auto_specified($connection)
+    public function it_should_convert_to_a_legacy_dn_with_auto_specified($connection)
     {
         $connection->execute(Argument::any())->willReturn([
             'count' => 1,
@@ -64,7 +64,7 @@ class ConvertExchangeLegacyDnSpec extends ObjectBehavior
         ."/");
     }
 
-    function it_should_throw_an_exception_if_it_cannot_determine_the_legacy_exchange_dn_automatically($connection)
+    public function it_should_throw_an_exception_if_it_cannot_determine_the_legacy_exchange_dn_automatically($connection)
     {
         $connection->execute(Argument::any())->willThrow('LdapTools\Exception\EmptyResultException');
 

@@ -14,7 +14,7 @@ use PhpSpec\ObjectBehavior;
 
 class ParameterResolverSpec extends ObjectBehavior
 {
-    function let()
+    public function let()
     {
         $attributes = [
             'firstName' => '%foo%',
@@ -28,24 +28,24 @@ class ParameterResolverSpec extends ObjectBehavior
         $this->beConstructedWith($attributes, $parameters);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Resolver\ParameterResolver');
     }
 
-    function it_should_return_an_array_when_calling_resolve()
+    public function it_should_return_an_array_when_calling_resolve()
     {
         $this->resolve()->shouldBeArray();
     }
 
-    function it_should_correctly_parse_passed_parameters()
+    public function it_should_correctly_parse_passed_parameters()
     {
         $this->resolve()->shouldHaveKeyWithValue('firstName', 'Emmett');
         $this->resolve()->shouldHaveKeyWithValue('lastName', 'Brown');
         $this->resolve()->shouldHaveKeyWithValue('displayName', 'Brown, Emmett');
     }
 
-    function it_should_be_case_insensitive_for_parameter_names()
+    public function it_should_be_case_insensitive_for_parameter_names()
     {
         $attributes = [
             'firstName' => '%BAR%',
@@ -60,7 +60,7 @@ class ParameterResolverSpec extends ObjectBehavior
         $this->resolve()->shouldHaveKeyWithValue('lastName', 'Emmett');
     }
 
-    function it_should_return_attributes_in_the_same_case_they_were_passed()
+    public function it_should_return_attributes_in_the_same_case_they_were_passed()
     {
         $attributes = [
             'FirstNamE' => '%BAR%',
@@ -73,7 +73,7 @@ class ParameterResolverSpec extends ObjectBehavior
         $this->resolve()->shouldHaveKey('FirstNamE');
     }
 
-    function it_should_detect_circular_references_in_parameters()
+    public function it_should_detect_circular_references_in_parameters()
     {
         $attributes = [
             'firstName' => '%lastName%',
@@ -85,7 +85,7 @@ class ParameterResolverSpec extends ObjectBehavior
         $this->shouldThrow('LdapTools\Exception\LogicException')->duringResolve();
     }
 
-    function it_should_return_attributes_correctly_when_no_parameters_are_used()
+    public function it_should_return_attributes_correctly_when_no_parameters_are_used()
     {
         $attributes = [
             'firstName' => 'Foo',
@@ -96,7 +96,7 @@ class ParameterResolverSpec extends ObjectBehavior
         $this->resolve()->shouldBeEqualTo($attributes);
     }
 
-    function it_should_resolve_parameters_in_the_correct_order()
+    public function it_should_resolve_parameters_in_the_correct_order()
     {
         $attributes = [
             'displayName' => '%lastname%, %firstname% as %username%',
@@ -118,7 +118,7 @@ class ParameterResolverSpec extends ObjectBehavior
         $this->resolve()->shouldHaveKeyWithValue('city', 'Hill Valley');
     }
 
-    function it_should_handle_an_attribute_value_as_an_array()
+    public function it_should_handle_an_attribute_value_as_an_array()
     {
         $attributes = [
             'displayName' => '%lastname%, %firstname% as %username%',
@@ -142,7 +142,7 @@ class ParameterResolverSpec extends ObjectBehavior
         $this->resolve()->shouldHaveKeyWithValue('foobar', ['Emmett', 'Brown', 'bleh']);
     }
 
-    function it_should_throw_an_exception_when_trying_to_use_a_multivalued_attribute_as_a_parameter()
+    public function it_should_throw_an_exception_when_trying_to_use_a_multivalued_attribute_as_a_parameter()
     {
         $attributes = [
             'displayName' => '%firstname%',
@@ -157,7 +157,7 @@ class ParameterResolverSpec extends ObjectBehavior
         $this->shouldThrow('\LdapTools\Exception\InvalidArgumentException')->duringResolve();
     }
     
-    function it_should_check_if_a_value_has_parameters()
+    public function it_should_check_if_a_value_has_parameters()
     {
         $this::hasParameters('ou=test,%foo%')->shouldBeEqualTo(true);
         $this::hasParameters(['ou=test,%foo%', 'ou=test,dc=foo,dc=bar'])->shouldBeEqualTo(true);
@@ -166,7 +166,7 @@ class ParameterResolverSpec extends ObjectBehavior
         $this::hasParameters(['foo', 'ou=test,dc=foo,dc=bar'])->shouldBeEqualTo(false);
     }
 
-    function it_should_only_check_strings_for_parameters()
+    public function it_should_only_check_strings_for_parameters()
     {
         $attributes = [
             'displayName' => new \DateTime(),
@@ -180,10 +180,10 @@ class ParameterResolverSpec extends ObjectBehavior
         $this::hasParameters($attributes)->shouldBeEqualTo(false);
     }
 
-    public function getMatchers()
+    public function getMatchers(): array
     {
         return [
-            'haveKeyWithValue' => function($subject, $key, $value) {
+            'haveKeyWithValue' => function ($subject, $key, $value) {
                 return isset($subject[$key]) && ($subject[$key] === $value);
             },
         ];

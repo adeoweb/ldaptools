@@ -15,22 +15,22 @@ use PhpSpec\ObjectBehavior;
 
 class EncodeWindowsPasswordSpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\AttributeConverter\EncodeWindowsPassword');
     }
 
-    function it_should_implement_AttributeConverterInterface()
+    public function it_should_implement_AttributeConverterInterface()
     {
         $this->shouldImplement('\LdapTools\AttributeConverter\AttributeConverterInterface');
     }
 
-    function it_should_not_return_anything_when_calling_fromLdap()
+    public function it_should_not_return_anything_when_calling_fromLdap()
     {
         $this->fromLdap('foo')->shouldBeNull();
     }
 
-    function it_should_throw_an_exception_if_ssl_or_tls_is_not_enabled(\LdapTools\Connection\LdapConnectionInterface $connection)
+    public function it_should_throw_an_exception_if_ssl_or_tls_is_not_enabled(\LdapTools\Connection\LdapConnectionInterface $connection)
     {
         $this->toLdap('test')->shouldNotThrow('\LdapTools\Exception\LdapConnectionException');
 

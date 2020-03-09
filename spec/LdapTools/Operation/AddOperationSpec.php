@@ -23,54 +23,53 @@ class AddOperationSpec extends ObjectBehavior
         $this->beConstructedWith('foo');
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Operation\AddOperation');
     }
 
-    function it_should_be_able_to_be_constructed_with_a_null_dn()
+    public function it_should_be_able_to_be_constructed_with_a_null_dn()
     {
         $this->beConstructedWith(null);
         $this->shouldHaveType('LdapTools\Operation\AddOperation');
-
     }
 
-    function it_should_implement_LdapOperationInterface()
+    public function it_should_implement_LdapOperationInterface()
     {
         $this->shouldImplement('\LdapTools\Operation\LdapOperationInterface');
     }
 
-    function it_should_set_the_attributes_for_the_add_operation()
+    public function it_should_set_the_attributes_for_the_add_operation()
     {
         $attributes = ['foo' => 'bar', 'bar' => 'foo'];
         $this->setAttributes($attributes);
         $this->getAttributes()->shouldBeEqualTo($attributes);
     }
 
-    function it_should_set_the_DN_for_the_add_operation()
+    public function it_should_set_the_DN_for_the_add_operation()
     {
         $dn = 'cn=foo,dc=example,dc=local';
         $this->setDn($dn);
         $this->getDn()->shouldBeEqualTo($dn);
     }
 
-    function it_should_chain_the_setters()
+    public function it_should_chain_the_setters()
     {
         $this->setDn('foo')->shouldReturnAnInstanceOf('\LdapTools\Operation\AddOperation');
         $this->setAttributes(['foo' => 'bar'])->shouldReturnAnInstanceOf('\LdapTools\Operation\AddOperation');
     }
 
-    function it_should_get_the_name_of_the_operation()
+    public function it_should_get_the_name_of_the_operation()
     {
         $this->getName()->shouldBeEqualTo('Add');
     }
 
-    function it_should_get_the_correct_ldap_function()
+    public function it_should_get_the_correct_ldap_function()
     {
         $this->getLdapFunction()->shouldBeEqualTo('ldap_add');
     }
 
-    function it_should_return_the_arguments_for_the_ldap_function_in_the_correct_order()
+    public function it_should_return_the_arguments_for_the_ldap_function_in_the_correct_order()
     {
         $args = [
             'cn=foo,dc=example,dc=local',
@@ -81,7 +80,7 @@ class AddOperationSpec extends ObjectBehavior
         $this->getArguments()->shouldBeEqualTo($args);
     }
 
-    function it_should_get_a_log_formatted_array()
+    public function it_should_get_a_log_formatted_array()
     {
         $this->getLogArray()->shouldBeArray();
         $this->getLogArray()->shouldHaveKey('DN');
@@ -90,7 +89,7 @@ class AddOperationSpec extends ObjectBehavior
         $this->getLogArray()->shouldHaveKey('Controls');
     }
 
-    function it_should_mask_password_values_in_the_log_formatted_array()
+    public function it_should_mask_password_values_in_the_log_formatted_array()
     {
         $this->setAttributes(['username' => 'foo', 'unicodePwd' => 'correct horse battery staple']);
         $this->getLogArray()->shouldContain(print_r(['username' => 'foo', 'unicodePwd' => '******'], true));
@@ -98,19 +97,19 @@ class AddOperationSpec extends ObjectBehavior
         $this->getLogArray()->shouldContain(print_r(['username' => 'foo', 'userPassword' => '******'], true));
     }
 
-    function it_should_throw_an_invalid_argument_exception_if_the_dn_is_left_null_when_get_arguments_is_called()
+    public function it_should_throw_an_invalid_argument_exception_if_the_dn_is_left_null_when_get_arguments_is_called()
     {
         $this->beConstructedWith(null);
         $this->shouldThrow('\LdapTools\Exception\InvalidArgumentException')->duringGetArguments();
     }
 
-    function it_should_set_a_location()
+    public function it_should_set_a_location()
     {
         $this->setLocation('dc=foo,dc=bar');
         $this->getLocation()->shouldBeEqualTo('dc=foo,dc=bar');
     }
 
-    function it_should_add_pre_operations()
+    public function it_should_add_pre_operations()
     {
         $operation1 = new AddOperation('cn=foo,dc=bar,dc=foo');
         $operation2 = new DeleteOperation('cn=foo,dc=bar,dc=foo');
@@ -121,7 +120,7 @@ class AddOperationSpec extends ObjectBehavior
         $this->getPreOperations()->shouldBeEqualTo([$operation1, $operation2, $operation3]);
     }
 
-    function it_should_add_post_operations()
+    public function it_should_add_post_operations()
     {
         $operation1 = new AddOperation('cn=foo,dc=bar,dc=foo');
         $operation2 = new DeleteOperation('cn=foo,dc=bar,dc=foo');
@@ -132,7 +131,7 @@ class AddOperationSpec extends ObjectBehavior
         $this->getPostOperations()->shouldBeEqualTo([$operation1, $operation2, $operation3]);
     }
     
-    function it_should_add_ldap_controls()
+    public function it_should_add_ldap_controls()
     {
         $control1 = new LdapControl('foo', true);
         $control2 = new LdapControl('bar');

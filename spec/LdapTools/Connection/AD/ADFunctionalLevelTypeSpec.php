@@ -14,55 +14,55 @@ use PhpSpec\ObjectBehavior;
 
 class ADFunctionalLevelTypeSpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Connection\AD\ADFunctionalLevelType');
     }
 
-    function it_should_have_a_WIN2000_constant()
+    public function it_should_have_a_WIN2000_constant()
     {
         $this->shouldHaveConstant('WIN2000');
     }
 
-    function it_should_have_a_WIN2003_constant()
+    public function it_should_have_a_WIN2003_constant()
     {
         $this->shouldHaveConstant('WIN2003');
     }
 
-    function it_should_have_a_WIN2003_MIXED_DOMAIN_constant()
+    public function it_should_have_a_WIN2003_MIXED_DOMAIN_constant()
     {
         $this->shouldHaveConstant('WIN2003_MIXED_DOMAIN');
     }
 
-    function it_should_have_a_WIN2008_constant()
+    public function it_should_have_a_WIN2008_constant()
     {
         $this->shouldHaveConstant('WIN2008');
     }
 
-    function it_should_have_a_WIN2008R2_constant()
+    public function it_should_have_a_WIN2008R2_constant()
     {
         $this->shouldHaveConstant('WIN2008R2');
     }
 
-    function it_should_have_a_WIN2012_constant()
+    public function it_should_have_a_WIN2012_constant()
     {
         $this->shouldHaveConstant('WIN2012');
     }
 
-    function it_should_have_a_WIN2012R2_constant()
+    public function it_should_have_a_WIN2012R2_constant()
     {
         $this->shouldHaveConstant('WIN2012R2');
     }
 
-    function it_should_have_a_WIN2016_constant()
+    public function it_should_have_a_WIN2016_constant()
     {
         $this->shouldHaveConstant('WIN2016');
     }
 
-    public function getMatchers()
+    public function getMatchers(): array
     {
         return [
-            'haveConstant' => function($subject, $constant) {
+            'haveConstant' => function ($subject, $constant) {
                 return defined('\LdapTools\Connection\AD\ADFunctionalLevelType::'.$constant);
             }
         ];

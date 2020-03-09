@@ -14,12 +14,12 @@ use PhpSpec\ObjectBehavior;
 
 class LdifEntryBuilderSpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Ldif\LdifEntryBuilder');
     }
 
-    function it_should_build_an_add_entry()
+    public function it_should_build_an_add_entry()
     {
         $dn = 'dc=foo,dc=bar';
         $attributes = ['givenName' => 'foo', 'sn' => 'bar'];
@@ -29,7 +29,7 @@ class LdifEntryBuilderSpec extends ObjectBehavior
         $this->add($dn, $attributes)->getAttributes()->shouldBeEqualTo(['givenName' => ['foo'], 'sn' => ['bar']]);
     }
 
-    function it_should_build_a_delete_entry()
+    public function it_should_build_a_delete_entry()
     {
         $dn = 'dc=foo,dc=bar';
 
@@ -37,7 +37,7 @@ class LdifEntryBuilderSpec extends ObjectBehavior
         $this->delete($dn)->getDn()->shouldBeEqualTo($dn);
     }
 
-    function it_should_build_a_modify_entry()
+    public function it_should_build_a_modify_entry()
     {
         $dn = 'dc=foo,dc=bar';
 
@@ -45,7 +45,7 @@ class LdifEntryBuilderSpec extends ObjectBehavior
         $this->modify($dn)->getDn()->shouldBeEqualTo($dn);
     }
 
-    function it_should_build_a_modrdn_entry_when_calling_rename()
+    public function it_should_build_a_modrdn_entry_when_calling_rename()
     {
         $dn = 'dc=foo,dc=bar';
         $name = 'cn=foobar';
@@ -58,7 +58,7 @@ class LdifEntryBuilderSpec extends ObjectBehavior
         //$this->rename($dn, $name)->getDeleteOldRdn()->shouldBeEqualTo(true);
     }
 
-    function it_should_build_a_moddn_when_calling_move()
+    public function it_should_build_a_moddn_when_calling_move()
     {
         $dn = 'cn=foobar,dc=foo,dc=bar';
         $ou = 'ou=employees,dc=foo,dc=bar';
@@ -69,7 +69,7 @@ class LdifEntryBuilderSpec extends ObjectBehavior
         $this->move($dn, $ou)->getDeleteOldRdn()->shouldBeEqualTo(true);
     }
 
-    function it_should_build_a_moddn_entry()
+    public function it_should_build_a_moddn_entry()
     {
         $dn = 'dc=foo,dc=bar';
 
@@ -77,4 +77,3 @@ class LdifEntryBuilderSpec extends ObjectBehavior
         $this->moddn($dn)->getDn()->shouldBeEqualTo($dn);
     }
 }
-

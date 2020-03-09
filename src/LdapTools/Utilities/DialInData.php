@@ -74,7 +74,7 @@ class DialInData
 
     /**
      * Get the CallbackPhoneNumber as a hex value. The encoding process for this value is currently unknown.
-     * 
+     *
      * @return string
      */
     public function getCallbackPhoneNumber()
@@ -84,7 +84,7 @@ class DialInData
 
     /**
      * Set the CallbackPhoneNumber as a hex value. The encoding process for this value is currently unknown.
-     * 
+     *
      * @param string $callbackPhoneNumber
      * @return $this
      */
@@ -97,7 +97,7 @@ class DialInData
 
     /**
      * Get the signature value for the dial-in data.
-     * 
+     *
      * @return string
      */
     public function getSignature()
@@ -107,7 +107,7 @@ class DialInData
 
     /**
      * Check whether the signature is valid, thus signifying a valid data structure.
-     * 
+     *
      * @return bool
      */
     public function isSignatureValid()
@@ -131,7 +131,7 @@ class DialInData
 
     /**
      * Decode and parse the binary dial-in data from the userParameters attribute (the data between 44 and 96 bytes).
-     * 
+     *
      * @param string $binary
      */
     protected function decode($binary)

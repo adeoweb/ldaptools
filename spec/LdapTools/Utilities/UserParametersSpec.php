@@ -27,12 +27,12 @@ class UserParametersSpec extends ObjectBehavior
         'e380b0180801437478436667466c61677331e380b0e381a6e380b2e380b9220201437478496e697469616c50726f6772616de380b02402'.
         '01437478496e697469616c50726f6772616d57e380b0';
     
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Utilities\UserParameters');
     }
     
-    function it_should_decode_binary_dialin_and_TSPropertyArray_data_on_construction()
+    public function it_should_decode_binary_dialin_and_TSPropertyArray_data_on_construction()
     {
         $this->beConstructedWith(hex2bin($this->defaultHex));
         
@@ -41,7 +41,7 @@ class UserParametersSpec extends ObjectBehavior
         $this->toBinary()->shouldEqual(hex2bin($this->defaultHex));
     }
     
-    function it_should_not_construct_the_TSPropertyArray_if_it_doesnt_exist()
+    public function it_should_not_construct_the_TSPropertyArray_if_it_doesnt_exist()
     {
         $this->beConstructedWith(hex2bin(substr($this->defaultHex, 0, 96)));
         $this->getDialInData()->shouldReturnAnInstanceOf('LdapTools\Utilities\DialInData');
@@ -55,11 +55,11 @@ class UserParametersSpec extends ObjectBehavior
         )));
     }
     
-    function it_should_not_construct_the_dialin_data_if_it_is_completely_empty()
+    public function it_should_not_construct_the_dialin_data_if_it_is_completely_empty()
     {
         $expected = substr_replace($this->defaultHex, str_pad('', 52, '20'), 44, 52);
         $expected = substr_replace(
-            $expected, 
+            $expected,
             str_pad(unpack('H*', UserParameters::RESERVED_DATA_VALUE['RDS'])[1], 44, '20', STR_PAD_RIGHT),
             0,
             44
@@ -71,7 +71,7 @@ class UserParametersSpec extends ObjectBehavior
         $this->toBinary()->shouldEqual(hex2bin($expected));
     }
     
-    function it_should_be_constructed_with_a_TSPropertyArray_object()
+    public function it_should_be_constructed_with_a_TSPropertyArray_object()
     {
         $tsPropArray = new TSPropertyArray();
         $tsPropArray->set('CtxWFProfilePath', 'foobar');
@@ -81,7 +81,7 @@ class UserParametersSpec extends ObjectBehavior
         $this->getDialInData()->shouldBeNull();
     }
     
-    function it_should_be_constructed_with_a_DialInData_object()
+    public function it_should_be_constructed_with_a_DialInData_object()
     {
         $did = new DialInData();
         $did->setUserPrivilege(9);
@@ -91,14 +91,14 @@ class UserParametersSpec extends ObjectBehavior
         $this->getTSPropertyArray()->shouldBeNull();
     }
 
-    function it_should_be_able_to_set_TSPropertyArray()
+    public function it_should_be_able_to_set_TSPropertyArray()
     {
         $tsPropArray = (new TSPropertyArray())->set('CtxShadow', 4);
         $this->setTSPropertyArray($tsPropArray);
         $this->getTSPropertyArray()->shouldEqual($tsPropArray);
     }
 
-    function it_should_be_able_to_set_DialInData()
+    public function it_should_be_able_to_set_DialInData()
     {
         $did = (new DialInData())->setUserPrivilege(9);
         
@@ -106,7 +106,7 @@ class UserParametersSpec extends ObjectBehavior
         $this->getDialInData()->shouldEqual($did);
     }
 
-    function it_should_preserve_any_data_that_occurs_after_the_TSPropertyArray_data()
+    public function it_should_preserve_any_data_that_occurs_after_the_TSPropertyArray_data()
     {
         $foobar = '666f6f626172';
         $hex = $this->defaultHex;
@@ -117,14 +117,14 @@ class UserParametersSpec extends ObjectBehavior
         $this->toBinary()->shouldEqual(hex2bin($hex));
     }
     
-    function it_should_get_the_reserved_data_string_from_a_binary_constructed_object()
+    public function it_should_get_the_reserved_data_string_from_a_binary_constructed_object()
     {
         $this->beConstructedWith(hex2bin($this->defaultHex));
         
         $this->getReservedDataString()->shouldEqual(UserParameters::RESERVED_DATA_VALUE['NPS_RDS']);
     }
     
-    function it_should_get_empty_binary_data_when_nothing_is_set()
+    public function it_should_get_empty_binary_data_when_nothing_is_set()
     {
         $this->toBinary()->shouldEqual(hex2bin(str_pad('', 96, '20')));
     }

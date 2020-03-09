@@ -98,7 +98,7 @@ class LdapResultSorterSpec extends ObjectBehavior
      */
     protected $collection;
 
-    function let()
+    public function let()
     {
         $this->collection = new LdapObjectCollection();
         foreach ($this->toSort as $sort) {
@@ -107,53 +107,53 @@ class LdapResultSorterSpec extends ObjectBehavior
         $this->beConstructedWith($this->orderBy);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Query\LdapResultSorter');
     }
 
-    function it_should_be_set_to_case_insensitive_by_default()
+    public function it_should_be_set_to_case_insensitive_by_default()
     {
         $this->getIsCaseSensitive()->shouldBeEqualTo(false);
     }
 
-    function it_should_sort_an_array_of_results_ascending_by_first_name()
+    public function it_should_sort_an_array_of_results_ascending_by_first_name()
     {
-        $this->sort($this->toSort)->shouldHaveFirstValue('firstName','Amy');
-        $this->sort($this->toSort)->shouldHaveLastValue('firstName','Tim');
+        $this->sort($this->toSort)->shouldHaveFirstValue('firstName', 'Amy');
+        $this->sort($this->toSort)->shouldHaveLastValue('firstName', 'Tim');
 
-        $this->sort($this->collection->toArray())->shouldHaveFirstValue('firstName','Amy');
-        $this->sort($this->collection->toArray())->shouldHaveLastValue('firstName','Tim');
+        $this->sort($this->collection->toArray())->shouldHaveFirstValue('firstName', 'Amy');
+        $this->sort($this->collection->toArray())->shouldHaveLastValue('firstName', 'Tim');
     }
 
-    function it_should_sort_an_array_of_results_descending_by_first_name()
+    public function it_should_sort_an_array_of_results_descending_by_first_name()
     {
         $this->beConstructedWith(['firstName' => 'DESC']);
-        $this->sort($this->toSort)->shouldHaveFirstValue('firstName','Tim');
-        $this->sort($this->toSort)->shouldHaveLastValue('firstName','Amy');
-        $this->sort($this->collection->toArray())->shouldHaveFirstValue('firstName','Tim');
-        $this->sort($this->collection->toArray())->shouldHaveLastValue('firstName','Amy');
+        $this->sort($this->toSort)->shouldHaveFirstValue('firstName', 'Tim');
+        $this->sort($this->toSort)->shouldHaveLastValue('firstName', 'Amy');
+        $this->sort($this->collection->toArray())->shouldHaveFirstValue('firstName', 'Tim');
+        $this->sort($this->collection->toArray())->shouldHaveLastValue('firstName', 'Amy');
     }
 
-    function it_should_sort_on_multiple_attributes_desc()
+    public function it_should_sort_on_multiple_attributes_desc()
     {
         $this->beConstructedWith(['firstName' => 'ASC', 'lastName' => 'DESC']);
-        $this->sort($this->toSort)->shouldHaveFirstValue('firstName','Amy');
-        $this->sort($this->toSort)->shouldHaveFirstValue('lastName','Yang');
-        $this->sort($this->collection->toArray())->shouldHaveFirstValue('firstName','Amy');
-        $this->sort($this->collection->toArray())->shouldHaveFirstValue('lastName','Yang');
+        $this->sort($this->toSort)->shouldHaveFirstValue('firstName', 'Amy');
+        $this->sort($this->toSort)->shouldHaveFirstValue('lastName', 'Yang');
+        $this->sort($this->collection->toArray())->shouldHaveFirstValue('firstName', 'Amy');
+        $this->sort($this->collection->toArray())->shouldHaveFirstValue('lastName', 'Yang');
     }
 
-    function it_should_sort_on_multiple_attributes_asc()
+    public function it_should_sort_on_multiple_attributes_asc()
     {
         $this->beConstructedWith(['firstName' => 'ASC', 'lastName' => 'ASC']);
-        $this->sort($this->toSort)->shouldHaveFirstValue('lastName','Feng');
-        $this->sort($this->toSort)->shouldHaveFirstValue('firstName','Amy');
-        $this->sort($this->collection->toArray())->shouldHaveFirstValue('lastName','Feng');
-        $this->sort($this->collection->toArray())->shouldHaveFirstValue('firstName','Amy');
+        $this->sort($this->toSort)->shouldHaveFirstValue('lastName', 'Feng');
+        $this->sort($this->toSort)->shouldHaveFirstValue('firstName', 'Amy');
+        $this->sort($this->collection->toArray())->shouldHaveFirstValue('lastName', 'Feng');
+        $this->sort($this->collection->toArray())->shouldHaveFirstValue('firstName', 'Amy');
     }
 
-    function it_should_sort_on_a_datetime_object_asc()
+    public function it_should_sort_on_a_datetime_object_asc()
     {
         $toSort = $this->toSort;
         $toSort[0]['created'] = new \DateTime('2014-6-07');
@@ -161,10 +161,10 @@ class LdapResultSorterSpec extends ObjectBehavior
         $toSort[2]['created'] = new \DateTime('2015-2-22');
         $toSort[3]['created'] = new \DateTime('2014-8-01');
         $this->beConstructedWith(['created' => 'ASC']);
-        $this->sort($toSort)->shouldHaveFirstValue('lastName','Smith');
+        $this->sort($toSort)->shouldHaveFirstValue('lastName', 'Smith');
     }
 
-    function it_should_sort_on_a_datetime_object_desc()
+    public function it_should_sort_on_a_datetime_object_desc()
     {
         $toSort = $this->toSort;
         $toSort[0]['created'] = new \DateTime('2014-6-07');
@@ -172,11 +172,11 @@ class LdapResultSorterSpec extends ObjectBehavior
         $toSort[2]['created'] = new \DateTime('2015-2-22');
         $toSort[3]['created'] = new \DateTime('2014-8-01');
         $this->beConstructedWith(['created' => 'DESC']);
-        $this->sort($toSort)->shouldHaveFirstValue('lastName','Feng');
-        $this->sort($toSort)->shouldHaveFirstValue('firstName','Amy');
+        $this->sort($toSort)->shouldHaveFirstValue('lastName', 'Feng');
+        $this->sort($toSort)->shouldHaveFirstValue('firstName', 'Amy');
     }
 
-    function it_should_sort_on_multiple_attributes_with_aliases()
+    public function it_should_sort_on_multiple_attributes_with_aliases()
     {
         $aliases = [
             'user' => new LdapObjectSchema('ad', 'user'),
@@ -187,15 +187,15 @@ class LdapResultSorterSpec extends ObjectBehavior
             $this->collection->add(new LdapObject($sort, 'group'));
         }
 
-        $this->sort($this->toSort)->shouldHaveFirstValue('firstName','Amy');
-        $this->sort($this->toSort)->shouldHaveLastValue('firstName','Tim');
-        $this->sort(array_merge($this->toSort, $this->toSortGroups))->shouldHaveFirstValue('name','Accounting');
-        $this->sort(array_merge($this->toSort, $this->toSortGroups))->shouldHaveLastValue('lastName','Peterson');
+        $this->sort($this->toSort)->shouldHaveFirstValue('firstName', 'Amy');
+        $this->sort($this->toSort)->shouldHaveLastValue('firstName', 'Tim');
+        $this->sort(array_merge($this->toSort, $this->toSortGroups))->shouldHaveFirstValue('name', 'Accounting');
+        $this->sort(array_merge($this->toSort, $this->toSortGroups))->shouldHaveLastValue('lastName', 'Peterson');
         $this->sort($this->collection)->first()->get('name')->shouldBeEqualTo('Accounting');
         $this->sort($this->collection)->last()->get('lastName')->shouldBeEqualTo('Peterson');
     }
 
-    function it_should_sort_UTF8_data()
+    public function it_should_sort_UTF8_data()
     {
         $this->collection = new LdapObjectCollection();
         foreach ($this->toSortUtf8 as $sort) {
@@ -229,7 +229,7 @@ class LdapResultSorterSpec extends ObjectBehavior
         $this->sort($this->collection)->shouldBeLike($objectResult);
     }
 
-    function it_should_sort_case_insensitive_by_default()
+    public function it_should_sort_case_insensitive_by_default()
     {
         $results = $this->toSortUtf8;
         array_push($results, ['name' => 'mike']);
@@ -276,7 +276,7 @@ class LdapResultSorterSpec extends ObjectBehavior
         $this->sort($this->collection)->shouldBeLike($objectResult);
     }
 
-    function it_should_sort_case_sensitive_if_specified()
+    public function it_should_sort_case_sensitive_if_specified()
     {
         $results = $this->toSortUtf8;
         array_push($results, ['name' => 'mike']);
@@ -324,7 +324,7 @@ class LdapResultSorterSpec extends ObjectBehavior
         $this->sort($this->collection)->shouldBeLike($objectResult);
     }
 
-    public function getMatchers()
+    public function getMatchers(): array
     {
         return [
             'haveFirstValue' => function ($subject, $key, $value) {

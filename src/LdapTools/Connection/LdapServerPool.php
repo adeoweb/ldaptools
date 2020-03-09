@@ -184,8 +184,10 @@ class LdapServerPool
             ));
         }
         array_multisort(
-            array_column($servers, 'pri'), SORT_ASC|SORT_NUMERIC,
-            array_column($servers, 'weight'), SORT_DESC|SORT_NUMERIC,
+            array_column($servers, 'pri'),
+            SORT_ASC|SORT_NUMERIC,
+            array_column($servers, 'weight'),
+            SORT_DESC|SORT_NUMERIC,
             $servers
         );
 

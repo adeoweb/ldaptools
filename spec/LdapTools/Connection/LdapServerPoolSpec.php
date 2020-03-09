@@ -29,12 +29,12 @@ class LdapServerPoolSpec extends ObjectBehavior
         $this->beConstructedWith($config, $tcp);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Connection\LdapServerPool');
     }
 
-    function it_should_set_the_domain_config($tcp)
+    public function it_should_set_the_domain_config($tcp)
     {
         $config = (new DomainConfiguration('foo.bar'))->setServers(['foo']);
         $tcp->connect('foo', Argument::any(), Argument::any())->willReturn(true);
@@ -42,40 +42,40 @@ class LdapServerPoolSpec extends ObjectBehavior
         $this->setConfig($config)->getServer()->shouldBeEqualTo('foo');
     }
 
-    function it_should_be_able_to_check_if_a_specific_server_is_available($tcp)
+    public function it_should_be_able_to_check_if_a_specific_server_is_available($tcp)
     {
         $tcp->connect('foobar', Argument::any(), Argument::any())->shouldBeCalled()->willReturn(true);
 
         $this->isServerAvailable('foobar')->shouldBeEqualTo(true);
     }
 
-    function it_should_have_a_SELECT_ORDER_constant()
+    public function it_should_have_a_SELECT_ORDER_constant()
     {
         $this->shouldHaveConstant('SELECT_ORDER');
     }
 
-    function it_should_have_a_SELECT_RANDOM_constant()
+    public function it_should_have_a_SELECT_RANDOM_constant()
     {
         $this->shouldHaveConstant('SELECT_RANDOM');
     }
 
-    function it_should_have_order_as_the_default_selection_method()
+    public function it_should_have_order_as_the_default_selection_method()
     {
         $this->getSelectionMethod()->shouldBeEqualTo(LdapServerPool::SELECT_ORDER);
     }
 
-    function it_should_change_the_selection_method_when_calling_setSelectionMethod()
+    public function it_should_change_the_selection_method_when_calling_setSelectionMethod()
     {
         $this->setSelectionMethod(LdapServerPool::SELECT_RANDOM);
         $this->getSelectionMethod()->shouldBeEqualTo(LdapServerPool::SELECT_RANDOM);
     }
 
-    function it_should_throw_an_error_when_calling_setting_an_invalid_selection_method()
+    public function it_should_throw_an_error_when_calling_setting_an_invalid_selection_method()
     {
         $this->shouldThrow('\LdapTools\Exception\InvalidArgumentException')->duringSetSelectionMethod('foo');
     }
 
-    function it_should_use_the_server_array_as_is_when_using_the_method_order()
+    public function it_should_use_the_server_array_as_is_when_using_the_method_order()
     {
         $config = new DomainConfiguration('example.com');
         $config->setServers($this->servers);
@@ -83,7 +83,7 @@ class LdapServerPoolSpec extends ObjectBehavior
         $this->getSortedServersArray()->shouldBeEqualTo($this->servers);
     }
 
-    function it_should_randomize_the_server_array_when_using_the_method_random()
+    public function it_should_randomize_the_server_array_when_using_the_method_random()
     {
         $config = new DomainConfiguration('example.com');
         $config->setServers($this->servers);
@@ -93,7 +93,7 @@ class LdapServerPoolSpec extends ObjectBehavior
         $this->getSortedServersArray()->shouldNotBeEqualTo($this->servers);
     }
 
-    function it_should_throw_an_exception_when_no_servers_are_available(TcpSocket $tcp)
+    public function it_should_throw_an_exception_when_no_servers_are_available(TcpSocket $tcp)
     {
         $tcp->connect('foo', 389, 1)->shouldBeCalled()->willReturn(false);
         $config = new DomainConfiguration('example.com');
@@ -103,7 +103,7 @@ class LdapServerPoolSpec extends ObjectBehavior
         $this->shouldThrow(new LdapConnectionException('No LDAP server is available.'))->duringGetServer();
     }
 
-    function it_should_lookup_servers_via_dns_if_no_servers_are_defined(TcpSocket $tcp, Dns $dns)
+    public function it_should_lookup_servers_via_dns_if_no_servers_are_defined(TcpSocket $tcp, Dns $dns)
     {
         $tcp->connect('bar.example.com', 389, 1)->shouldBeCalled()->willReturn(false);
         $tcp->connect('test.example.com', 389, 1)->shouldBeCalled()->willReturn(false);
@@ -150,7 +150,7 @@ class LdapServerPoolSpec extends ObjectBehavior
         $this->getServer()->shouldBeEqualTo('foo.example.com');
     }
 
-    function it_should_throw_an_error_when_no_servers_are_returned_from_dns(TcpSocket $tcp, Dns $dns)
+    public function it_should_throw_an_error_when_no_servers_are_returned_from_dns(TcpSocket $tcp, Dns $dns)
     {
         $e = new LdapConnectionException('No LDAP servers found via DNS for "example.com".');
         $dns->getRecord("_ldap._tcp.example.com", DNS_SRV)->willReturn(false);
@@ -160,7 +160,7 @@ class LdapServerPoolSpec extends ObjectBehavior
         $this->shouldThrow($e)->duringGetServer();
     }
 
-    function it_should_adjust_the_port_if_it_changes_in_the_domain_config(TcpSocket $tcp)
+    public function it_should_adjust_the_port_if_it_changes_in_the_domain_config(TcpSocket $tcp)
     {
         $tcp->connect('foo', 389, 1)->shouldBeCalled()->willReturn(true);
         $tcp->close()->shouldBeCalled();
@@ -176,7 +176,7 @@ class LdapServerPoolSpec extends ObjectBehavior
         $this->getServer()->shouldReturn('foo');
     }
 
-    function it_should_use_the_connect_timeout_value_from_the_config(TcpSocket $tcp)
+    public function it_should_use_the_connect_timeout_value_from_the_config(TcpSocket $tcp)
     {
         $tcp->connect('foo', 389, 5)->shouldBeCalled()->willReturn(true);
         $tcp->close()->shouldBeCalled();
@@ -186,10 +186,10 @@ class LdapServerPoolSpec extends ObjectBehavior
         $this->getServer()->shouldReturn('foo');
     }
 
-    public function getMatchers()
+    public function getMatchers(): array
     {
         return [
-            'haveConstant' => function($subject, $constant) {
+            'haveConstant' => function ($subject, $constant) {
                 return defined('\LdapTools\Connection\LdapServerPool::'.$constant);
             }
         ];

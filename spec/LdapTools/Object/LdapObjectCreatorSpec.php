@@ -56,7 +56,7 @@ class LdapObjectCreatorSpec extends ObjectBehavior
     {
         $this->config = new DomainConfiguration('example.com');
         $this->config->setUseTls(true);
-        $ldapObject = new LdapObject(['defaultNamingContext' => 'dc=example,dc=com'],'RootDSE');
+        $ldapObject = new LdapObject(['defaultNamingContext' => 'dc=example,dc=com'], 'RootDSE');
         $connection->getConfig()->willReturn($this->config);
         $connection->getRootDse()->willReturn($ldapObject);
 
@@ -71,67 +71,67 @@ class LdapObjectCreatorSpec extends ObjectBehavior
         $this->beConstructedWith($connection, $this->schemaFactory, $this->dispatcher);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Object\LdapObjectCreator');
     }
 
-    function it_should_chain_calls_when_adding_attributes()
+    public function it_should_chain_calls_when_adding_attributes()
     {
         $this->with(['foo' => 'bar'])->shouldReturnAnInstanceOf('\LdapTools\Object\LdapObjectCreator');
     }
 
-    function it_should_chain_calls_when_creating_a_user()
+    public function it_should_chain_calls_when_creating_a_user()
     {
         $this->createUser()->shouldReturnAnInstanceOf('\LdapTools\Object\LdapObjectCreator');
     }
 
-    function it_should_chain_calls_when_creating_a_group()
+    public function it_should_chain_calls_when_creating_a_group()
     {
         $this->createGroup()->shouldReturnAnInstanceOf('\LdapTools\Object\LdapObjectCreator');
     }
 
-    function it_should_chain_calls_when_creating_a_contact()
+    public function it_should_chain_calls_when_creating_a_contact()
     {
         $this->createContact()->shouldReturnAnInstanceOf('\LdapTools\Object\LdapObjectCreator');
     }
 
-    function it_should_chain_calls_when_creating_a_computer()
+    public function it_should_chain_calls_when_creating_a_computer()
     {
         $this->createComputer()->shouldReturnAnInstanceOf('\LdapTools\Object\LdapObjectCreator');
     }
 
-    function it_should_chain_calls_when_creating_an_ou()
+    public function it_should_chain_calls_when_creating_an_ou()
     {
         $this->createOU()->shouldReturnAnInstanceOf('\LdapTools\Object\LdapObjectCreator');
     }
 
-    function it_should_chain_calls_when_setting_the_container()
+    public function it_should_chain_calls_when_setting_the_container()
     {
         $this->in('dc=foo,dc=bar')->shouldReturnAnInstanceOf('\LdapTools\Object\LdapObjectCreator');
     }
 
-    function it_should_chain_calls_when_setting_a_parameter()
+    public function it_should_chain_calls_when_setting_a_parameter()
     {
         $this->setParameter('foo', 'bar')->shouldReturnAnInstanceOf('\LdapTools\Object\LdapObjectCreator');
     }
 
-    function it_should_chain_calls_when_setting_the_dn()
+    public function it_should_chain_calls_when_setting_the_dn()
     {
         $this->setDn('cn=foo,dc=example,dc=local')->shouldReturnAnInstanceOf('\LdapTools\Object\LdapObjectCreator');
     }
 
-    function it_should_throw_an_exception_when_passing_an_invalid_object_to_create()
+    public function it_should_throw_an_exception_when_passing_an_invalid_object_to_create()
     {
         $this->shouldThrow('\LdapTools\Exception\InvalidArgumentException')->duringCreate(new DomainConfiguration('foo.bar'));
     }
 
-    function it_should_throw_an_exception_when_passing_an_unknown_ldap_object_type_to_create()
+    public function it_should_throw_an_exception_when_passing_an_unknown_ldap_object_type_to_create()
     {
         $this->shouldThrow('\Exception')->duringCreate('foo');
     }
 
-    function it_should_set_parameters_for_the_attributes_sent_to_ldap($connection)
+    public function it_should_set_parameters_for_the_attributes_sent_to_ldap($connection)
     {
         $this->addOperation->setLocation('dc=foo,dc=bar');
         $connection->execute($this->addOperation)->willReturn(true);
@@ -145,7 +145,7 @@ class LdapObjectCreatorSpec extends ObjectBehavior
         $this->execute();
     }
 
-    function it_should_respect_an_explicitly_set_dn($connection)
+    public function it_should_respect_an_explicitly_set_dn($connection)
     {
         $connection->execute($this->addOperation)->willReturn(true);
         $this->addOperation->setDn('cn=chad,ou=users,dc=foo,dc=bar');
@@ -156,7 +156,7 @@ class LdapObjectCreatorSpec extends ObjectBehavior
             ->execute();
     }
 
-    function it_should_escape_the_base_dn_name_properly_when_using_a_schema($connection)
+    public function it_should_escape_the_base_dn_name_properly_when_using_a_schema($connection)
     {
         $attributes = $this->attributes;
         $attributes['cn'] = 'foo=,bar';
@@ -170,13 +170,13 @@ class LdapObjectCreatorSpec extends ObjectBehavior
             ->execute();
     }
 
-    function it_should_throw_an_exception_when_no_container_is_specified()
+    public function it_should_throw_an_exception_when_no_container_is_specified()
     {
         $this->createGroup()->with(['name' => 'foo']);
         $this->shouldThrow(new \LogicException('You must specify a container or OU to place this LDAP object in.'))->duringExecute();
     }
 
-    function it_should_use_a_default_container_defined_in_the_schema($connection)
+    public function it_should_use_a_default_container_defined_in_the_schema($connection)
     {
         $parser = SchemaParserFactory::get('yml', __DIR__.'/../../resources/schema');
         $schemaobj = $parser->parse('example', 'DefaultContainer');
@@ -191,7 +191,7 @@ class LdapObjectCreatorSpec extends ObjectBehavior
             ->execute();
     }
 
-    function it_should_allow_a_default_container_to_be_overwritten($connection)
+    public function it_should_allow_a_default_container_to_be_overwritten($connection)
     {
         $operation = clone $this->addOperation;
         $operation->setDn('cn=somedude,ou=employees,dc=example,dc=local');
@@ -204,7 +204,7 @@ class LdapObjectCreatorSpec extends ObjectBehavior
             ->execute();
     }
 
-    function it_should_set_parameters_for_the_container_of_the_ldap_object($connection)
+    public function it_should_set_parameters_for_the_container_of_the_ldap_object($connection)
     {
         $operation = clone $this->addOperation;
         $operation->setDn("cn=somedude,ou=Sales,dc=example,dc=com");
@@ -223,7 +223,7 @@ class LdapObjectCreatorSpec extends ObjectBehavior
         $this->execute();
     }
 
-    function it_should_call_creation_events_when_creating_a_ldap_object(EventDispatcherInterface $dispatcher, $connection)
+    public function it_should_call_creation_events_when_creating_a_ldap_object(EventDispatcherInterface $dispatcher, $connection)
     {
         $this->addOperation->setLocation('dc=foo,dc=bar');
         $connection->execute($this->addOperation)->willReturn(true);
@@ -251,7 +251,7 @@ class LdapObjectCreatorSpec extends ObjectBehavior
         $this->execute();
     }
 
-    function it_should_allow_a_ldap_server_to_be_set($connection)
+    public function it_should_allow_a_ldap_server_to_be_set($connection)
     {
         $operation = clone $this->addOperation;
         $operation->setLocation('ou=employees,dc=example,dc=local');
@@ -266,14 +266,14 @@ class LdapObjectCreatorSpec extends ObjectBehavior
             ->execute();
     }
 
-    function it_should_get_the_ldap_server_set()
+    public function it_should_get_the_ldap_server_set()
     {
         $this->getServer()->shouldBeEqualTo(null);
         $this->setServer('foo')->shouldReturnAnInstanceOf('\LdapTools\Object\LdapObjectCreator');
         $this->getServer()->shouldBeEqualTo('foo');
     }
 
-    function it_should_filter_out_empty_strings_and_null_values_before_the_operation_is_executed($connection)
+    public function it_should_filter_out_empty_strings_and_null_values_before_the_operation_is_executed($connection)
     {
         $operation = clone $this->addOperation;
         $attributes = $this->attributes;

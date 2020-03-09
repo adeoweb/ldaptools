@@ -15,12 +15,12 @@ use PhpSpec\ObjectBehavior;
 
 class SddlParserExceptionSpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType(SddlParserException::class);
     }
 
-    function it_should_have_the_base_exception_type()
+    public function it_should_have_the_base_exception_type()
     {
         $this->shouldHaveType('\LdapTools\Exception\Exception');
     }

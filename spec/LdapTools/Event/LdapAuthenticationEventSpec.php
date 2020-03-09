@@ -21,38 +21,38 @@ class LdapAuthenticationEventSpec extends ObjectBehavior
 
     protected $response;
 
-    function let()
+    public function let()
     {
         $this->operation = (new AuthenticationOperation())->setUsername('foo')->setPassword('bar');
         $this->beConstructedWith(Event::LDAP_AUTHENTICATION_BEFORE, $this->operation);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Event\LdapAuthenticationEvent');
     }
 
-    function it_should_implement_EventInterface()
+    public function it_should_implement_EventInterface()
     {
         $this->shouldImplement('LdapTools\Event\EventInterface');
     }
 
-    function it_should_set_the_name_correctly()
+    public function it_should_set_the_name_correctly()
     {
         $this->getName()->shouldBeEqualTo(Event::LDAP_AUTHENTICATION_BEFORE);
     }
 
-    function it_should_get_the_operation()
+    public function it_should_get_the_operation()
     {
         $this->getOperation()->shouldBeEqualTo($this->operation);
     }
 
-    function it_should_have_an_null_response_if_it_is_not_set_yet()
+    public function it_should_have_an_null_response_if_it_is_not_set_yet()
     {
         $this->getResponse()->shouldBeEqualTo(null);
     }
 
-    function it_should_get_the_ldap_response()
+    public function it_should_get_the_ldap_response()
     {
         $response = new AuthenticationResponse(true);
         $this->beConstructedWith(Event::LDAP_AUTHENTICATION_BEFORE, $this->operation, $response);

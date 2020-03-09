@@ -37,7 +37,7 @@ class ConvertWindowsGuid implements AttributeConverterInterface
         $guid = strtolower($guid) === self::AUTO ? LdapUtilities::uuid4() : $guid;
         if (!LdapUtilities::isValidGuid($guid)) {
             throw new AttributeConverterException(sprintf(
-               'The value "%s" is not a valid GUID.',
+                'The value "%s" is not a valid GUID.',
                 $guid
             ));
         }

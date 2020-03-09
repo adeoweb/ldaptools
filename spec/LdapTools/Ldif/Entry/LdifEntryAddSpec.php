@@ -20,32 +20,32 @@ use PhpSpec\ObjectBehavior;
 
 class LdifEntryAddSpec extends ObjectBehavior
 {
-    function let()
+    public function let()
     {
         $this->beConstructedWith('dc=foo,dc=bar');
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Ldif\Entry\LdifEntryAdd');
     }
 
-    function it_should_implement_LdifEntryInterface()
+    public function it_should_implement_LdifEntryInterface()
     {
         $this->shouldImplement('\LdapTools\Ldif\Entry\LdifEntryInterface');
     }
 
-    function it_should_implement_SchemaAwareInterface()
+    public function it_should_implement_SchemaAwareInterface()
     {
         $this->shouldImplement('\LdapTools\Schema\SchemaAwareInterface');
     }
 
-    function it_should_implement_LdapAwareInterface()
+    public function it_should_implement_LdapAwareInterface()
     {
         $this->shouldImplement('\LdapTools\Connection\LdapAwareInterface');
     }
 
-    function it_should_be_able_to_be_contructed_with_attributes()
+    public function it_should_be_able_to_be_contructed_with_attributes()
     {
         $attributes = ['foo' => ['bar'], 'bar' => ['foo']];
         $this->beConstructedWith('dc=foo,dc=bar', $attributes);
@@ -53,14 +53,14 @@ class LdifEntryAddSpec extends ObjectBehavior
         $this->getAttributes()->shouldBeEqualTo($attributes);
     }
 
-    function it_should_set_the_dn()
+    public function it_should_set_the_dn()
     {
         $dn = 'foo';
         $this->setDn($dn);
         $this->getDn()->shouldBeEqualTo($dn);
     }
 
-    function it_should_add_a_control()
+    public function it_should_add_a_control()
     {
         $control = new LdapControl('foo');
         $this->addControl($control);
@@ -68,19 +68,19 @@ class LdifEntryAddSpec extends ObjectBehavior
         $this->getControls()->shouldBeEqualTo([$control]);
     }
 
-    function it_should_add_an_attribute()
+    public function it_should_add_an_attribute()
     {
         $this->addAttribute('name', 'foo');
         $this->getAttributes()->shouldBeEqualTo(['name' => ['foo']]);
     }
 
-    function it_should_set_the_attributes()
+    public function it_should_set_the_attributes()
     {
         $this->setAttributes(['name' => 'foo']);
         $this->getAttributes()->shouldBeEqualTo(['name' => ['foo']]);
     }
 
-    function it_should_get_an_add_operation()
+    public function it_should_get_an_add_operation()
     {
         $attributes = [
             'givenName' => 'foo',
@@ -92,7 +92,7 @@ class LdifEntryAddSpec extends ObjectBehavior
         $this->toOperation()->getAttributes()->shouldBeEqualTo(['givenName' => ['foo'],'sn' => ['bar']]);
     }
 
-    function it_should_get_the_ldif_string_representation()
+    public function it_should_get_the_ldif_string_representation()
     {
         $attributes = [
             'givenName' => 'foo',
@@ -112,7 +112,7 @@ class LdifEntryAddSpec extends ObjectBehavior
         $this->toString()->shouldBeEqualTo($ldif);
     }
 
-    function it_should_get_the_ldif_representation_in_the_context_of_a_type_and_schema(LdapConnectionInterface $connection, LdapObject $rootdse)
+    public function it_should_get_the_ldif_representation_in_the_context_of_a_type_and_schema(LdapConnectionInterface $connection, LdapObject $rootdse)
     {
         $domain = new DomainConfiguration('example.local');
         $domain->setUseTls(true);
@@ -147,7 +147,7 @@ class LdifEntryAddSpec extends ObjectBehavior
         $this->toString()->shouldBeEqualTo($ldif);
     }
 
-    function it_should_add_a_comment()
+    public function it_should_add_a_comment()
     {
         $this->addComment('test')->shouldReturnAnInstanceOf('LdapTools\Ldif\Entry\LdifEntryAdd');
         $this->getComments()->shouldHaveCount(1);

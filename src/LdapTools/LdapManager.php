@@ -337,7 +337,9 @@ class LdapManager
     {
         if (!$this->schemaFactory) {
             $this->schemaFactory = new LdapObjectSchemaFactory(
-                $this->getCache(), $this->getSchemaParser(), $this->config->getEventDispatcher()
+                $this->getCache(),
+                $this->getSchemaParser(),
+                $this->config->getEventDispatcher()
             );
         }
 

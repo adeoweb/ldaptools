@@ -36,7 +36,7 @@ class LdapManagerSpec extends ObjectBehavior
      */
     protected $domain;
     
-    function let()
+    public function let()
     {
         $config = new Configuration();
 
@@ -59,12 +59,12 @@ class LdapManagerSpec extends ObjectBehavior
         $this->beConstructedWith($config);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\LdapManager');
     }
 
-    function it_should_allow_ldap_connections_to_be_passed_to_the_constructor(LdapConnectionInterface $connection, LdapConnectionInterface $connection2)
+    public function it_should_allow_ldap_connections_to_be_passed_to_the_constructor(LdapConnectionInterface $connection, LdapConnectionInterface $connection2)
     {
         $domainConfig2 = new DomainConfiguration('foo.bar');
         $connection2->getConfig()->willReturn($domainConfig2);
@@ -80,64 +80,64 @@ class LdapManagerSpec extends ObjectBehavior
         $this->switchDomain('foo.bar')->getConnection()->shouldBeEqualTo($connection2);
     }
 
-    function it_should_return_a_ldap_connection_when_calling_getConnection()
+    public function it_should_return_a_ldap_connection_when_calling_getConnection()
     {
         $this->getConnection()->shouldReturnAnInstanceOf('\LdapTools\Connection\LdapConnectionInterface');
         $this->getConnection()->getConfig()->getDomainName()->shouldBeEqualTo('example.com');
     }
 
-    function it_should_return_a_ldap_connection_when_calling_getConnection_with_a_specific_domain()
+    public function it_should_return_a_ldap_connection_when_calling_getConnection_with_a_specific_domain()
     {
         $this->getConnection('test.com')->shouldReturnAnInstanceOf('\LdapTools\Connection\LdapConnectionInterface');
         $this->getConnection('test.com')->getConfig()->getDomainName()->shouldBeEqualTo('test.com');
         $this->getDomainContext()->shouldBeEqualTo('example.com');
     }
 
-    function it_should_error_when_trying_to_get_a_connection_that_doesnt_exist()
+    public function it_should_error_when_trying_to_get_a_connection_that_doesnt_exist()
     {
         $e = new InvalidArgumentException('Domain "foo" is not valid. Valid domains are: example.com, test.com');
 
         $this->shouldThrow($e)->duringGetConnection('foo');
     }
 
-    function it_should_return_a_LdapQueryBuilder_when_calling_buildLdapQuery()
+    public function it_should_return_a_LdapQueryBuilder_when_calling_buildLdapQuery()
     {
         $this->buildLdapQuery()->shouldHaveType('\LdapTools\Query\LdapQueryBuilder');
     }
 
-    function it_should_return_the_first_added_domain_when_calling_getDomainContext()
+    public function it_should_return_the_first_added_domain_when_calling_getDomainContext()
     {
         $this->getDomainContext()->shouldBeEqualTo('example.com');
     }
 
-    function it_should_switch_the_domain_context_when_calling_switchDomain()
+    public function it_should_switch_the_domain_context_when_calling_switchDomain()
     {
         $this->switchDomain('test.com');
         $this->getDomainContext()->shouldBeEqualTo('test.com');
     }
 
-    function it_should_return_an_array_when_calling_getDomains()
+    public function it_should_return_an_array_when_calling_getDomains()
     {
         $this->getDomains()->shouldBeArray();
     }
 
-    function it_should_return_the_correct_number_of_domains_when_calling_getDomains()
+    public function it_should_return_the_correct_number_of_domains_when_calling_getDomains()
     {
         $this->getDomains()->shouldHaveCount(2);
     }
 
-    function it_should_return_the_correct_domains_when_calling_getDomains()
+    public function it_should_return_the_correct_domains_when_calling_getDomains()
     {
         $this->getDomains()->shouldContain('test.com');
         $this->getDomains()->shouldContain('example.com');
     }
 
-    function it_should_throw_a_RuntimeException_when_adding_a_config_with_no_domains()
+    public function it_should_throw_a_RuntimeException_when_adding_a_config_with_no_domains()
     {
         $this->shouldThrow('\RuntimeException')->during('__construct', [ new Configuration() ]);
     }
 
-    function it_should_honor_the_default_domain_configuration_option()
+    public function it_should_honor_the_default_domain_configuration_option()
     {
         $config = new Configuration();
 
@@ -158,12 +158,12 @@ class LdapManagerSpec extends ObjectBehavior
         $this->getDomainContext()->shouldBeEqualTo('test.com');
     }
 
-    function it_should_return_a_ldap_object_repository_when_calling_getRepository()
+    public function it_should_return_a_ldap_object_repository_when_calling_getRepository()
     {
         $this->getRepository('user')->shouldHaveType('\LdapTools\Object\LdapObjectRepository');
     }
 
-    function it_should_error_when_calling_getRepository_for_a_type_that_does_not_exist()
+    public function it_should_error_when_calling_getRepository_for_a_type_that_does_not_exist()
     {
         $this->config->setSchemaFolder(__DIR__.'/../resources/schema');
         $this->domain->setSchemaName('example');
@@ -172,25 +172,25 @@ class LdapManagerSpec extends ObjectBehavior
         $this->shouldThrow(new \RuntimeException('Unable to load Repository for type "CustomRepository": Repository class "\Foo\Bar" not found.'))->duringGetRepository('CustomRepository');
     }
 
-    function it_should_return_a_ldap_object_creator_when_calling_createLdapObject()
+    public function it_should_return_a_ldap_object_creator_when_calling_createLdapObject()
     {
         $this->createLdapObject()->shouldReturnAnInstanceOf('\LdapTools\Object\LdapObjectCreator');
     }
 
-    function it_should_allow_specifying_the_object_type_to_create_when_calling_createLdapObject(LdapConnectionInterface $connection)
+    public function it_should_allow_specifying_the_object_type_to_create_when_calling_createLdapObject(LdapConnectionInterface $connection)
     {
         $domain = (new DomainConfiguration('foo.bar'))->setBaseDn('dc=foo,dc=bar')->setUseTls(true);
         $connection->getConfig()->willReturn($domain);
         $connection->getRootDse()->willReturn(new LdapObject(['dc' => '']));
         $this->beConstructedWith(new Configuration(), $connection);
 
-        $connection->execute(Argument::that(function($operation) {
+        $connection->execute(Argument::that(function ($operation) {
             return array_key_exists('samaccountname', array_change_key_case($operation->getAttributes()));
         }))->shouldBeCalled();
         $this->createLdapObject('user')->with(['username' => 'foo', 'password' => 'bar'])->in('dc=foo,dc=bar')->execute();
     }
 
-    function it_should_attempt_to_authenticate_a_username_and_password(LdapConnectionInterface $connection)
+    public function it_should_attempt_to_authenticate_a_username_and_password(LdapConnectionInterface $connection)
     {
         $operation = new AuthenticationOperation();
         $operation->setUsername('foo')->setPassword('bar');
@@ -200,10 +200,10 @@ class LdapManagerSpec extends ObjectBehavior
         $connection->execute($operation)->willReturn($response);
         $this->beConstructedWith(new Configuration(), $connection);
 
-        $this->authenticate('foo','bar')->shouldBeEqualTo(true);
+        $this->authenticate('foo', 'bar')->shouldBeEqualTo(true);
     }
 
-    function it_should_set_a_ldap_connection(LdapConnectionInterface $connection, LdapConnectionInterface $connection2)
+    public function it_should_set_a_ldap_connection(LdapConnectionInterface $connection, LdapConnectionInterface $connection2)
     {
         $domainConfig = new DomainConfiguration('foo.bar');
         $connection->getConfig()->willReturn($domainConfig);
@@ -216,7 +216,7 @@ class LdapManagerSpec extends ObjectBehavior
         $this->getConnection('chad.sikorra')->shouldBeEqualTo($connection2);
     }
 
-    function it_should_register_converters_listed_in_the_config()
+    public function it_should_register_converters_listed_in_the_config()
     {
         $config = new Configuration();
         $config->setSchemaFolder(__DIR__.'/../resources/schema');
@@ -235,27 +235,27 @@ class LdapManagerSpec extends ObjectBehavior
             ->toLdapFilter()->shouldBeEqualTo('(&(objectClass=foo)(&(bar=TRUE)))');
     }
 
-    function it_should_return_the_cache_class_in_use()
+    public function it_should_return_the_cache_class_in_use()
     {
         $this->getCache()->shouldReturnAnInstanceOf('\LdapTools\Cache\CacheInterface');
     }
 
-    function it_should_return_the_schema_parser_in_use()
+    public function it_should_return_the_schema_parser_in_use()
     {
         $this->getSchemaParser()->shouldReturnAnInstanceOf('\LdapTools\Schema\Parser\SchemaParserInterface');
     }
 
-    function it_should_return_the_ldap_object_schema_factory_in_use()
+    public function it_should_return_the_ldap_object_schema_factory_in_use()
     {
         $this->getSchemaFactory()->shouldReturnAnInstanceOf('\LdapTools\Factory\LdapObjectSchemaFactory');
     }
 
-    function it_should_return_the_event_dispatcher_instance()
+    public function it_should_return_the_event_dispatcher_instance()
     {
         $this->getEventDispatcher()->shouldReturnAnInstanceOf('\LdapTools\Event\EventDispatcherInterface');
     }
 
-    function it_should_delete_a_ldap_object(LdapConnectionInterface $connection)
+    public function it_should_delete_a_ldap_object(LdapConnectionInterface $connection)
     {
         $domainConfig = new DomainConfiguration('example.local');
         $connection->getConfig()->willReturn($domainConfig);
@@ -273,7 +273,7 @@ class LdapManagerSpec extends ObjectBehavior
         $this->delete($ldapObject, true);
     }
 
-    function it_should_restore_a_ldap_object(LdapConnectionInterface $connection)
+    public function it_should_restore_a_ldap_object(LdapConnectionInterface $connection)
     {
         $domainConfig = new DomainConfiguration('example.local');
         $connection->getConfig()->willReturn($domainConfig);
@@ -283,7 +283,7 @@ class LdapManagerSpec extends ObjectBehavior
         $ldapObject1 = new LdapObject(['dn' => $dn, 'lastKnownLocation' => 'cn=Users,dc=example,dc=local'], 'deleted');
         $ldapObject2 = new LdapObject(['dn' => $dn, 'lastKnownLocation' => 'cn=Users,dc=example,dc=local'], 'deleted');
         
-        $connection->execute(Argument::that(function($operation) use ($dn) {
+        $connection->execute(Argument::that(function ($operation) use ($dn) {
             /** @var BatchModifyOperation $operation */
             $batches = $operation->getBatchCollection()->toArray();
             
@@ -294,7 +294,7 @@ class LdapManagerSpec extends ObjectBehavior
         }))->shouldBeCalled();
         $this->restore($ldapObject1);
         
-        $connection->execute(Argument::that(function($operation) use ($dn) {
+        $connection->execute(Argument::that(function ($operation) use ($dn) {
             /** @var BatchModifyOperation $operation */
             $batches = $operation->getBatchCollection()->toArray();
 
@@ -306,7 +306,7 @@ class LdapManagerSpec extends ObjectBehavior
         $this->restore($ldapObject2, 'ou=Employees,dc=example,dc=local');
     }
 
-    function it_should_get_a_ldif_object()
+    public function it_should_get_a_ldif_object()
     {
         $this->createLdif()->shouldReturnAnInstanceOf('\LdapTools\Ldif\Ldif');
     }

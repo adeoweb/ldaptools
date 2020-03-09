@@ -27,18 +27,18 @@ use PhpSpec\ObjectBehavior;
 
 class AuthenticationOperationHandlerSpec extends ObjectBehavior
 {
-    function let(LdapConnectionInterface $connection, EventDispatcherInterface $dispatcher)
+    public function let(LdapConnectionInterface $connection, EventDispatcherInterface $dispatcher)
     {
         $this->setConnection($connection);
         $this->setEventDispatcher($dispatcher);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Operation\Handler\AuthenticationOperationHandler');
     }
 
-    function it_should_NOT_support_add_delete_rename_query_or_modify_operation()
+    public function it_should_NOT_support_add_delete_rename_query_or_modify_operation()
     {
         $this->supports(new AddOperation('foo'))->shouldBeEqualTo(false);
         $this->supports(new DeleteOperation('foo'))->shouldBeEqualTo(false);
@@ -47,12 +47,12 @@ class AuthenticationOperationHandlerSpec extends ObjectBehavior
         $this->supports(new QueryOperation('(foo=bar)'))->shouldBeEqualTo(false);
     }
 
-    function it_should_support_authentication_operations()
+    public function it_should_support_authentication_operations()
     {
         $this->supports(new AuthenticationOperation())->shouldBeEqualTo(true);
     }
 
-    function it_should_authenticate_a_user($connection)
+    public function it_should_authenticate_a_user($connection)
     {
         $operation = (new AuthenticationOperation())->setUsername('foo')->setPassword('bar');
         $connection->connect('foo', 'bar', false, null)->willReturn($connection);
@@ -64,7 +64,7 @@ class AuthenticationOperationHandlerSpec extends ObjectBehavior
         $this->execute($operation)->isAuthenticated()->shouldBeEqualTo(true);
     }
 
-    function it_should_authenticate_a_user_but_not_reconnect_if_the_connection_wasnt_bound($connection)
+    public function it_should_authenticate_a_user_but_not_reconnect_if_the_connection_wasnt_bound($connection)
     {
         $operation = (new AuthenticationOperation())->setUsername('foo')->setPassword('bar');
         $connection->connect('foo', 'bar', false, null)->willReturn($connection);
@@ -74,7 +74,7 @@ class AuthenticationOperationHandlerSpec extends ObjectBehavior
         $this->execute($operation)->shouldReturnAnInstanceOf('\LdapTools\Operation\AuthenticationResponse');
     }
 
-    function it_should_authenticate_a_user_and_stay_connected_as_them_if_specified(DomainConfiguration $config, $connection)
+    public function it_should_authenticate_a_user_and_stay_connected_as_them_if_specified(DomainConfiguration $config, $connection)
     {
         $operation = (new AuthenticationOperation())->setUsername('foo')->setPassword('bar')->setSwitchToCredentials(true);
         $connection->connect('foo', 'bar', false, null)->willReturn($connection);
@@ -89,7 +89,7 @@ class AuthenticationOperationHandlerSpec extends ObjectBehavior
         $this->execute($operation)->shouldReturnAnInstanceOf('\LdapTools\Operation\AuthenticationResponse');
     }
 
-    function it_should_not_authenticate_if_a_bind_exception_is_thrown($connection)
+    public function it_should_not_authenticate_if_a_bind_exception_is_thrown($connection)
     {
         $ex = new LdapBindException('Foo');
         $operation = (new AuthenticationOperation())->setUsername('foo')->setPassword('bar');
@@ -106,7 +106,7 @@ class AuthenticationOperationHandlerSpec extends ObjectBehavior
         $this->execute($operation)->getErrorCode()->shouldBeEqualTo(99);
     }
 
-    function it_should_not_switch_credentials_on_an_authentication_failure($connection)
+    public function it_should_not_switch_credentials_on_an_authentication_failure($connection)
     {
         $ex = new LdapBindException('Foo');
         $operation = (new AuthenticationOperation())->setUsername('foo')->setPassword('bar')->setSwitchToCredentials(true);
@@ -123,7 +123,7 @@ class AuthenticationOperationHandlerSpec extends ObjectBehavior
         $this->execute($operation)->shouldReturnAnInstanceOf('\LdapTools\Operation\AuthenticationResponse');
     }
 
-    function it_should_call_the_event_dispatchers($connection, $dispatcher)
+    public function it_should_call_the_event_dispatchers($connection, $dispatcher)
     {
         $operation = (new AuthenticationOperation())->setUsername('foo')->setPassword('bar');
         $connection->connect('foo', 'bar', false, null)->willReturn($connection);

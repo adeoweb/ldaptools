@@ -44,7 +44,7 @@ class ConvertExchangeObjectVersion extends ConvertExchangeVersion
             $msExchVersion = ObjectVersion::getNameValue($value);
         } else {
             throw new AttributeConverterException(sprintf(
-               'Version name "%s" is not recognized. Recognized values are: %s',
+                'Version name "%s" is not recognized. Recognized values are: %s',
                 $value,
                 'auto, '.implode(', ', ObjectVersion::values())
             ));

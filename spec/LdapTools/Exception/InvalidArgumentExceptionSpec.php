@@ -14,17 +14,17 @@ use PhpSpec\ObjectBehavior;
 
 class InvalidArgumentExceptionSpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Exception\InvalidArgumentException');
     }
 
-    function it_should_have_the_exception_interface()
+    public function it_should_have_the_exception_interface()
     {
         $this->shouldHaveType('\LdapTools\Exception\ExceptionInterface');
     }
 
-    function it_should_extend_the_base_invalid_argument_exception()
+    public function it_should_extend_the_base_invalid_argument_exception()
     {
         $this->shouldHaveType('\InvalidArgumentException');
     }

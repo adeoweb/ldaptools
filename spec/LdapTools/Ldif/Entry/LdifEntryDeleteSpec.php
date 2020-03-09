@@ -15,29 +15,29 @@ use PhpSpec\ObjectBehavior;
 
 class LdifEntryDeleteSpec extends ObjectBehavior
 {
-    function let()
+    public function let()
     {
         $this->beConstructedWith('dc=foo,dc=bar');
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Ldif\Entry\LdifEntryDelete');
     }
 
-    function it_should_implement_LdifEntryInterface()
+    public function it_should_implement_LdifEntryInterface()
     {
         $this->shouldImplement('\LdapTools\Ldif\Entry\LdifEntryInterface');
     }
 
-    function it_should_set_the_dn()
+    public function it_should_set_the_dn()
     {
         $dn = 'foo';
         $this->setDn($dn);
         $this->getDn()->shouldBeEqualTo($dn);
     }
 
-    function it_should_add_a_control()
+    public function it_should_add_a_control()
     {
         $control = new LdapControl('foo');
         $this->addControl($control);
@@ -45,13 +45,13 @@ class LdifEntryDeleteSpec extends ObjectBehavior
         $this->getControls()->shouldBeEqualTo([$control]);
     }
 
-    function it_should_get_a_delete_operation()
+    public function it_should_get_a_delete_operation()
     {
         $this->toOperation()->shouldReturnAnInstanceOf('LdapTools\Operation\DeleteOperation');
         $this->toOperation()->getDn()->shouldBeEqualTo('dc=foo,dc=bar');
     }
 
-    function it_should_get_the_ldif_string_for_the_entry()
+    public function it_should_get_the_ldif_string_for_the_entry()
     {
         $ldif =
             "# Delete example.\r\n"
@@ -61,7 +61,7 @@ class LdifEntryDeleteSpec extends ObjectBehavior
         $this->toString()->shouldBeEqualTo($ldif);
     }
 
-    function it_should_add_a_comment()
+    public function it_should_add_a_comment()
     {
         $this->addComment('test')->shouldReturnAnInstanceOf('LdapTools\Ldif\Entry\LdifEntryDelete');
         $this->getComments()->shouldHaveCount(1);

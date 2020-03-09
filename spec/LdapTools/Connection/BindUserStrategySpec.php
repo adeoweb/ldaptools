@@ -16,24 +16,24 @@ use PhpSpec\ObjectBehavior;
 
 class BindUserStrategySpec extends ObjectBehavior
 {
-    function let()
+    public function let()
     {
         $config = new DomainConfiguration('example.local');
         $config->setLdapType(LdapConnection::TYPE_OPENLDAP);
         $this->beConstructedThrough('getInstance', [ $config ]);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Connection\BindUserStrategy');
     }
 
-    function it_should_return_the_username_by_default()
+    public function it_should_return_the_username_by_default()
     {
         $this->getUsername('foo')->shouldBeEqualTo('foo');
     }
 
-    function it_should_use_a_custom_format_definition()
+    public function it_should_use_a_custom_format_definition()
     {
         $config = new DomainConfiguration('example.local');
         $config->setLdapType(LdapConnection::TYPE_OPENLDAP);
@@ -43,7 +43,7 @@ class BindUserStrategySpec extends ObjectBehavior
         $this->getUsername('foo')->shouldBeEqualTo('CN=foo,DC=foo,DC=bar');
     }
 
-    function it_should_not_use_the_format_definition_if_the_value_is_already_a_dn()
+    public function it_should_not_use_the_format_definition_if_the_value_is_already_a_dn()
     {
         $config = new DomainConfiguration('example.local');
         $config->setLdapType(LdapConnection::TYPE_OPENLDAP);

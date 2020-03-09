@@ -33,7 +33,7 @@ class ConvertExchangeProxyAddressSpec extends ObjectBehavior
         ],
     ];
 
-    function let(LdapConnectionInterface $connection)
+    public function let(LdapConnectionInterface $connection)
     {
         $connection->getConfig()->willReturn(new DomainConfiguration('foo.bar'));
         $this->setOptions([
@@ -45,36 +45,36 @@ class ConvertExchangeProxyAddressSpec extends ObjectBehavior
         $this->setAttribute('exchangeSmtpAddress');
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\AttributeConverter\ConvertExchangeProxyAddress');
     }
 
-    function it_should_implement_AttributeConverterInterface()
+    public function it_should_implement_AttributeConverterInterface()
     {
         $this->shouldImplement('\LdapTools\AttributeConverter\AttributeConverterInterface');
     }
 
-    function it_should_convert_an_array_of_addresses_to_an_array_of_specific_address_types()
+    public function it_should_convert_an_array_of_addresses_to_an_array_of_specific_address_types()
     {
         $this->fromLdap(['smtp:foo@bar.com','SMTP:foo.bar@foo.com','x400:foo'])->shouldBeEqualTo(['foo@bar.com','foo.bar@foo.com']);
         $this->setOptions(['is_default' => true]);
         $this->fromLdap(['smtp:foo@bar.com','SMTP:foo.bar@foo.com','x400:foo'])->shouldBeEqualTo(['foo.bar@foo.com']);
     }
 
-    function it_should_return_the_default_address_for_a_specific_type_of_address_if_requested()
+    public function it_should_return_the_default_address_for_a_specific_type_of_address_if_requested()
     {
         $this->setOptions(['is_default' => true]);
         $this->fromLdap(['smtp:foo@bar.com','SMTP:foo.bar@foo.com','x400:foo'])->shouldBeEqualTo(['foo.bar@foo.com']);
     }
 
-    function it_should_return_an_empty_string_for_the_default_address_if_it_cannot_be_found()
+    public function it_should_return_an_empty_string_for_the_default_address_if_it_cannot_be_found()
     {
         $this->setOptions(['is_default' => true]);
         $this->fromLdap(['x400:foo'])->shouldBeEqualTo('');
     }
 
-    function it_should_aggregate_values_when_converting_an_array_of_addresses_to_ldap_on_creation()
+    public function it_should_aggregate_values_when_converting_an_array_of_addresses_to_ldap_on_creation()
     {
         $this->setOperationType(AttributeConverterInterface::TYPE_CREATE);
         $this->toLdap(['foo@bar.com','foo.bar@foo.com'])->shouldBeEqualTo(['smtp:foo@bar.com', 'smtp:foo.bar@foo.com']);
@@ -84,9 +84,9 @@ class ConvertExchangeProxyAddressSpec extends ObjectBehavior
         $this->toLdap(['foo2@bar.com'])->shouldBeEqualTo(['smtp:foo@bar.com', 'smtp:foo.bar@foo.com','SMTP:foo2@bar.com']);
     }
 
-    function it_should_aggregate_values_when_converting_an_array_of_addresses_to_ldap_on_modification($connection)
+    public function it_should_aggregate_values_when_converting_an_array_of_addresses_to_ldap_on_modification($connection)
     {
-        $connection->execute(Argument::that(function($operation) {
+        $connection->execute(Argument::that(function ($operation) {
             return $operation->getFilter() == '(&(objectClass=*))'
                 && $operation->getAttributes() == ['proxyAddresses']
                 && $operation->getBaseDn() == 'cn=foo,dc=foo,dc=bar';
@@ -99,16 +99,16 @@ class ConvertExchangeProxyAddressSpec extends ObjectBehavior
         ];
 
         $this->setOperationType(AttributeConverterInterface::TYPE_MODIFY);
-        $this->setBatch(new Batch(Batch::TYPE['ADD'],'exchangeSmtpAddress',['chad@sikorra.com']));
+        $this->setBatch(new Batch(Batch::TYPE['ADD'], 'exchangeSmtpAddress', ['chad@sikorra.com']));
         $this->toLdap(['chad@sikorra.com'])->shouldBeEqualTo($addresses);
         $this->getBatch()->getModType()->shouldBeEqualTo(Batch::TYPE['REPLACE']);
 
         unset($addresses[0]);
-        $this->setBatch(new Batch(Batch::TYPE['REMOVE'],'exchangeSmtpAddress',['foo@foo.bar']));
+        $this->setBatch(new Batch(Batch::TYPE['REMOVE'], 'exchangeSmtpAddress', ['foo@foo.bar']));
         $this->toLdap(['foo@foo.bar'])->shouldBeEqualTo($addresses);
 
         $this->setOptions(['is_default' => true]);
-        $this->setBatch(new Batch(Batch::TYPE['ADD'],'exchangeDefaultSmtpAddress',['foo@foo.bar']));
+        $this->setBatch(new Batch(Batch::TYPE['ADD'], 'exchangeDefaultSmtpAddress', ['foo@foo.bar']));
         $this->toLdap(['FooBar@foo'])->shouldBeLike([
             1 => "smtp:Foo.Bar@foo.bar",
             2 => "x400:foo",
@@ -117,7 +117,7 @@ class ConvertExchangeProxyAddressSpec extends ObjectBehavior
         ]);
     }
 
-    function it_should_not_aggregate_values_on_a_search()
+    public function it_should_not_aggregate_values_on_a_search()
     {
         $this->setOperationType(AttributeConverterInterface::TYPE_SEARCH_FROM);
         $this->getShouldAggregateValues()->shouldBeEqualTo(false);

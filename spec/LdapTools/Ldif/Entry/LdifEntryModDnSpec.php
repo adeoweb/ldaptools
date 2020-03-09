@@ -15,22 +15,22 @@ use PhpSpec\ObjectBehavior;
 
 class LdifEntryModDnSpec extends ObjectBehavior
 {
-    function let()
+    public function let()
     {
         $this->beConstructedWith('dc=foo,dc=bar');
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Ldif\Entry\LdifEntryModDn');
     }
 
-    function it_should_implement_LdifEntryInterface()
+    public function it_should_implement_LdifEntryInterface()
     {
         $this->shouldImplement('\LdapTools\Ldif\Entry\LdifEntryInterface');
     }
 
-    function it_should_be_able_to_be_contructed_with_dn_changes()
+    public function it_should_be_able_to_be_contructed_with_dn_changes()
     {
         $newRdn = 'cn=foobar';
         $newLocation = 'ou=foo,dc=foo,dc=bar';
@@ -42,14 +42,14 @@ class LdifEntryModDnSpec extends ObjectBehavior
         $this->getDeleteOldRdn()->shouldBeEqualTo($deleteOldRdn);
     }
 
-    function it_should_set_the_dn()
+    public function it_should_set_the_dn()
     {
         $dn = 'foo';
         $this->setDn($dn);
         $this->getDn()->shouldBeEqualTo($dn);
     }
 
-    function it_should_add_a_control()
+    public function it_should_add_a_control()
     {
         $control = new LdapControl('foo');
         $this->addControl($control);
@@ -57,7 +57,7 @@ class LdifEntryModDnSpec extends ObjectBehavior
         $this->getControls()->shouldBeEqualTo([$control]);
     }
 
-    function it_should_get_a_rename_operation()
+    public function it_should_get_a_rename_operation()
     {
         $newRdn = 'cn=foobar';
         $newLocation = 'ou=foo,dc=foo,dc=bar';
@@ -70,7 +70,7 @@ class LdifEntryModDnSpec extends ObjectBehavior
         $this->toOperation()->getDeleteOldRdn()->shouldBeEqualTo($deleteOldRdn);
     }
 
-    function it_should_get_the_ldif_string_representation()
+    public function it_should_get_the_ldif_string_representation()
     {
         $newRdn = 'cn=foobar';
         $newLocation = 'ou=foo,dc=foo,dc=bar';
@@ -89,7 +89,7 @@ class LdifEntryModDnSpec extends ObjectBehavior
         $this->toString()->shouldBeEqualTo($ldif);
     }
 
-    function it_should_add_a_comment()
+    public function it_should_add_a_comment()
     {
         $this->addComment('test')->shouldReturnAnInstanceOf('LdapTools\Ldif\Entry\LdifEntryModDn');
         $this->getComments()->shouldHaveCount(1);

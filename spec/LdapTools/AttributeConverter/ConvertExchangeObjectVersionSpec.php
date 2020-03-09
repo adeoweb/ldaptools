@@ -32,26 +32,26 @@ class ConvertExchangeObjectVersionSpec extends ObjectBehavior
         ],
     ];
 
-    function let(LdapConnectionInterface $connection)
+    public function let(LdapConnectionInterface $connection)
     {
         $connection->getConfig()->willReturn(new DomainConfiguration('foo.bar'));
         $connection->getRootDse()->willReturn(new LdapObject(['configurationNamingContext' => 'cn=config,dc=foo,dc=bar']));
         $this->setLdapConnection($connection);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType(ConvertExchangeObjectVersion::class);
     }
 
-    function it_should_allow_a_simple_version_number_going_to_ldap()
+    public function it_should_allow_a_simple_version_number_going_to_ldap()
     {
         foreach (ObjectVersion::toArray() as $name => $value) {
             $this->toLdap($name)->shouldBeEqualTo((string) $value);
         }
     }
 
-    function it_should_attempt_to_query_the_version_to_use_if_auto_is_sent_to_ldap($connection)
+    public function it_should_attempt_to_query_the_version_to_use_if_auto_is_sent_to_ldap($connection)
     {
         $v2007 = $this->result;
         $v2010 = $this->result;
@@ -70,7 +70,7 @@ class ConvertExchangeObjectVersionSpec extends ObjectBehavior
         $this->toLdap('auto')->shouldBeEqualTo((string) ObjectVersion::v2016);
     }
 
-    function it_should_throw_an_exception_if_a_version_number_to_use_cannot_be_determined($connection)
+    public function it_should_throw_an_exception_if_a_version_number_to_use_cannot_be_determined($connection)
     {
         $result = $this->result;
 
@@ -81,12 +81,12 @@ class ConvertExchangeObjectVersionSpec extends ObjectBehavior
         $this->shouldThrow('LdapTools\Exception\AttributeConverterException')->duringToLdap('auto');
     }
 
-    function it_should_throw_an_exception_if_a_simple_version_number_going_to_ldap_is_not_recognized()
+    public function it_should_throw_an_exception_if_a_simple_version_number_going_to_ldap_is_not_recognized()
     {
         $this->shouldThrow('LdapTools\Exception\AttributeConverterException')->duringToLdap('2003');
     }
 
-    function it_should_get_the_object_version_from_ldap()
+    public function it_should_get_the_object_version_from_ldap()
     {
         $this->fromLdap((string) ObjectVersion::v2007)->shouldBeEqualTo('v2007');
         $this->fromLdap((string) ObjectVersion::v2013)->shouldBeEqualTo('v2013');

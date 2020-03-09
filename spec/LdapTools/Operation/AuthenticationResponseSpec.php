@@ -14,20 +14,20 @@ use PhpSpec\ObjectBehavior;
 
 class AuthenticationResponseSpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->beConstructedWith(true);
         $this->shouldHaveType('LdapTools\Operation\AuthenticationResponse');
         $this->isAuthenticated()->shouldBeEqualTo(true);
     }
 
-    function it_should_set_whether_it_is_authenticated()
+    public function it_should_set_whether_it_is_authenticated()
     {
         $this->beConstructedWith(false);
         $this->isAuthenticated()->shouldBeEqualTo(false);
     }
 
-    function it_should_get_the_error_message_and_error_code()
+    public function it_should_get_the_error_message_and_error_code()
     {
         $message = 'Foo';
         $code = 2;

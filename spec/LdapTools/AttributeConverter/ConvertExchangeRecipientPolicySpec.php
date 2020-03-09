@@ -22,19 +22,19 @@ use Prophecy\Argument;
 
 class ConvertExchangeRecipientPolicySpec extends ObjectBehavior
 {
-    function let(LdapConnectionInterface $connection)
+    public function let(LdapConnectionInterface $connection)
     {
         $this->setLdapConnection($connection);
         $connection->getConfig()->willReturn(new DomainConfiguration('foo.bar'));
         $connection->getRootDse()->willReturn(new LdapObject(['configurationNamingContext' => 'cn=config,dc=foo,dc=bar']));
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType(ConvertExchangeRecipientPolicy::class);
     }
 
-    function it_should_convert_recipient_policies_going_to_ldap_on_creation($connection)
+    public function it_should_convert_recipient_policies_going_to_ldap_on_creation($connection)
     {
         $this->setOperationType(AttributeConverterInterface::TYPE_CREATE);
         $guid = new GUID(LdapUtilities::uuid4());
@@ -54,7 +54,7 @@ class ConvertExchangeRecipientPolicySpec extends ObjectBehavior
         $this->toLdap(['Default Policy'])->shouldBeEqualTo([ConvertExchangeRecipientPolicy::AUTO_UPDATE, $guid->toString()]);
     }
 
-    function it_should_convert_recipient_policies_going_to_ldap_on_modification_or_searching($connection)
+    public function it_should_convert_recipient_policies_going_to_ldap_on_modification_or_searching($connection)
     {
         $this->setOperationType(AttributeConverterInterface::TYPE_MODIFY);
         $guid = new GUID(LdapUtilities::uuid4());
@@ -76,7 +76,7 @@ class ConvertExchangeRecipientPolicySpec extends ObjectBehavior
         $this->toLdap(['Foo'])->shouldBeEqualTo([$guid->toString()]);
     }
 
-    function it_should_convert_recipient_policies_to_names_when_querying_from_ldap($connection)
+    public function it_should_convert_recipient_policies_to_names_when_querying_from_ldap($connection)
     {
         $this->setOperationType(AttributeConverterInterface::TYPE_SEARCH_FROM);
         $guid = new GUID(LdapUtilities::uuid4());

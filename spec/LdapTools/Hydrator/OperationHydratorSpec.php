@@ -44,7 +44,7 @@ class OperationHydratorSpec extends ObjectBehavior
      */
     protected $parser;
 
-    function let(LdapConnectionInterface $connection, LdapObject $rootdse)
+    public function let(LdapConnectionInterface $connection, LdapObject $rootdse)
     {
         $domain = new DomainConfiguration('example.local');
         $domain->setUseTls(true);
@@ -56,12 +56,12 @@ class OperationHydratorSpec extends ObjectBehavior
         $this->schema = $this->parser->parse('ad', 'user');
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Hydrator\OperationHydrator');
     }
 
-    function it_should_hydrate_an_add_operation_to_ldap($connection)
+    public function it_should_hydrate_an_add_operation_to_ldap($connection)
     {
         $this->setLdapObjectSchema($this->schema);
         $this->setOperationType(AttributeConverterInterface::TYPE_CREATE);
@@ -98,7 +98,7 @@ class OperationHydratorSpec extends ObjectBehavior
         $this->hydrateToLdap($original1)->getDn()->shouldBeEqualTo('cn=John,ou=employees,dc=example,dc=local');
     }
 
-    function it_should_properly_construct_a_multivalued_RDN_for_an_add_operation($connection)
+    public function it_should_properly_construct_a_multivalued_RDN_for_an_add_operation($connection)
     {
         $this->setLdapObjectSchema((new LdapObjectSchema('foo', 'bar'))->setRdn(['cn', 'mail']));
         $this->setOperationType(AttributeConverterInterface::TYPE_CREATE);
@@ -108,7 +108,7 @@ class OperationHydratorSpec extends ObjectBehavior
         $this->hydrateToLdap($operation)->getDn()->shouldBeEqualTo('cn=foo+mail=foo@bar.local,dc=foo,dc=bar');
     }
 
-    function it_should_throw_an_exception_hydrating_an_add_operation_when_the_RDN_attribute_is_not_specified($connection)
+    public function it_should_throw_an_exception_hydrating_an_add_operation_when_the_RDN_attribute_is_not_specified($connection)
     {
         $this->setLdapObjectSchema(new LdapObjectSchema('foo', 'bar'));
         $this->setOperationType(AttributeConverterInterface::TYPE_CREATE);
@@ -118,7 +118,7 @@ class OperationHydratorSpec extends ObjectBehavior
         $this->shouldThrow('LdapTools\Exception\LogicException')->duringHydrateToLdap($operation);
     }
 
-    function it_should_throw_an_exception_hydrating_an_add_operation_when_the_location_is_not_specified($connection)
+    public function it_should_throw_an_exception_hydrating_an_add_operation_when_the_location_is_not_specified($connection)
     {
         $this->setLdapObjectSchema(new LdapObjectSchema('foo', 'bar'));
         $this->setOperationType(AttributeConverterInterface::TYPE_CREATE);
@@ -128,7 +128,7 @@ class OperationHydratorSpec extends ObjectBehavior
         $this->shouldThrow('LdapTools\Exception\LogicException')->duringHydrateToLdap($operation);
     }
 
-    function it_should_hydrate_a_modify_operation_to_ldap($connection)
+    public function it_should_hydrate_a_modify_operation_to_ldap($connection)
     {
         $this->setLdapObjectSchema($this->schema);
         $this->setOperationType(AttributeConverterInterface::TYPE_CREATE);
@@ -160,20 +160,20 @@ class OperationHydratorSpec extends ObjectBehavior
         $this->hydrateToLdap($operation)->getBatchCollection()->getBatchArray()->shouldBeEqualTo($expected);
     }
     
-    function it_should_hydrate_a_query_operation_to_ldap_without_a_schema_or_connection()
+    public function it_should_hydrate_a_query_operation_to_ldap_without_a_schema_or_connection()
     {
         $this->setOperationType(AttributeConverterInterface::TYPE_SEARCH_TO);
         $filter = new FilterBuilder();
         $collection = new OperatorCollection();
-        $collection->add($filter->eq('foo','bar'));
-        $collection->add($filter->eq('bar','foo'));
+        $collection->add($filter->eq('foo', 'bar'));
+        $collection->add($filter->eq('bar', 'foo'));
         $operation = new QueryOperation($collection, ['foo']);
 
         $this->hydrateToLdap($operation)->getFilter()->shouldBeEqualTo('(&(foo=bar)(bar=foo))');
         $this->hydrateToLdap($operation)->getBaseDn()->shouldBeNull();
     }
 
-    function it_should_hydrate_a_query_operation_to_ldap_with_a_schema($connection)
+    public function it_should_hydrate_a_query_operation_to_ldap_with_a_schema($connection)
     {
         $this->schema->setBaseDn('dc=foo,dc=bar');
         $this->setLdapObjectSchema($this->schema);
@@ -182,9 +182,9 @@ class OperationHydratorSpec extends ObjectBehavior
         
         $filter = new FilterBuilder();
         $collection = new OperatorCollection();
-        $collection->add($filter->eq('firstName','foo'));
-        $collection->add($filter->eq('lastName','bar'));
-        $collection->add($filter->eq('exchangeHideFromGAL',false));
+        $collection->add($filter->eq('firstName', 'foo'));
+        $collection->add($filter->eq('lastName', 'bar'));
+        $collection->add($filter->eq('exchangeHideFromGAL', false));
         $collection->addLdapObjectSchema($this->schema);
         $operation = new QueryOperation($collection, ['foo']);
 
@@ -194,7 +194,7 @@ class OperationHydratorSpec extends ObjectBehavior
         $this->hydrateToLdap($operation)->getBaseDn()->shouldBeEqualTo('dc=foo,dc=bar');
     }
 
-    function it_should_not_attempt_to_resolve_parameters_for_a_base_dn_for_the_RootDSE(QueryOperation $operation, $connection)
+    public function it_should_not_attempt_to_resolve_parameters_for_a_base_dn_for_the_RootDSE(QueryOperation $operation, $connection)
     {
         $operation->getBaseDn()->willReturn('');
         $operation->getAttributes()->willReturn(['foo']);
@@ -206,14 +206,14 @@ class OperationHydratorSpec extends ObjectBehavior
         $this->hydrateToLdap($operation);
     }
     
-    function it_should_attempt_to_resolve_parameters_for_the_base_dn($connection, $rootdse)
+    public function it_should_attempt_to_resolve_parameters_for_the_base_dn($connection, $rootdse)
     {
         $this->setLdapObjectSchema($this->schema);
         $this->setOperationType(AttributeConverterInterface::TYPE_SEARCH_TO);
         $this->setLdapConnection($connection);
 
         $rootDseAttr = [
-            'defaultNamingContext' => 'dc=foo,dc=bar', 
+            'defaultNamingContext' => 'dc=foo,dc=bar',
             'configurationNamingContext' => 'cn=config,dc=foo,dc=bar'
         ];
         foreach ($rootDseAttr as $name => $value) {
@@ -227,7 +227,7 @@ class OperationHydratorSpec extends ObjectBehavior
         $this->hydrateToLdap($operation)->getBaseDn()->shouldBeEqualTo($rootDseAttr['defaultNamingContext']);
     }
     
-    function it_should_add_controls_on_an_operation_going_to_ldap($connection)
+    public function it_should_add_controls_on_an_operation_going_to_ldap($connection)
     {
         $operation = new QueryOperation('(foo=bar');
 
@@ -242,7 +242,7 @@ class OperationHydratorSpec extends ObjectBehavior
         $this->hydrateToLdap($operation)->getControls()->shouldBeEqualTo([$control]);
     }
     
-    function it_should_set_whether_paging_is_used_based_off_the_schema($connection)
+    public function it_should_set_whether_paging_is_used_based_off_the_schema($connection)
     {
         $operation = new QueryOperation('(foo=bar');
         
@@ -256,7 +256,7 @@ class OperationHydratorSpec extends ObjectBehavior
         $this->hydrateToLdap($operation)->getUsePaging()->shouldBeEqualTo(true);
     }
 
-    function it_should_set_the_scope_based_off_the_schema($connection)
+    public function it_should_set_the_scope_based_off_the_schema($connection)
     {
         $operation = new QueryOperation('(foo=bar)');
 
@@ -270,10 +270,10 @@ class OperationHydratorSpec extends ObjectBehavior
         $this->hydrateToLdap($operation)->getScope()->shouldBeEqualTo('onelevel');
     }
     
-    function it_should_select_get_the_correct_attributes_to_select_based_off_the_alias_in_use($connection)
+    public function it_should_select_get_the_correct_attributes_to_select_based_off_the_alias_in_use($connection)
     {
         $this->setLdapConnection($connection);
-        $gSchema = $this->parser->parse('ad','group');
+        $gSchema = $this->parser->parse('ad', 'group');
 
         $operators = new OperatorCollection();
         $operators->addLdapObjectSchema($this->schema, 'u');
@@ -288,8 +288,8 @@ class OperationHydratorSpec extends ObjectBehavior
         $this->setLdapObjectSchema($this->schema);
         $this->setAlias('u');
         $this->hydrateToLdap(clone $operationSelect)->getAttributes()->shouldBeEqualTo([
-            'givenName', 
-            'sn', 
+            'givenName',
+            'sn',
             'cn'
         ]);
 
@@ -316,10 +316,10 @@ class OperationHydratorSpec extends ObjectBehavior
         ]);
     }
     
-    function it_should_correctly_add_attributes_to_select_based_off_aliases_in_the_order_by_selection($connection)
+    public function it_should_correctly_add_attributes_to_select_based_off_aliases_in_the_order_by_selection($connection)
     {
         $this->setLdapConnection($connection);
-        $gSchema = $this->parser->parse('ad','group');
+        $gSchema = $this->parser->parse('ad', 'group');
 
         $operators = new OperatorCollection();
         $operators->addLdapObjectSchema($this->schema, 'u');
@@ -347,13 +347,13 @@ class OperationHydratorSpec extends ObjectBehavior
             'cn',
             'department',
             'objectGuid',
-        ]);        
+        ]);
     }
     
-    function it_should_hydrate_the_ldap_filter_for_a_query_operation_based_off_the_current_alias($connection)
+    public function it_should_hydrate_the_ldap_filter_for_a_query_operation_based_off_the_current_alias($connection)
     {
         $this->setLdapConnection($connection);
-        $gSchema = $this->parser->parse('ad','group');
+        $gSchema = $this->parser->parse('ad', 'group');
 
         $operators = new OperatorCollection();
         $operators->addLdapObjectSchema($this->schema, 'u');
@@ -366,12 +366,12 @@ class OperationHydratorSpec extends ObjectBehavior
         $this->hydrateToLdap($operation)->getFilter()->shouldBeEqualTo('(&(objectClass=group)(foo=bar))');
     }
     
-    function it_should_only_support_an_operation_going_to_ldap()
+    public function it_should_only_support_an_operation_going_to_ldap()
     {
         $this->shouldThrow('\LdapTools\Exception\InvalidArgumentException')->duringHydrateToLdap('foo');
     }
 
-    function it_should_add_rename_operations_when_hydrating_a_batch_operation_with_rdn_changes($connection)
+    public function it_should_add_rename_operations_when_hydrating_a_batch_operation_with_rdn_changes($connection)
     {
         $this->setLdapObjectSchema($this->schema);
         $this->setOperationType(AttributeConverterInterface::TYPE_MODIFY);

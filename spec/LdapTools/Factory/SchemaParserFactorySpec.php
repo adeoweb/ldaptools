@@ -14,30 +14,30 @@ use PhpSpec\ObjectBehavior;
 
 class SchemaParserFactorySpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Factory\SchemaParserFactory');
     }
 
-    function it_should_have_a_constant_for_the_yaml_parser_type()
+    public function it_should_have_a_constant_for_the_yaml_parser_type()
     {
         $this->shouldHaveConstant('TYPE_YML');
     }
 
-    function it_should_return_the_correct_parser_type_when_calling_get()
+    public function it_should_return_the_correct_parser_type_when_calling_get()
     {
         $this->get('yml', 'foo')->shouldBeAnInstanceOf('\LdapTools\Schema\Parser\SchemaYamlParser');
     }
 
-    function it_should_thrown_InvalidArgumentException_when_passing_unknown_parser_types()
+    public function it_should_thrown_InvalidArgumentException_when_passing_unknown_parser_types()
     {
         $this->shouldThrow('\LdapTools\Exception\InvalidArgumentException')->duringGet('foo', 'bar');
     }
 
-    public function getMatchers()
+    public function getMatchers(): array
     {
         return [
-            'haveConstant' => function($subject, $constant) {
+            'haveConstant' => function ($subject, $constant) {
                 return defined('\LdapTools\Factory\SchemaParserFactory::'.$constant);
             }
         ];

@@ -15,32 +15,32 @@ use PhpSpec\ObjectBehavior;
 
 class ResponseCodeSpec extends ObjectBehavior
 {
-    function let()
+    public function let()
     {
         $this->beConstructedWith('AccountDisabled');
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType(ResponseCode::class);
     }
 
-    function it_should_get_the_error_message_for_the_instantiated_enum()
+    public function it_should_get_the_error_message_for_the_instantiated_enum()
     {
         $this->getMessage()->shouldBeEqualTo('The account is currently disabled.');
     }
 
-    function it_should_get_the_error_message_for_a_response_code_enum_name()
+    public function it_should_get_the_error_message_for_a_response_code_enum_name()
     {
         $this::getMessageForError('AccountLocked')->shouldBeEqualTo('The account is currently locked out.');
     }
 
-    function it_should_get_the_error_message_for_a_response_code_enum_value()
+    public function it_should_get_the_error_message_for_a_response_code_enum_value()
     {
         $this::getMessageForError(1909)->shouldBeEqualTo('The account is currently locked out.');
     }
 
-    function it_should_check_if_an_error_message_exists_for_a_given_error()
+    public function it_should_check_if_an_error_message_exists_for_a_given_error()
     {
         $this::hasMessageForError('AccountLocked')->shouldBeEqualTo(true);
         $this::hasMessageForError(1909)->shouldBeEqualTo(true);

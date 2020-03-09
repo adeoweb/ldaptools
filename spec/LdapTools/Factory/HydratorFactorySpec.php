@@ -15,17 +15,17 @@ use PhpSpec\ObjectBehavior;
 
 class HydratorFactorySpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Factory\HydratorFactory');
     }
 
-    function it_should_return_an_ArrayHydrator_when_calling_get()
+    public function it_should_return_an_ArrayHydrator_when_calling_get()
     {
         $this->get(HydratorFactory::TO_ARRAY)->shouldReturnAnInstanceOf('\LdapTools\Hydrator\ArrayHydrator');
     }
 
-    function it_should_throw_InvalidArgumentException_when_calling_get_with_an_invalid_hydrator()
+    public function it_should_throw_InvalidArgumentException_when_calling_get_with_an_invalid_hydrator()
     {
         $this->shouldThrow('\LdapTools\Exception\InvalidArgumentException')->duringGet('foo');
     }

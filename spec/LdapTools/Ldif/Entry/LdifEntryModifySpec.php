@@ -21,29 +21,29 @@ use PhpSpec\ObjectBehavior;
 
 class LdifEntryModifySpec extends ObjectBehavior
 {
-    function let()
+    public function let()
     {
         $this->beConstructedWith('dc=foo,dc=bar');
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Ldif\Entry\LdifEntryModify');
     }
 
-    function it_should_implement_LdifEntryInterface()
+    public function it_should_implement_LdifEntryInterface()
     {
         $this->shouldImplement('\LdapTools\Ldif\Entry\LdifEntryInterface');
     }
 
-    function it_should_set_the_dn()
+    public function it_should_set_the_dn()
     {
         $dn = 'foo';
         $this->setDn($dn);
         $this->getDn()->shouldBeEqualTo($dn);
     }
 
-    function it_should_add_a_control()
+    public function it_should_add_a_control()
     {
         $control = new LdapControl('foo');
         $this->addControl($control);
@@ -51,12 +51,12 @@ class LdifEntryModifySpec extends ObjectBehavior
         $this->getControls()->shouldBeEqualTo([$control]);
     }
 
-    function it_should_get_the_batch_collection()
+    public function it_should_get_the_batch_collection()
     {
         $this->getBatchCollection()->shouldReturnAnInstanceOf('LdapTools\BatchModify\BatchCollection');
     }
 
-    function it_should_add_an_attribute_value()
+    public function it_should_add_an_attribute_value()
     {
         $this->add('foo', 'bar');
         $this->getBatchCollection()->getBatchArray()->shouldContain([
@@ -68,7 +68,7 @@ class LdifEntryModifySpec extends ObjectBehavior
         ]);
     }
 
-    function it_should_delete_an_attribute_value()
+    public function it_should_delete_an_attribute_value()
     {
         $this->delete('foo', 'bar');
         $this->getBatchCollection()->getBatchArray()->shouldContain([
@@ -80,7 +80,7 @@ class LdifEntryModifySpec extends ObjectBehavior
         ]);
     }
 
-    function it_should_replace_an_attribute_value()
+    public function it_should_replace_an_attribute_value()
     {
         $this->replace('foo', 'bar');
         $this->getBatchCollection()->getBatchArray()->shouldContain([
@@ -92,7 +92,7 @@ class LdifEntryModifySpec extends ObjectBehavior
         ]);
     }
 
-    function it_should_reset_an_attribute_value()
+    public function it_should_reset_an_attribute_value()
     {
         $this->reset('foo');
         $this->getBatchCollection()->getBatchArray()->shouldContain([
@@ -101,18 +101,18 @@ class LdifEntryModifySpec extends ObjectBehavior
         ]);
     }
 
-    function it_should_get_an_add_operation()
+    public function it_should_get_an_add_operation()
     {
         $this->toOperation()->shouldReturnAnInstanceOf('LdapTools\Operation\BatchModifyOperation');
         $this->toOperation()->getDn()->shouldBeEqualTo('dc=foo,dc=bar');
     }
 
-    function it_should_get_the_ldif_string_representation()
+    public function it_should_get_the_ldif_string_representation()
     {
         $this->addComment("Modify entry example.");
         $this->add('phone', '555-5555');
         $this->reset('sn');
-        $this->replace('givenName','foo');
+        $this->replace('givenName', 'foo');
         $this->delete('fax', '123-4567');
         $this->add('address', ['123 fake st', '456 real st']);
 
@@ -139,7 +139,7 @@ class LdifEntryModifySpec extends ObjectBehavior
         $this->toString()->shouldBeEqualTo($ldif);
     }
 
-    function it_should_get_the_ldif_string_representation_in_the_context_of_a_type_and_a_schema(LdapConnectionInterface $connection, LdapObject $rootdse)
+    public function it_should_get_the_ldif_string_representation_in_the_context_of_a_type_and_a_schema(LdapConnectionInterface $connection, LdapObject $rootdse)
     {
         $domain = new DomainConfiguration('example.local');
         $domain->setUseTls(true);
@@ -157,7 +157,7 @@ class LdifEntryModifySpec extends ObjectBehavior
 
         $this->add('phoneNumber', '555-5555');
         $this->reset('lastName');
-        $this->replace('firstName','bar');
+        $this->replace('firstName', 'bar');
         $this->delete('password', 'foo');
         $this->add('password', 'bar');
 
@@ -181,7 +181,7 @@ class LdifEntryModifySpec extends ObjectBehavior
         $this->toString()->shouldBeEqualTo($ldif);
     }
 
-    function it_should_add_a_comment()
+    public function it_should_add_a_comment()
     {
         $this->addComment('test')->shouldReturnAnInstanceOf('LdapTools\Ldif\Entry\LdifEntryModify');
         $this->getComments()->shouldHaveCount(1);
@@ -192,4 +192,3 @@ class LdifEntryModifySpec extends ObjectBehavior
         $this->getComments()->shouldBeEqualTo(['test', 'foo', 'bar']);
     }
 }
-

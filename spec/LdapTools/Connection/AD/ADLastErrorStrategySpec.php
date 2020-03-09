@@ -14,12 +14,12 @@ use PhpSpec\ObjectBehavior;
 
 class ADLastErrorStrategySpec extends ObjectBehavior
 {
-    function let()
+    public function let()
     {
         $this->beConstructedThrough('getInstance', ['ad', true]);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Connection\AD\ADLastErrorStrategy');
     }

@@ -21,17 +21,17 @@ use PhpSpec\ObjectBehavior;
 
 class OperationHandlerSpec extends ObjectBehavior
 {
-    function let(LdapConnectionInterface $connection)
+    public function let(LdapConnectionInterface $connection)
     {
         $this->setConnection($connection);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Operation\Handler\OperationHandler');
     }
 
-    function it_should_support_an_add_delete_rename_or_modify_operation()
+    public function it_should_support_an_add_delete_rename_or_modify_operation()
     {
         $this->supports(new AddOperation('foo'))->shouldBeEqualTo(true);
         $this->supports(new DeleteOperation('foo'))->shouldBeEqualTo(true);
@@ -39,7 +39,7 @@ class OperationHandlerSpec extends ObjectBehavior
         $this->supports(new BatchModifyOperation('foo'))->shouldBeEqualTo(true);
     }
 
-    function it_should_not_support_query_or_authentication_operations()
+    public function it_should_not_support_query_or_authentication_operations()
     {
         $this->supports(new AuthenticationOperation())->shouldBeEqualTo(false);
         $this->supports(new QueryOperation('(foo=bar)'))->shouldBeEqualTo(false);

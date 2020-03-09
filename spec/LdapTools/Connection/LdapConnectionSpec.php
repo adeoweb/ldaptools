@@ -17,7 +17,7 @@ use \LdapTools\DomainConfiguration;
 
 class LdapConnectionSpec extends ObjectBehavior
 {
-    function let()
+    public function let()
     {
         $config = new DomainConfiguration('example.com');
         $config->setServers(['test'])
@@ -26,12 +26,12 @@ class LdapConnectionSpec extends ObjectBehavior
         $this->beConstructedWith($config);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('LdapTools\Connection\LdapConnection');
     }
 
-    function it_should_accept_an_event_dispatcher_as_a_second_constructor_argument()
+    public function it_should_accept_an_event_dispatcher_as_a_second_constructor_argument()
     {
         $config = new DomainConfiguration('example.com');
         $config->setServers(['test'])
@@ -41,12 +41,12 @@ class LdapConnectionSpec extends ObjectBehavior
         $this->beConstructedWith($config, new SymfonyEventDispatcher());
     }
 
-    function it_should_return_false_when_calling_isBound_and_there_is_no_connection_yet()
+    public function it_should_return_false_when_calling_isBound_and_there_is_no_connection_yet()
     {
         $this->isBound()->shouldBeEqualTo(false);
     }
 
-    function it_should_honor_an_explicitly_set_schema_name_if_present()
+    public function it_should_honor_an_explicitly_set_schema_name_if_present()
     {
         $config = new DomainConfiguration('example.com');
         $config->setServers(['test'])
@@ -58,7 +58,7 @@ class LdapConnectionSpec extends ObjectBehavior
         $this->getConfig()->getSchemaName()->shouldBeEqualTo('foo');
     }
 
-    function it_should_have_a_page_size_as_specified_from_the_config()
+    public function it_should_have_a_page_size_as_specified_from_the_config()
     {
         $config = new DomainConfiguration('example.com');
         $config->setServers(['test'])
@@ -70,22 +70,22 @@ class LdapConnectionSpec extends ObjectBehavior
         $this->getConfig()->getPageSize()->shouldBeEqualTo(250);
     }
 
-    function it_should_get_the_current_server()
+    public function it_should_get_the_current_server()
     {
         $this->getServer()->shouldBeEqualTo(null);
     }
 
-    function it_should_have_a_method_to_get_the_connection_resource()
+    public function it_should_have_a_method_to_get_the_connection_resource()
     {
         $this->getResource()->shouldBeEqualTo(null);
     }
     
-    function it_should_get_an_idle_time_of_0_when_it_has_not_been_connected()
+    public function it_should_get_an_idle_time_of_0_when_it_has_not_been_connected()
     {
         $this->getIdleTime()->shouldBeEqualTo(0);
     }
 
-    function it_should_get_a_diagnostic_message()
+    public function it_should_get_a_diagnostic_message()
     {
         $this->getDiagnosticMessage()->shouldEqual(null);
     }
